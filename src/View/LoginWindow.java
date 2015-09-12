@@ -30,7 +30,6 @@ public class LoginWindow  {
     private static  LoginWindow  instance = new LoginWindow();
 
     private  GridPane gridPane;
-    private  GridPane discGridPane;
     private  TextField userText;
     private  Label statusLabel;
     private  PasswordField userPass;
@@ -54,7 +53,6 @@ public class LoginWindow  {
 
         root = new BorderPane();
         gridPane = new GridPane();
-        discGridPane = new GridPane();
         hBox = new HBox();
 
         // this is for register layout
@@ -73,6 +71,17 @@ public class LoginWindow  {
         loginToggle.setSelected(true);
 
 
+        // nodes for Login
+        userText = new TextField();
+        userPass = new PasswordField();
+        loginButton = new Button("Log In");
+        cancelButton = new Button("Cancel");
+        userText.setPromptText("Username");
+        userPass.setPromptText("Password");
+        userText.setAlignment(Pos.CENTER);
+        userPass.setAlignment(Pos.CENTER);
+
+
         // top bordderPane
         hBox.setPadding(new Insets(1,20,0,20));
         hBox.setAlignment(Pos.CENTER);
@@ -89,20 +98,9 @@ public class LoginWindow  {
         root.setTop(hBox);
 
 
-        // nodes for Login
-        userText = new TextField();
-        userPass = new PasswordField();
-        loginButton = new Button("Log In");
-        cancelButton = new Button("Cancel");
-        userText.setPromptText("Username");
-        userPass.setPromptText("Password");
-        userText.setAlignment(Pos.CENTER);
-        userPass.setAlignment(Pos.CENTER);
-
-
         // for the parent Layout
-        setUpGridPane(300,400);
-        loginStage = new CustomStage(30,30,gridPane.getPrefWidth(), gridPane.getPrefHeight());
+        setGridPaneSize(300,230);
+        loginStage =  new CustomStage(30,30,gridPane.getPrefWidth(), gridPane.getPrefHeight());
         scene = new Scene(root);
         loginStage.setScene(scene);
         loginStage.setX(0);
@@ -117,7 +115,7 @@ public class LoginWindow  {
             public void handle(ActionEvent event) {
                 root.setCenter(null);
                 root.setCenter(loginSetUp());
-                loginStage.setHeight(gridPane.getPrefHeight());
+
             }
         });
         registerToggle.setOnAction(new EventHandler<ActionEvent>() {
@@ -136,6 +134,7 @@ public class LoginWindow  {
         // if not set loginDisconnected to server
 
         if (isConnected){
+            System.out.println("center loginsetup");
             root.setCenter(loginSetUp());
         }else if (!isConnected){
             root.setCenter(setUpDisconnectedLogin());
@@ -145,13 +144,16 @@ public class LoginWindow  {
     }
 
 
-    private void setUpGridPane(double prefWidth, double prefHeight){
+    private void setGridPaneSize(double width, double h){
+        gridPane = new GridPane();
+        gridPane.setPrefWidth(width);
+        gridPane.setPrefHeight(h);
 
+    }
 
-        // connected login GridPane
+    private GridPane loginSetUp(){
+        gridPane = new GridPane();
 
-        gridPane.setPrefWidth(prefWidth);
-        gridPane.setPrefHeight(prefHeight);
 
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setVgap(8);
@@ -163,51 +165,6 @@ public class LoginWindow  {
         gridPane.setHalignment(cancelButton, HPos.CENTER);
         gridPane.add(loginButton,0,2);
         gridPane.add(cancelButton,0,2);
-
-
-        // Disconnected login gridPane;
-
-        discGridPane.setPrefWidth(prefWidth);
-        discGridPane.setPrefHeight(prefHeight);
-
-        Image img = new Image(getClass().getResourceAsStream("/images/30.gif"));
-
-        Label label = new Label();
-        label.setGraphic(new ImageView(img));
-
-        discGridPane.setAlignment(Pos.CENTER);
-        discGridPane.setVgap(8);
-        discGridPane.setPadding(new Insets(15,0,30,0));
-
-        discGridPane.add(label,0,0);
-        discGridPane.add(userText,0,1);
-        discGridPane.add(userPass,0,2);
-        discGridPane.setHalignment(loginButton, HPos.RIGHT);
-        discGridPane.setHalignment(cancelButton, HPos.CENTER);
-        discGridPane.add(loginButton,0,3);
-        discGridPane.add(cancelButton,0,3);
-
-    }
-
-
-
-    private GridPane setUpDisconnectedLogin(){
-        root.setCenter(null);
-
-        loginToggle.setDisable(true);
-        registerToggle.setDisable(true);
-        forgotToggle.setDisable(true);
-
-        userPass.setDisable(true);
-        userText.setDisable(true);
-        loginButton.setDisable(true);
-        cancelButton.setDisable(true);
-
-        return discGridPane;
-    }
-    private GridPane loginSetUp(){
-        gridPane = new GridPane();
-        root.setCenter(null);
 
         loginToggle.setDisable(false);
         registerToggle.setDisable(false);
@@ -233,6 +190,41 @@ public class LoginWindow  {
                 }
             }
         });
+
+        return gridPane;
+    }
+
+    private GridPane setUpDisconnectedLogin(){
+        gridPane = new GridPane();
+
+        gridPane.setPrefWidth(500);
+        gridPane.setPrefHeight(210);
+
+        Image img = new Image(getClass().getResourceAsStream("/images/30.gif"));
+
+        Label label = new Label();
+        label.setGraphic(new ImageView(img));
+
+        gridPane.setAlignment(Pos.CENTER);
+        gridPane.setVgap(8);
+        gridPane.setPadding(new Insets(15, 0, 30, 0));
+
+        gridPane.add(label, 0, 0);
+        gridPane.add(userText, 0, 1);
+        gridPane.add(userPass, 0, 2);
+        gridPane.setHalignment(loginButton, HPos.RIGHT);
+        gridPane.setHalignment(cancelButton, HPos.CENTER);
+        gridPane.add(loginButton, 0, 3);
+        gridPane.add(cancelButton, 0, 3);
+
+        loginToggle.setDisable(true);
+        registerToggle.setDisable(true);
+        forgotToggle.setDisable(true);
+
+        userPass.setDisable(true);
+        userText.setDisable(true);
+        loginButton.setDisable(true);
+        cancelButton.setDisable(true);
 
         return gridPane;
     }
