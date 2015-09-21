@@ -41,20 +41,14 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
             Registry reg = LocateRegistry.getRegistry("Localhost",Constant.Remote_port);
             rm = (RemoteMethods) reg.lookup(Constant.Remote_ID);
             bol = rm.checkDatabase();
-                        if (bol){
-                            return bol;
-                        }else if (!bol){
-                            System.out.println("down");
-                            return bol;
-                        }
 
         } catch (RemoteException e) {
             System.out.println("cant connect remotely");
             e.printStackTrace();
-            return false;
+            bol = false;
         } catch (NotBoundException z) {
             z.printStackTrace();
-            return false;
+            bol = false;
         }
         return bol;
     }

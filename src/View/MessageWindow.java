@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -72,10 +73,13 @@ public class MessageWindow {
         label.setStyle("-fx-background-color: brown");
         label.setTextFill(Color.AZURE);
 
-        vBox.getChildren().addAll(label);
+
+        Group g = new Group();
+        g.getChildren().add(label);
+        vBox.getChildren().addAll(g);
         vBox.setVgrow(label,Priority.ALWAYS);
 
-        scene = new Scene(vBox,width,50);
+        scene = new Scene(vBox,width,70);
         stage.setWidth(scene.getWidth());
         stage.setHeight(scene.getHeight());
         stage.setScene(scene);

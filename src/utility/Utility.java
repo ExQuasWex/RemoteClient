@@ -1,5 +1,6 @@
 package utility;
 
+import Controller.Controller;
 import View.LoginWindow;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -12,7 +13,13 @@ import java.util.regex.Pattern;
  */
 public class Utility {
 
-    public static boolean confirmExit(){
+     Controller controller;
+     private boolean isConnected;
+    public Utility(){
+        controller = new Controller();
+    }
+
+    public boolean confirmExit(){
         boolean bol = false;
 
         Alert alertBox = new Alert(Alert.AlertType.CONFIRMATION);
@@ -40,5 +47,6 @@ public class Utility {
         }
         return boo;
     }
+
 
 }
