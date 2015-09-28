@@ -1,7 +1,8 @@
 package View;
 
-import ClientModel.StaffRegister;
+import clientModel.StaffRegister;
 import Controller.Controller;
+import clientModel.SecretQuestion;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -24,12 +25,20 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import utility.Utility;
 
+import javax.xml.soap.Text;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.rmi.RemoteException;
 import java.util.regex.Pattern;
 
 /**
  * Created by Didoy on 8/24/2015.
+ * if the server is down the this class will show disconnected login from setUpDisconnectedLogin()
+ * and will try to reconnect by connectToServer()
+ * if not it will show login window
+ *
+ * Height = 240 connected
+ * Height = 290 disconnected;
  */
 public class LoginWindow  {
 
@@ -37,7 +46,7 @@ public class LoginWindow  {
     private static  LoginWindow  instance = new LoginWindow();
 
     private  GridPane gridPane;
-    private  TextField userText;
+    private  TextField userText, contactField;
     private  Label statusLabel;
     private  PasswordField userPass;
     private  Scene scene;
@@ -54,6 +63,8 @@ public class LoginWindow  {
     private boolean isConnected = true;
     private  Controller ctr;
 
+    private Alert alertBox;
+
     private  LoginWindow(){
 
         ctr = new Controller();
@@ -64,11 +75,6 @@ public class LoginWindow  {
         hBox = new HBox();
 
         utility = new Utility();
-
-        // this is for register layout
-        registerVbox = new VBox(5);
-        registerVbox.setAlignment(Pos.CENTER);
-        registerVbox.setFillWidth(false);
 
         toggleGroup = new ToggleGroup();
         loginToggle = new ToggleButton("Login");
@@ -93,6 +99,9 @@ public class LoginWindow  {
         userText.setAlignment(Pos.CENTER);
         userPass.setAlignment(Pos.CENTER);
 
+        // nodes that need to declared final and global from registerSetup()
+        contactField = new TextField();
+
 
         // top bordderPane
         hBox.setPadding(new Insets(1,20,0,20));
@@ -110,24 +119,11 @@ public class LoginWindow  {
         hBox.getChildren().addAll(loginToggle, registerToggle, forgotToggle);
         root.setTop(hBox);
 
-
-        // for the parent Layout
-        setGridPaneSize(350, 280);
-        root.setPrefWidth(gridPane.getPrefWidth());
-        loginStage =  new CustomStage(30,30,gridPane.getPrefWidth(),gridPane.getPrefHeight());
-        scene = new Scene(root);
-        loginStage.setScene(scene);
-        loginStage.setX(0);
-        loginStage.setY(loginStage.getScreenMaxHeight());
-        loginStage.setResizable(false);
-        loginStage.initStyle(StageStyle.UNDECORATED);
-        loginStage.setTitle("Log In");
-
-
         loginToggle.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 root.setCenter(null);
+                loginStage.setHeight(loginSetUp().getPrefHeight());
                 root.setCenter(loginSetUp());
             }
         });
@@ -138,10 +134,8 @@ public class LoginWindow  {
                 root.setCenter(setUpRegister());
                 loginStage.setHeight(registerVbox.getPrefHeight());
 
-
             }
         });
-
 
         // set the loginsetup to center if connected to server
         // if not set loginDisconnected to server
@@ -149,23 +143,28 @@ public class LoginWindow  {
         if (isConnected){
             System.out.println("center loginsetup");
             root.setCenter(loginSetUp());
+
+            loginStage =  new CustomStage(30,30,350,245);
         }else if (!isConnected){
             root.setCenter(setUpDisconnectedLogin());
+            loginStage =  new CustomStage(30,30,350,290);
         }
+
+        scene = new Scene(root);
+        loginStage.setScene(scene);
+        loginStage.setX(0);
+        loginStage.setY(loginStage.getScreenMaxHeight());
+        loginStage.setResizable(false);
+        loginStage.initStyle(StageStyle.UNDECORATED);
+        loginStage.setTitle("Log In");
+
         loginStage.showWithAnimation();
-
-    }
-
-
-    private void setGridPaneSize(double width, double h){
-        gridPane = new GridPane();
-        gridPane.setPrefWidth(width);
-        gridPane.setPrefHeight(h);
-
     }
 
     private GridPane loginSetUp(){
         gridPane = new GridPane();
+
+        gridPane.setPrefHeight(240);
 
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setVgap(8);
@@ -215,7 +214,11 @@ public class LoginWindow  {
             }else if (isServerConnected()){
                 String username = userText.getText();
                 String pass = userPass.getText();
-                ctr.Login(username, pass);
+                try {
+                    ctr.Login(username, pass);
+                } catch (RemoteException e1) {
+                    e1.printStackTrace();
+                }
                 System.out.println("coonected");
             }
 
@@ -308,14 +311,20 @@ public class LoginWindow  {
     }
 
     private VBox setUpRegister(){
+
+        // this is for register layout
+        registerVbox = new VBox(5);
+        registerVbox.setAlignment(Pos.CENTER);
+        registerVbox.setFillWidth(false);
+
         HBox hBox = new HBox();
         ToggleGroup tg = new ToggleGroup();
 
-        Button save = new Button("Save");
-        save.setPrefWidth(90);
+
+
         statusLabel = new Label();
         TextField nameField = new TextField();
-        TextField contactField = new TextField();
+        contactField = new TextField();
         TextField homeAdress = new TextField();
         TextField userName = new TextField();
         PasswordField password = new PasswordField();
@@ -323,20 +332,31 @@ public class LoginWindow  {
         PasswordField adminPass = new PasswordField();
         RadioButton tbMale = new RadioButton("Male");
         RadioButton tbFemale = new RadioButton("FeMale");
+        Button save = new Button("Save");
+        ComboBox secretQ = new ComboBox();
+        secretQ.setPromptText("Secret Question");
+        TextField secretAns = new TextField();
+
 
         tbMale.setToggleGroup(tg);
         tbFemale.setToggleGroup(tg);
+        tg.selectToggle(tbMale);
 
         // Sizes
-        nameField.setPrefWidth(190);
-        userName.setPrefWidth(190);
-        contactField.setPrefWidth(190);
-        homeAdress.setPrefWidth(190);
-        password.setPrefWidth(190);
-        confirmPass.setPrefWidth(190);
-        adminPass.setPrefWidth(190);
-        statusLabel.setPrefWidth(190);
+        save.setPrefWidth(90);
+        nameField.setPrefWidth(240);
+        userName.setPrefWidth(240);
+        contactField.setPrefWidth(240);
+        homeAdress.setPrefWidth(240);
+        password.setPrefWidth(240);
+        confirmPass.setPrefWidth(240);
+        adminPass.setPrefWidth(240);
+        statusLabel.setPrefWidth(240);
+        secretQ.setPrefWidth(240);
+        secretAns.setPrefWidth(240);
 
+        // adding elements to combo Box
+        secretQ.getItems().setAll(SecretQuestion.values());
 
         // Text Orientation
         statusLabel.setAlignment(Pos.CENTER);
@@ -347,7 +367,7 @@ public class LoginWindow  {
         password.setAlignment(Pos.CENTER);
         confirmPass.setAlignment(Pos.CENTER);
         adminPass.setAlignment(Pos.CENTER);
-
+        secretAns.setAlignment(Pos.CENTER);
 
         // set prompt
         nameField.setPromptText("Enter Full Name");
@@ -357,6 +377,7 @@ public class LoginWindow  {
         password.setPromptText("Password");
         confirmPass.setPromptText("Confirm Password");
         adminPass.setPromptText("Admin Key Code");
+        secretAns.setPromptText("Your secret answer");
 
         // set The radioButton
         hBox.setAlignment(Pos.CENTER);
@@ -364,9 +385,11 @@ public class LoginWindow  {
         hBox.getChildren().addAll(tbMale,tbFemale);
 
         registerVbox.setPadding(new Insets(5, 5, 0, 5));
-        registerVbox.getChildren().addAll(nameField,userName, contactField, homeAdress,
+        registerVbox.getChildren().addAll(nameField,userName, contactField, homeAdress,secretQ, secretAns,
                 password,confirmPass,adminPass,hBox, save);
-        registerVbox.setPrefHeight(300);
+
+        // setting this height will also set the height of the window
+        registerVbox.setPrefHeight(380);
 
 
 
@@ -374,12 +397,20 @@ public class LoginWindow  {
         save.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                double width = loginStage.getWidth();
+                double x = (loginStage.getX() + loginStage.getWidth()/2);
+                double y = (loginStage.getY() + loginStage.getHeight()/2 ) - 60;
+
+                messageBox = new MessageWindow();
+
                 String name = nameField.getText().trim();
                 String username = userName.getText().trim();
                 String contact = contactField.getText().trim();
                 String address = homeAdress.getText().trim();
                 String pass  = password.getText().trim();
                 String cpass = confirmPass.getText().trim();
+                String secretAnswer = secretAns.getText().trim();
+                String keyCode = adminPass.getText().trim();
                 String gender = null;
 
                 if (tg.getSelectedToggle() == tbFemale){
@@ -388,12 +419,54 @@ public class LoginWindow  {
                     gender = "Male";
                 }
 
-                StaffRegister  staffRegister= new StaffRegister(name,username,contact,address,gender,pass,cpass);
+                // format contact string
+                contact = contact.replaceFirst("(\\d{4})(\\d{3})(\\d{4})","$1-$2-$3");
+                contactField.setText(contact);
 
-                if (!validate(staffRegister)){
+                int secretID = 0;
+                SecretQuestion sq = null;
+                if (SecretQuestion.PET == secretQ.getSelectionModel().getSelectedItem()){
+                    secretID = 1;
+                    sq = SecretQuestion.PET;
+                }else if (SecretQuestion.TVSHOW == secretQ.getSelectionModel().getSelectedItem()){
+                    secretID = 2;
+                    sq = SecretQuestion.TVSHOW;
+                }else if (SecretQuestion.BOOK == secretQ.getSelectionModel().getSelectedItem()){
+                    secretID = 3;
+                    sq = SecretQuestion.BOOK;
+                }else {
+                    messageBox.showValidationInfo("Please add secret Question",x,y,width - 20);
+                }
+
+                StaffRegister  staffRegister = new StaffRegister(name,username,contact,address,secretID,sq,secretAnswer,gender,pass,cpass);
+
+                if (!validate(staffRegister,x,y,width,messageBox,keyCode)){
                     // let the validate method to handle this
                 }else{
-                    // save to database
+                    boolean isRegistered;
+                    System.out.println("all registration is now validated");
+                    isRegistered =  ctr.register(staffRegister);
+
+                    if (isRegistered){
+                        alertBox = new Alert(Alert.AlertType.INFORMATION);
+                        alertBox.setHeaderText(null);
+                        alertBox.setTitle("Register");
+                        alertBox.setContentText("Your account is succesfully Created");
+                        alertBox.show();
+
+                        nameField.setText("");
+                        userName.setText("");
+                        homeAdress.setText("");
+                        password.setText("");
+                        contactField.setText("");
+                        confirmPass.setText("");
+                        homeAdress.setText("");
+                        adminPass.setText("");
+                        secretAns.setText("");
+
+                    }else{
+
+                    }
                 }
             }
         });
@@ -408,17 +481,17 @@ public class LoginWindow  {
             public void run() {
                 try {
                     Thread.sleep(1300);
-                    System.out.println("connectong to server");
-
-                    while (!isServerConnected()){
-                             isServerConnected();
-                                    if (isServerConnected()){
-                                           // set the BorderPane center with connected LoginWindow
+                    isConnected = isServerConnected();
+                    while (!isConnected){
+                        isConnected = isServerConnected();
+                        System.out.println("connecting to server");
+                        if (isConnected){
                                         Platform.runLater(new Runnable() {
                                             @Override
                                             public void run() {
                                                 System.out.println("we are now connected to server");
                                                 changeLogIncCenter(loginSetUp());
+                                                loginStage.setHeight(240);
                                             }
                                         });
                                         break;
@@ -437,42 +510,94 @@ public class LoginWindow  {
         return ctr.isServerConnected();
     }
 
-
     private void changeLogIncCenter(Pane pane){
                 root.setCenter(null);
                 root.setCenter(pane);
     }
 
-    public  boolean validate(StaffRegister staffReg){
-         messageBox = new MessageWindow();
+    public  boolean validate(StaffRegister staffReg, double x, double y, double width,MessageWindow messageBox, String keyCode){
 
         boolean isValidated = false;
-        double width = loginStage.getWidth();
-        double x = (loginStage.getX() + loginStage.getWidth()/2);
-        double y = (loginStage.getY() + loginStage.getHeight()/2 ) - 60;
-
-        String invalidName = "Invalid Name";
-        String invalidUsername = "invalid username";
-        String invalidContact = "invalid contact";
-        String invalidAddress = "invalid address";
-        String invalidPassword = "Invalid password";
 
                 if (staffReg.getName().equals(null) || staffReg.getName().equals("")) {
                     messageBox.showValidationInfo("The name you entered is empty", x, y, width - 20);
                     isValidated = false;
                 }
-                    else if (!Pattern.matches("^\\W?[a-zA-Z\\s]{4,30}$+",staffReg.getName())){
+                    else if (!Pattern.matches("^\\W?[a-zA-Z\\s]{4,30}$+", staffReg.getName())){
                     messageBox.showValidationInfo("     The name should not contain \n" +
-                            "       any digits or Symbol,or must not exceed to 30 characters", x, y, width - 20);
+                            "any digits or Symbol,or must not exceed to 30 characters", x, y, width - 20);
+                    isValidated = false;
                     }
 
+                else if (staffReg.getUsername().equals("")|| staffReg.getUsername().equals(null)){
+                    messageBox.showValidationInfo("The username you entered is empty", x, y, width - 20);
+                    isValidated = false;
+                }   else  if (!Pattern.matches("^[a-zA-Z0-9_-]{6,10}$+",staffReg.getUsername())){
+                    messageBox.showValidationInfo("Username must not contain any special character \n" +
+                            "rather than - or _ , Character size: 6-10", x, y, width - 20);
+                    isValidated = false;
+                     }
 
+                else if (staffReg.getContact().equals("")|| staffReg.getContact().equals(null)){
+                    messageBox.showValidationInfo("The Contact you entered is empty", x, y, width - 20);
+                    isValidated = false;
+                }
+                     else if (!Pattern.matches("^[\\d\\-]{13}$+",staffReg.getContact())) {
+                    messageBox.showValidationInfo("Your contact number must be 11 digits and have no \n" +
+                            "any special character", x, y, width - 20);
+                    isValidated = false;
+                     }
+
+                else if (!Pattern.matches("^[\\d]+\\s?[a-zA-Z\\.\\-\\s]+",staffReg.getAddress())){
+                    messageBox.showValidationInfo("Your Address must consist of 5 digits\n" +
+                            "any special character", x, y, width - 20);
+                    isValidated = false;
+                }else if (staffReg.getSq() == null){
+                    messageBox.showValidationInfo("Please add Secret Question", x, y, width - 20);
+                    isValidated = false;
+                }
+
+                else if (staffReg.getSecretAnswer().equals("")){
+                    messageBox.showValidationInfo("Please add Secret Answer \n for your secret question", x, y, width - 20);
+                    isValidated = false;
+                }
+                else if (!Pattern.matches("^[a-zA-Z0-9\\s_.-]+",staffReg.getSecretAnswer())){
+                    messageBox.showValidationInfo("please avoid using uneccessary symbols", x, y, width - 20);
+                    isValidated = false;
+                }
+                else if (staffReg.getPassword().equals("")|| staffReg.getComfirmpass().equals("")){
+                    messageBox.showValidationInfo("Please add your desired password", x, y, width - 20);
+                    isValidated = false;
+                }
+
+                else if (!staffReg.getPassword().equals(staffReg.getComfirmpass())){
+                    messageBox.showValidationInfo("Password don't match", x, y, width - 20);
+                    isValidated = false;
+                }
+
+                else if (!Pattern.matches("^[a-zA-Z0-9]{6,15}$+",staffReg.getPassword())){
+                    messageBox.showValidationInfo("Please change your password \n and avoid using special characters", x, y, width - 20);
+                    isValidated = false;
+                }else if (staffReg.getGender().equals("")){
+                    messageBox.showValidationInfo("Please select your biological gender", x, y, width - 20);
+                    isValidated = false;
+                }
+                // match the inut keycode from database admin keycode
+                else if (keyCode.equals("")){
+                    messageBox.showValidationInfo("The keyCode you entered is Empty", x, y, width - 20);
+                    isValidated = false;
+                }
+                else if (!ctr.getAdminKeyCode(keyCode)){
+                    messageBox.showValidationInfo("The keyCode you entered is invalid", x, y, width - 20);
+                    isValidated = false;
+                }
+                else {
+                    isValidated = true;
+                }
 
 
         return isValidated;
     }
-
-
 
     public  void close(){
         loginStage.clseWithAnimation();
@@ -486,5 +611,14 @@ public class LoginWindow  {
         this.isConnected = isConnected;
     }
 
+    // this event occur when client side cant reach the server
+    // this is being called from another class example by the time the
+    // it process information and suddenly we lose connection to server
+    public void setLoginStageToDisconnected(){
+        root.setCenter(null);
+        root.setCenter(setUpDisconnectedLogin());
+        toggleGroup.selectToggle(loginToggle);
+        loginStage.setHeight(290);
+    }
 
 }

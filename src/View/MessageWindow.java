@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
@@ -66,6 +67,7 @@ public class MessageWindow {
         Label label = new Label(message);
         label.setPadding(new Insets(2));
         label.setAlignment(Pos.CENTER);
+        label.setContentDisplay(ContentDisplay.CENTER);
 
 
         label.prefWidthProperty().bind(vBox.widthProperty());

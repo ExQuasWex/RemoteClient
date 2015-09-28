@@ -1,6 +1,7 @@
 package Controller;
 
 import ClientModel.Database;
+import clientModel.StaffRegister;
 
 import java.rmi.RemoteException;
 
@@ -24,10 +25,15 @@ public class Controller {
     return  clientDB.connectToServer();
     }
 
+    public void  Login(String user, String Pass) throws RemoteException{
+        clientDB.Login(user,Pass);
+    }
+    public boolean  getAdminKeyCode(String keycode) {
+        return  clientDB.getAdminKeyCode(keycode);
+    }
 
-
-    public void  Login(String user, String Pass){
-
+    public  boolean register(StaffRegister staffRegister){
+           return clientDB.register(staffRegister);
     }
 
 }
