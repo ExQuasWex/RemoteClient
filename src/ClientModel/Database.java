@@ -2,7 +2,6 @@ package ClientModel;
 
 import RMI.Constant;
 import RMI.RemoteMethods;
-import View.LoginWindow;
 import clientModel.StaffRegister;
 import javafx.scene.control.Alert;
 
@@ -18,7 +17,7 @@ import java.sql.SQLException;
  */
 public class Database extends UnicastRemoteObject implements RemoteMethods {
 
-    RemoteMethods rm;
+    RemoteMethods server;
     Alert alertBox;
     public Database() throws RemoteException {
 
@@ -27,29 +26,16 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
     @Override
     public boolean checkDatabase() throws RemoteException, SQLException {
         connectToServer();
-        return rm.checkDatabase();
+        return server.checkDatabase();
     }
-
-
-
-
-    private void connectionError(){
-        alertBox = new Alert(Alert.AlertType.ERROR);
-        alertBox.setHeaderText(null);
-        alertBox.setTitle("Error information");
-        alertBox.setContentText("We cant connect to server as of the moment");
-        alertBox.show();
-        LoginWindow.getInstantance().setLoginStageToDisconnected();
-    }
-
 
     public boolean connectToServer(){
         boolean bol;
         try {
 
             Registry reg = LocateRegistry.getRegistry("Localhost",Constant.Remote_port);
-            rm = (RemoteMethods) reg.lookup(Constant.Remote_ID);
-            bol = rm.checkDatabase();
+            server = (RemoteMethods) reg.lookup(Constant.Remote_ID);
+            bol = server.checkDatabase();
 
         } catch (RemoteException e) {
             System.out.println("Client:Database:connectToServer:RemoteException");
@@ -68,20 +54,13 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
 
     // CLIENT BASIC METHODS
 
-
     @Override
     public boolean getAdminKeyCode(String keycode) {
         boolean bool = false;
         try {
-            if (!connectToServer()){
-                connectionError();
-            }else{
-                bool = rm.getAdminKeyCode(keycode);
-            }
-
+                bool = server.getAdminKeyCode(keycode);
         }catch (RemoteException e){
             e.printStackTrace();
-            connectionError();
             System.out.println("Client:Database:getAdminkeyCode:RemoteException");
         }
 
@@ -92,29 +71,40 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
     public boolean register(StaffRegister staffRegister){
         boolean isRegistered;
         try {
-            if (!connectToServer()){
-                isRegistered = false;
-                connectionError();
-            }else{
-                rm.register(staffRegister);
-                isRegistered = true;
-            }
+                isRegistered = server.register(staffRegister);
 
         }catch (RemoteException e){
-            e.printStackTrace();
-            connectionError();
             isRegistered = false;
             System.out.println("Client:Database:register:RemoteException");
         }
-
         return isRegistered;
     }
 
     @Override
-    public boolean Login(String user, String pass) throws RemoteException {
-        connectToServer();
-        System.out.println(rm.Login(user,pass));
-        return   rm.Login(user,pass);
+    public boolean getUsername(String username)  {
+        boolean bol = false;
+
+        try {
+            bol = server.getUsername(username);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            bol = false;
+        }
+        return bol;
+    }
+
+    @Override
+    public boolean Login(String user, String pass)  {
+    boolean bool = false;
+        try {
+              bool = server.Login(user,pass);
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            bool = false;
+        }
+        return bool;
+
     }
 
 

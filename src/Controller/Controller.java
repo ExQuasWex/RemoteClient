@@ -25,8 +25,8 @@ public class Controller {
     return  clientDB.connectToServer();
     }
 
-    public void  Login(String user, String Pass) throws RemoteException{
-        clientDB.Login(user,Pass);
+    public boolean  Login(String user, String Pass) {
+        return  clientDB.Login(user,Pass);
     }
     public boolean  getAdminKeyCode(String keycode) {
         return  clientDB.getAdminKeyCode(keycode);
@@ -36,4 +36,7 @@ public class Controller {
            return clientDB.register(staffRegister);
     }
 
+    public boolean getUsername(String username){
+        return clientDB.getUsername(username);
+    }
 }
