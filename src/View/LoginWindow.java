@@ -25,10 +25,6 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import utility.Utility;
 
-import javax.xml.soap.Text;
-import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.rmi.RemoteException;
 import java.util.regex.Pattern;
 
 /**
@@ -197,7 +193,6 @@ public class LoginWindow  {
         cancelButton.setDisable(false);
 
 
-
         // Handle Login Button
         loginButton.setOnAction(e -> {
             String username = userText.getText();
@@ -208,10 +203,17 @@ public class LoginWindow  {
                 if (ctr.Login(username, password)){
                     userText.setText("");
                     userPass.setText("");
-                    // close frame
-                    System.out.println("login successfully");
+
+                    loginStage.close();
+                  ClientFrame main =   ClientFrame.getInstance();
+                  //main.showClient();
+
                 }else {
-                    System.out.println("invalid username or password");
+                    alertBox = new Alert(Alert.AlertType.ERROR);
+                    alertBox.setHeaderText(null);
+                    alertBox.setTitle("Error information");
+                    alertBox.setContentText("Invalid username or password");
+                    alertBox.show();
                 }
             }
             else{
@@ -478,7 +480,6 @@ public class LoginWindow  {
 
         return  registerVbox;
     }
-
 
     private void connectToServer(){
         Thread thread = new Thread(new Runnable() {

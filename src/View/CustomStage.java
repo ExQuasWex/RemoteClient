@@ -150,6 +150,7 @@ public class CustomStage extends Stage {
         t1.getKeyFrames().addAll(kf, kf1, kf2,kf3);
         t1.play();
 
+
     }
 
     public double getScreenMaxHeight(){
