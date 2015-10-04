@@ -9,11 +9,13 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 /**
@@ -26,20 +28,22 @@ public class SlidePane extends HBox{
     private final double prefWidth;
 
     public SlidePane(double prefW){
-
+        getStylesheets().add("/CSS/Slidepane.css");
         prefWidth = prefW/2;
         setPrefWidth(prefWidth * 1.5);
 
-
-        Label accountinfo = new Label("Account");
+        Label accountinfo = new Label( "Account");
         Label form = new Label("Form");
-        accountinfo.setStyle("-fx-background-color: black");
-        form.setStyle("-fx-background-color: dimgray");
 
-        accountinfo.setStyle("-fx-text-fill: aliceblue");
-        form.setStyle("-fx-text-fill: aliceblue");
+        accountinfo.setPrefWidth(prefWidth-4);
+        form.setPrefWidth(prefWidth-4);
+
+
+
 
         leftVbox = new VBox();
+        leftVbox.getStyleClass().add("vBox-list");
+        leftVbox.setFillWidth(true);
         leftVbox.setAlignment(Pos.TOP_CENTER);
         leftVbox.setPrefWidth(prefWidth);
         leftVbox.getChildren().addAll(accountinfo,form);

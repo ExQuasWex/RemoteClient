@@ -40,6 +40,7 @@ public class ClientFrame {
         root.setLeft(sp);
 
         Scene scene = new Scene(root);
+
         clientStage.setScene(scene);
         clientStage.centerOnScreen();
         clientStage.show();

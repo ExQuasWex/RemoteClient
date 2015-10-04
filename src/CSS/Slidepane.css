@@ -1,0 +1,13 @@
+.vBox-list{
+    -fx-background-color: #383838;
+}
+
+.label {
+    -fx-text-fill: aliceblue;
+    -fx-border-color: #585858;
+    -fx-alignment: center;
+
+    -fx-highlight-text-fill: #585858;
+
+}
+
