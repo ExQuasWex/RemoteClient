@@ -490,7 +490,6 @@ public class LoginWindow  {
                     isConnected = isServerConnected();
                     while (!isConnected){
                         isConnected = isServerConnected();
-                        System.out.println("connecting to server");
                         if (isConnected){
                                         Platform.runLater(new Runnable() {
                                             @Override

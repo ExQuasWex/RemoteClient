@@ -7,7 +7,10 @@
     -fx-border-color: #585858;
     -fx-alignment: center;
 
-    -fx-highlight-text-fill: #585858;
 
+}
+.label:hover{
+    -fx-background-color: aliceblue;
+    -fx-text-fill: #383838;
 }
 

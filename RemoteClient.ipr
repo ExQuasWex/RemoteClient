@@ -152,15 +152,14 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/RemoteClient.iml" filepath="$PROJECT_DIR$/RemoteClient.iml" />
-      <module fileurl="file://$USER_HOME$/RemoteMethod/RemoteMethod.iml" filepath="$USER_HOME$/RemoteMethod/RemoteMethod.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../RemoteMethod/RemoteMethod.iml" filepath="$PROJECT_DIR$/../RemoteMethod/RemoteMethod.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" assert-keyword="true" jdk-15="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="VcsDirectoryMappings">
-    <mapping directory="" vcs="" />
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$USER_HOME$/RemoteMethod" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../RemoteMethod" vcs="Git" />
   </component>
 </project>
