@@ -28,6 +28,7 @@ public class SlidePane extends HBox{
     private final double prefWidth;
 
     public SlidePane(double prefW){
+
         getStylesheets().add("/CSS/Slidepane.css");
         prefWidth = prefW/2;
         setPrefWidth(prefWidth * 1.5);
@@ -35,10 +36,12 @@ public class SlidePane extends HBox{
         Label accountinfo = new Label( "Account");
         Label form = new Label("Form");
 
-        accountinfo.setPrefWidth(prefWidth-4);
-        form.setPrefWidth(prefWidth-4);
 
-
+        // sizing
+        accountinfo.setPrefWidth(prefWidth-2);
+        form.setPrefWidth(prefWidth-2);
+        accountinfo.setPrefHeight(30);
+        form.setPrefHeight(30);
 
 
         leftVbox = new VBox();
@@ -48,28 +51,52 @@ public class SlidePane extends HBox{
         leftVbox.setPrefWidth(prefWidth);
         leftVbox.getChildren().addAll(accountinfo,form);
 
-        Image arrow = new Image(getClass().getResourceAsStream("/images/leftArrow.png"),60,80,false,true);
-        Label slideB = new Label();
-        slideB.setGraphic(new ImageView(arrow));
+        Image arrow = new Image(getClass().getResourceAsStream("/images/leftArrow.png"),40,70,false,true);
+        Label slideArrow = new Label();
+        slideArrow.getStyleClass().add("label-arrow");
+        slideArrow.setGraphic(new ImageView(arrow));
 
         VBox rightVbox = new VBox();
-        rightVbox.getChildren().add(slideB);
+        rightVbox.getChildren().add(slideArrow);
         rightVbox.setAlignment(Pos.CENTER);
 
 
-            slideB.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            slideArrow.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    if (isOFF){
+                    if (isOFF) {
                         animateOn();
                         isOFF = false;
-                    }else {
+                    } else {
                         animateOff();
 
                         isOFF = true;
                     }
                 }
             });
+
+        slideArrow.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                System.out.println("enteer");
+            }
+        });
+
+        slideArrow.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                System.out.println("exit");
+            }
+        });
+
+        accountinfo.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                System.out.println("account is clicked");
+                    ClientFrame.getInstance().setAccountForm();
+
+            }
+        });
 
 
 

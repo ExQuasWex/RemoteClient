@@ -21,6 +21,7 @@ public class ClientFrame {
 
     private static CustomStage clientStage ;
     private static ClientFrame mainframe = new ClientFrame();
+    BorderPane root;
 
     private ClientFrame(){
 
@@ -30,12 +31,12 @@ public class ClientFrame {
         clientStage.setMaxWidth(screen.getWidth());
         clientStage.setMaxHeight(screen.getHeight());
 
-        clientStage.setHeight(clientStage.getMaxHeight());
+        clientStage.setHeight(clientStage.getMaxHeight()-20);
         clientStage.setWidth(clientStage.getMaxWidth());
 
         SlidePane sp = new SlidePane(500);
 
-        BorderPane root = new BorderPane();
+        root = new BorderPane();
         root.setCenter(new Label("Center"));
         root.setLeft(sp);
 
@@ -44,6 +45,11 @@ public class ClientFrame {
         clientStage.setScene(scene);
         clientStage.centerOnScreen();
         clientStage.show();
+    }
+
+    public void setAccountForm(){
+        root.setCenter(null);
+        root.setCenter(new Label("AccountForm"));
     }
 
     public static ClientFrame getInstance(){
