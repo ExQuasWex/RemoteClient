@@ -7,10 +7,20 @@
     -fx-border-color: #585858;
     -fx-alignment: center;
 
-
 }
 .label:hover{
     -fx-background-color: aliceblue;
     -fx-text-fill: #383838;
 }
+
+.label-arrow{
+    -fx-border-color: null ;
+
+}
+.label-arrow:hover{
+    -fx-background-color: null;
+    -fx-text-fill: null;
+
+}
+
 
