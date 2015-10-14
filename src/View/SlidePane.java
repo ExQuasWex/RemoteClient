@@ -30,15 +30,13 @@ public class SlidePane extends HBox{
     public SlidePane(double prefW){
         getStylesheets().add("/CSS/Slidepane.css");
         prefWidth = prefW/2;
-        setPrefWidth(prefWidth * 1.5);
+        setPrefWidth(prefWidth * 1.2);
 
         Label accountinfo = new Label( "Account");
         Label form = new Label("Form");
 
         accountinfo.setPrefWidth(prefWidth-4);
         form.setPrefWidth(prefWidth-4);
-
-
 
 
         leftVbox = new VBox();
@@ -65,9 +63,15 @@ public class SlidePane extends HBox{
                         isOFF = false;
                     }else {
                         animateOff();
-
                         isOFF = true;
                     }
+                }
+            });
+
+            accountinfo.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    ClientFrame.getInstance().showAccount();
                 }
             });
 
@@ -75,15 +79,17 @@ public class SlidePane extends HBox{
 
         //splitpane
         getChildren().addAll(leftVbox, rightVbox);
+        setStyle("-fx-border-color: #585858");
 
     }
+
 
     public  void animateOn(){
         getChildren().add(0,leftVbox);
         KeyValue kv = new KeyValue(leftVbox.prefWidthProperty(), prefWidth);
         KeyFrame kf = new KeyFrame(Duration.millis(300), kv);
 
-        KeyValue kv2 = new KeyValue(prefWidthProperty(),prefWidth * 1.5);
+        KeyValue kv2 = new KeyValue(prefWidthProperty(),prefWidth * 1.2);
         KeyFrame kf2 = new KeyFrame(Duration.millis(300), kv2);
 
         Timeline t = new Timeline();
@@ -98,7 +104,7 @@ public class SlidePane extends HBox{
         KeyFrame kf = new KeyFrame(Duration.millis(300), kv);
         Timeline t = new Timeline();
 
-        KeyValue kv2 = new KeyValue(prefWidthProperty(),prefWidth/2);
+        KeyValue kv2 = new KeyValue(prefWidthProperty(),prefWidth/10);
         KeyFrame kf2 = new KeyFrame(Duration.millis(300), kv2);
 
         t.getKeyFrames().addAll(kf, kf2);

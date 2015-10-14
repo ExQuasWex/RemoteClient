@@ -54,7 +54,7 @@ public class MessageWindow {
         noBtn = new Button("No");
         stage = new CustomStage(30,30,350,150);
 
-        controller = new Controller();
+        controller = Controller.getInstance();
 
     }
 

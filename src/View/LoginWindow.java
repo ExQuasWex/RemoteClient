@@ -29,8 +29,8 @@ import java.util.regex.Pattern;
 
 /**
  * Created by Didoy on 8/24/2015.
- * if the server is down the this class will show disconnected login from setUpDisconnectedLogin()
- * and will try to reconnect by connectToServer()
+ * if the server is down this class will show disconnected login from setUpDisconnectedLogin()
+ * and will try to reconnect by connectToServer() method
  * if not it will show login window
  *
  * Height = 240 connected
@@ -63,7 +63,7 @@ public class LoginWindow  {
 
     private  LoginWindow(){
 
-        ctr = new Controller();
+        ctr = Controller.getInstance();
         isConnected = ctr.isServerConnected();
 
         root = new BorderPane();
@@ -146,6 +146,7 @@ public class LoginWindow  {
         }
 
         scene = new Scene(root);
+        scene.getStylesheets().add("/CSS/Login.css");
         loginStage.setScene(scene);
         loginStage.setX(0);
         loginStage.setY(loginStage.getScreenMaxHeight());
@@ -242,7 +243,6 @@ public class LoginWindow  {
 
     private GridPane setUpDisconnectedLogin(){
 
-        Image img = new Image(getClass().getResourceAsStream("/images/30.gif"));
         Image imgLogo = new Image(getClass().getResourceAsStream("/images/mblctLogo.png"),100,100,false,true);
 
         Label connectingL = new Label("Connecting to Server. . .");
@@ -269,12 +269,12 @@ public class LoginWindow  {
         gridPane.setHalignment(logoLabel, HPos.CENTER);
         logoLabel.setGraphic(new ImageView(imgLogo));
 
-        Label label = new Label();
-        label.setGraphic(new ImageView(img));
+        ProgressBar pb = new ProgressBar();
+        pb.setPrefWidth(190);
 
         gridPane.setConstraints(logoLabel, 0, 0, 2, 1, HPos.CENTER, VPos.CENTER);
-        gridPane.setConstraints(label, 0, 1, 2, 1, HPos.CENTER, VPos.CENTER);
-        gridPane.setConstraints(connectingL,0,2,2,1,HPos.CENTER,VPos.CENTER);
+        gridPane.setConstraints(connectingL,0,1,2,1,HPos.CENTER,VPos.CENTER);
+        gridPane.setConstraints(pb, 0, 2, 2, 1, HPos.CENTER, VPos.CENTER);
 
         userText.setPrefColumnCount(15);
         userPass.setPrefColumnCount(15);
@@ -287,7 +287,7 @@ public class LoginWindow  {
         gridPane.setConstraints(loginButton, 0, 5, 2, 1, HPos.CENTER, VPos.CENTER);
         gridPane.setConstraints(cancelButton, 0, 5, 2, 1, HPos.CENTER, VPos.CENTER);
 
-        gridPane.getChildren().addAll(logoLabel,label,connectingL,userText,userPass,loginButton,cancelButton);
+        gridPane.getChildren().addAll(logoLabel,pb,connectingL,userText,userPass,loginButton,cancelButton);
 
         loginToggle.setDisable(true);
         registerToggle.setDisable(true);

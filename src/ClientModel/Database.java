@@ -2,6 +2,7 @@ package ClientModel;
 
 import RMI.Constant;
 import RMI.RemoteMethods;
+import clientModel.StaffInfo;
 import clientModel.StaffRegister;
 import javafx.scene.control.Alert;
 
@@ -94,17 +95,15 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
     }
 
     @Override
-    public boolean Login(String user, String pass)  {
-    boolean bool = false;
+    public StaffInfo Login(String user, String pass)  {
+    StaffInfo staffInfo = null;
         try {
-              bool = server.Login(user,pass);
+               staffInfo = server.Login(user,pass);
 
         } catch (RemoteException e) {
             e.printStackTrace();
-            bool = false;
         }
-        return bool;
-
+    return staffInfo;
     }
 
 

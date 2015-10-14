@@ -1,6 +1,7 @@
 package Controller;
 
 import ClientModel.Database;
+import clientModel.StaffInfo;
 import clientModel.StaffRegister;
 
 import java.rmi.RemoteException;
@@ -11,8 +12,10 @@ import java.rmi.RemoteException;
 public class Controller {
 
     Database clientDB ;
+    private  StaffInfo staffInfo;
 
-    public Controller() {
+    private static Controller controller = new Controller();
+    private Controller() {
 
         try {
             clientDB = new Database();
@@ -26,8 +29,15 @@ public class Controller {
     }
 
     public boolean  Login(String user, String Pass) {
-        return  clientDB.Login(user,Pass);
+        StaffInfo staffInfo = clientDB.Login(user,Pass);
+        this.staffInfo = staffInfo;
+        return staffInfo.isValid();
+
     }
+    public  StaffInfo getStaffInfo(){
+    return staffInfo;
+    }
+
     public boolean  getAdminKeyCode(String keycode) {
         return  clientDB.getAdminKeyCode(keycode);
     }
@@ -38,5 +48,8 @@ public class Controller {
 
     public boolean getUsername(String username){
         return clientDB.getUsername(username);
+    }
+    public  static  Controller getInstance(){
+        return controller;
     }
 }

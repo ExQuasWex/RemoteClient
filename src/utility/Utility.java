@@ -16,7 +16,7 @@ public class Utility {
      Controller controller;
      private boolean isConnected;
     public Utility(){
-        controller = new Controller();
+        controller = Controller.getInstance();
     }
 
     public boolean confirmExit(){
