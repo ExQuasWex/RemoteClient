@@ -1,5 +1,7 @@
-package View;
+package View.Login;
 
+import View.ClientWindow.ClientFrame;
+import clientModel.StaffInfo;
 import clientModel.StaffRegister;
 import Controller.Controller;
 import clientModel.SecretQuestion;
@@ -205,17 +207,26 @@ public class LoginWindow  {
                     userText.setText("");
                     userPass.setText("");
 
-                    loginStage.close();
-                  ClientFrame main =   ClientFrame.getInstance();
-                  //main.showClient();
+                    StaffInfo staffInfo = ctr.getStaffInfo();
 
-                }else {
+                    if (staffInfo.getStatus().equals("Online")){
+                        alertBox = new Alert(Alert.AlertType.ERROR);
+                        alertBox.setHeaderText(null);
+                        alertBox.setTitle("Error information");
+                        alertBox.setContentText("The account is being used in other terminal");
+                        alertBox.show();
+                    }else {
+                        loginStage.close();
+                        ClientFrame main =   ClientFrame.getInstance();
+                    }
+            }   else {
+
                     alertBox = new Alert(Alert.AlertType.ERROR);
                     alertBox.setHeaderText(null);
                     alertBox.setTitle("Error information");
                     alertBox.setContentText("Invalid username or password");
                     alertBox.show();
-                }
+            }
             }
             else{
                 userText.setText("");

@@ -98,8 +98,7 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
     public StaffInfo Login(String user, String pass)  {
     StaffInfo staffInfo = null;
         try {
-               staffInfo = server.Login(user,pass);
-
+            staffInfo = server.Login(user,pass);
         } catch (RemoteException e) {
             e.printStackTrace();
         }

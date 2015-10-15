@@ -1,20 +1,16 @@
-package View;
+package View.ClientWindow;
 
 import Controller.Controller;
+import View.Login.CustomStage;
 import clientModel.StaffInfo;
 import javafx.geometry.*;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.stage.Screen;
 import javafx.stage.StageStyle;
 
-import javax.tools.Tool;
 import java.awt.*;
 
 /**

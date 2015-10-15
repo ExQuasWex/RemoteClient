@@ -1,7 +1,6 @@
 package utility;
 
 import Controller.Controller;
-import View.LoginWindow;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
