@@ -30,17 +30,20 @@ public class SlidePane extends HBox{
 
         Label accountinfo = new Label( "Account");
         Label form = new Label("Form");
+        Label help = new Label("Help");
+        Label logout = new Label("Logout");
 
         accountinfo.setPrefWidth(prefWidth-4);
         form.setPrefWidth(prefWidth-4);
-
+        help.setPrefWidth(prefWidth-4);
+        logout.setPrefWidth(prefWidth-4);
 
         leftVbox = new VBox();
         leftVbox.getStyleClass().add("vBox-list");
         leftVbox.setFillWidth(true);
         leftVbox.setAlignment(Pos.TOP_CENTER);
         leftVbox.setPrefWidth(prefWidth);
-        leftVbox.getChildren().addAll(accountinfo,form);
+        leftVbox.getChildren().addAll(accountinfo,form,help,logout);
 
         Image arrow = new Image(getClass().getResourceAsStream("/images/leftArrow.png"),60,80,false,true);
         Label slideB = new Label();
@@ -67,7 +70,21 @@ public class SlidePane extends HBox{
             accountinfo.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    ClientFrame.getInstance().showAccount();
+                    ClientWindow.getInstance().showAccount();
+                }
+            });
+
+            form.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    ClientWindow.getInstance().showFamilyForm();
+                }
+            });
+
+            logout.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    ClientWindow.getInstance().Logout();
                 }
             });
 

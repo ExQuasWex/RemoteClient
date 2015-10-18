@@ -1,37 +1,33 @@
 package View.ClientWindow;
 
 import Controller.Controller;
-import View.Login.CustomStage;
+import View.Login.LoginWindow;
 import clientModel.StaffInfo;
 import javafx.geometry.*;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.awt.*;
+import java.util.Optional;
 
 /**
  * Created by Didoy on 9/30/2015.
  */
-public class ClientFrame {
+public class ClientWindow extends Stage{
 
-    private static CustomStage clientStage ;
-    private static ClientFrame mainframe = new ClientFrame();
+    private static ClientWindow mainframe = new ClientWindow();
     private BorderPane root;
 
-    private ClientFrame(){
+    private ClientWindow(){
 
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-        clientStage =  new CustomStage(30,30,screen.getWidth(),screen.getHeight());
-        clientStage.initStyle(StageStyle.DECORATED);
-        clientStage.setMaxWidth(screen.getWidth());
-        clientStage.setMaxHeight(screen.getHeight());
-
-        clientStage.setHeight(clientStage.getMaxHeight());
-        clientStage.setWidth(clientStage.getMaxWidth());
 
         SlidePane sp = new SlidePane(500);
 
@@ -41,12 +37,16 @@ public class ClientFrame {
 
         Scene scene = new Scene(root);
 
-        clientStage.setScene(scene);
-        clientStage.centerOnScreen();
-        clientStage.show();
+        setWidth(screen.getWidth());
+        setHeight(screen.getHeight());
+
+        setScene(scene);
+        centerOnScreen();
+        show();
+
     }
 
-    public static ClientFrame getInstance(){
+    public static ClientWindow getInstance(){
         return mainframe;
     }
     public void showAccount(){
@@ -104,9 +104,39 @@ public class ClientFrame {
         root.setCenter(null);
         root.setCenter(gp);
 
+
     }
-    public void showClient(){
-        clientStage.showWithAnimation();
+    public void showFamilyForm(){
+        FamilyForm fm = new FamilyForm();
+        root.setCenter(null);
+        root.setCenter(fm);
+    }
+
+    public void Logout(){
+        Alert alertBox = new Alert(Alert.AlertType.CONFIRMATION);
+        alertBox.setContentText("Are you sure you want to Logout?");
+        alertBox.setHeaderText(null);
+
+        Optional<ButtonType> result = alertBox.showAndWait();
+        if (result.get() == ButtonType.OK){
+            closeClientWindow();
+
+        }else if (result.get() == ButtonType.CANCEL){
+            alertBox.close();
+        }
+
+    }
+
+    public void closeClientWindow(){
+        Controller.getInstance().Logout();
+        LoginWindow.getInstantance().showLoginWindow(true);
+        System.out.println("log out fnish");
+        close();
+
+    }
+    public void showClientWindow(){
+        show();
+
     }
 
 

@@ -1,11 +1,13 @@
 package ClientModel;
 
+import Controller.Controller;
 import RMI.Constant;
 import RMI.RemoteMethods;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
 import javafx.scene.control.Alert;
 
+import java.rmi.ConnectException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -18,9 +20,25 @@ import java.sql.SQLException;
  */
 public class Database extends UnicastRemoteObject implements RemoteMethods {
 
-    RemoteMethods server;
-    Alert alertBox;
+   private RemoteMethods server;
+   private Alert alertBox;
+   private boolean bol;
+   private String ipAddress = "localhost"; //Local IP address
+   private  Registry reg;
+
+
     public Database() throws RemoteException {
+
+        try {
+             reg = LocateRegistry.getRegistry(System.setProperty("java.rmi.server.hostname",ipAddress),Constant.Remote_port);
+            //Registry reg = LocateRegistry.getRegistry("localhost",Constant.Remote_port);
+             server = (RemoteMethods) reg.lookup(Constant.Remote_ID);
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+        } catch (ConnectException ce){
+            ce.printStackTrace();
+
+        }
 
     }
 
@@ -31,24 +49,42 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
     }
 
     public boolean connectToServer(){
-        boolean bol;
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    reg = LocateRegistry.getRegistry(System.setProperty("java.rmi.server.hostname",ipAddress),Constant.Remote_port);
+                    //Registry reg = LocateRegistry.getRegistry("localhost",Constant.Remote_port);
+                    server = (RemoteMethods) reg.lookup(Constant.Remote_ID);
+
+                    bol = server.checkDatabase();
+                    System.out.println(bol);
+
+                } catch (RemoteException e) {
+                    System.out.println("Client:Database:connectToServer:RemoteException");
+                    bol = false;
+
+                } catch (SQLException s){
+                    System.out.println("Client:Database:connectToServer:SQLException");
+                    bol = false;
+                } catch (NotBoundException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+
         try {
-
-            Registry reg = LocateRegistry.getRegistry("Localhost",Constant.Remote_port);
-            server = (RemoteMethods) reg.lookup(Constant.Remote_ID);
-            bol = server.checkDatabase();
-
-        } catch (RemoteException e) {
-            System.out.println("Client:Database:connectToServer:RemoteException");
-            bol = false;
-
-        } catch (NotBoundException z) {
-            System.out.println("Client:Database:connectToServer:NotBoundException");
-            bol = false;
-        } catch (SQLException s){
-            System.out.println("Client:Database:connectToServer:SQLException");
-            bol = false;
+            t1.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
+        t1.start();
+
+
+
         return bol;
     }
 
@@ -95,15 +131,26 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
     }
 
     @Override
+    public void Logout(int accountID)  {
+        try {
+            server.Logout(accountID);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public StaffInfo Login(String user, String pass)  {
     StaffInfo staffInfo = null;
         try {
             staffInfo = server.Login(user,pass);
         } catch (RemoteException e) {
+            Controller.getInstance().setLoginToDisconnected();
             e.printStackTrace();
         }
     return staffInfo;
     }
+
 
 
 

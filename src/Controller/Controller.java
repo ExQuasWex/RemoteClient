@@ -1,6 +1,7 @@
 package Controller;
 
 import ClientModel.Database;
+import View.Login.LoginWindow;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
 
@@ -13,6 +14,8 @@ public class Controller {
 
     Database clientDB ;
     private  StaffInfo staffInfo;
+    private boolean isServerConnected;
+
 
     private static Controller controller = new Controller();
     private Controller() {
@@ -25,7 +28,8 @@ public class Controller {
     }
 
     public boolean isServerConnected(){           // check the server if is UP
-    return  clientDB.connectToServer();
+       isServerConnected  = clientDB.connectToServer();
+        return  isServerConnected;
     }
 
     public boolean  Login(String user, String Pass) {
@@ -51,5 +55,14 @@ public class Controller {
     }
     public  static  Controller getInstance(){
         return controller;
+    }
+
+    public  void Logout(){
+            clientDB.Logout(staffInfo.getAccountID());
+    }
+
+    // clientdb to Login
+    public void setLoginToDisconnected(){
+        LoginWindow.getInstantance().setLoginStageToDisconnected();
     }
 }

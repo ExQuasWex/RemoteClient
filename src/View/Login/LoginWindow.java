@@ -1,6 +1,6 @@
 package View.Login;
 
-import View.ClientWindow.ClientFrame;
+import View.ClientWindow.ClientWindow;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
 import Controller.Controller;
@@ -22,8 +22,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import utility.Utility;
 
@@ -63,10 +65,13 @@ public class LoginWindow  {
 
     private Alert alertBox;
 
+    private double dragX;
+    private double dragY;
+
     private  LoginWindow(){
 
         ctr = Controller.getInstance();
-        isConnected = ctr.isServerConnected();
+        isConnected = isServerConnected();
 
         root = new BorderPane();
         gridPane = new GridPane();
@@ -156,6 +161,29 @@ public class LoginWindow  {
         loginStage.initStyle(StageStyle.UNDECORATED);
         loginStage.setTitle("Log In");
 
+        root.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                dragX = loginStage.getX() - event.getScreenX() ;
+                dragY = loginStage.getY() - event.getScreenY() ;
+
+
+            }
+        });
+
+        root.setOnMouseReleased(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                dragX = event.getScreenX() + dragX;
+                dragY = event.getScreenY() + dragY;
+
+                loginStage.setX(dragX);
+                loginStage.setY(dragY);
+
+
+            }
+        });
+
         loginStage.showWithAnimation();
     }
 
@@ -202,7 +230,7 @@ public class LoginWindow  {
             String password = userPass.getText();
 
 
-            if (ctr.isServerConnected()){
+            if (isServerConnected()){
                 if (ctr.Login(username, password)){
                     userText.setText("");
                     userPass.setText("");
@@ -216,10 +244,11 @@ public class LoginWindow  {
                         alertBox.setContentText("The account is being used in other terminal");
                         alertBox.show();
                     }else {
+                        showClientWindow();
                         loginStage.close();
-                        ClientFrame main =   ClientFrame.getInstance();
+
                     }
-            }   else {
+                }else {
 
                     alertBox = new Alert(Alert.AlertType.ERROR);
                     alertBox.setHeaderText(null);
@@ -409,7 +438,7 @@ public class LoginWindow  {
         save.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (!ctr.isServerConnected()){
+                if (!isServerConnected()){
 
                     setLoginStageToDisconnected();
                 }else{
@@ -497,11 +526,10 @@ public class LoginWindow  {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(1300);
-                    isConnected = isServerConnected();
+
                     while (!isConnected){
-                        isConnected = isServerConnected();
-                        if (isConnected){
+                        Thread.sleep(1500);
+                        if (isServerConnected()){
                                         Platform.runLater(new Runnable() {
                                             @Override
                                             public void run() {
@@ -520,6 +548,8 @@ public class LoginWindow  {
             }
         });
         thread.start();
+
+
 
     }
     private  boolean isServerConnected(){
@@ -626,8 +656,8 @@ public class LoginWindow  {
     }
 
     public void showLoginWindow(boolean isConnected){
-        this.isConnected = isConnected;
-    }
+        loginStage.show();
+        }
 
     // this event occur when client side cant reach the server
     // this is being called from another class example by the time the
@@ -643,6 +673,21 @@ public class LoginWindow  {
         root.setCenter(setUpDisconnectedLogin());
         toggleGroup.selectToggle(loginToggle);
         loginStage.setHeight(290);
+    }
+
+    public void showClientWindow(){
+        ClientWindow cw = ClientWindow.getInstance();
+
+        cw.show();
+        cw.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                cw.closeClientWindow();
+            }
+        });
+
+
+
     }
 
 }

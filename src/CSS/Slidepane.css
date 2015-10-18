@@ -6,7 +6,6 @@
     -fx-text-fill: aliceblue;
     -fx-border-color: #585858;
     -fx-alignment: center;
-
 }
 .label:hover{
     -fx-background-color: aliceblue;
