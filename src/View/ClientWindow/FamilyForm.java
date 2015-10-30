@@ -2,7 +2,7 @@ package View.ClientWindow;
 
 import Controller.Controller;
 import RMI.Constant;
-import clientModel.Family;
+import clientModel.F;
 import clientModel.FamilyInfo;
 import clientModel.FamilyPoverty;
 import javafx.beans.value.ChangeListener;
@@ -560,13 +560,13 @@ public class FamilyForm extends GridPane{
 
 
 
-        //familyFormListener.handle(family);
+        //familyFormListener.handle(Family);
 
 /*
-        boolean isValidated = validate(family);
+        boolean isValidated = validate(Family);
 
         if (isValidated){
-            familyFormListener.handle(family);
+            familyFormListener.handle(Family);
         }else{
             // let the validation method hanlde this
         }

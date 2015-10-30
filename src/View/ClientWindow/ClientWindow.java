@@ -60,7 +60,7 @@ public class ClientWindow extends Stage{
     public void addFamily(Family family){
 
         System.out.println(family.getFamilyinfo().getName());
-       // return Controller.getInstance().addFamilyInfo(family);
+       // return Controller.getInstance().addFamilyInfo(Family);
     }
 
     public static ClientWindow getInstance(){
