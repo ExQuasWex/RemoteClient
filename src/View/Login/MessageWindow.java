@@ -21,7 +21,6 @@ import javafx.scene.paint.Color;
  */
 public class MessageWindow {
 
-    private CustomStage stage;
     private Label content, imageLabel;
     private Button yesBtn, noBtn;
     private Scene scene;
@@ -35,25 +34,18 @@ public class MessageWindow {
 
     private  Controller controller;
 
-    public MessageWindow() {
+    private static  MessageWindow messageWindow = new MessageWindow();
 
-        gridPane = new GridPane();
-        borderPane = new BorderPane();
-        content = new Label("The server is Down would you like to Reconnect? \n " +
-                "                        this will take few Minutes");
-        imageLabel = new Label();
-        pi = new ProgressIndicator();
+    private CustomStage stage ;
 
-        yesBtn = new Button("Yes");
-        noBtn = new Button("No");
-        stage = new CustomStage(30,30,350,150);
-
-        controller = Controller.getInstance();
-
+    private MessageWindow() {
+      stage  = new CustomStage(30,30,350,150);
     }
 
 
+
     public  void showValidationInfo(String message, double x, double y, double width) {
+
         VBox vBox = new VBox();
         vBox.setPadding(new Insets(5));
         vBox.setAlignment(Pos.CENTER);
@@ -63,12 +55,10 @@ public class MessageWindow {
         label.setAlignment(Pos.CENTER);
         label.setContentDisplay(ContentDisplay.CENTER);
 
-
         label.prefWidthProperty().bind(vBox.widthProperty());
         label.prefHeightProperty().bind(vBox.heightProperty());
         label.setStyle("-fx-background-color: brown");
         label.setTextFill(Color.AZURE);
-
 
         Group g = new Group();
         g.getChildren().add(label);
@@ -79,9 +69,13 @@ public class MessageWindow {
         stage.setWidth(scene.getWidth());
         stage.setHeight(scene.getHeight());
         stage.setScene(scene);
-        stage.setX(x - (label.getPrefWidth()/2));
+        stage.setX(x - (label.getPrefWidth() / 2));
         stage.setY(y);
         stage.fadeShowAnimation();
+    }
+
+    public static MessageWindow getInstance(){
+        return messageWindow;
     }
 
 

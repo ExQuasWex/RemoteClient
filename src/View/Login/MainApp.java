@@ -30,7 +30,7 @@ public class MainApp extends Application {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-               LoginWindow login = LoginWindow.getInstantance();
+                   LoginWindow login = LoginWindow.getInstantance();
             }
         });
     }

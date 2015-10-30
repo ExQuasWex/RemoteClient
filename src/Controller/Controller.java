@@ -2,6 +2,7 @@ package Controller;
 
 import ClientModel.Database;
 import View.Login.LoginWindow;
+import clientModel.Family;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
 
@@ -38,6 +39,10 @@ public class Controller {
         return staffInfo.isValid();
 
     }
+    public  boolean addFamilyInfo(Family family){
+        return clientDB.addFamilyInfo(family);
+    }
+
     public  StaffInfo getStaffInfo(){
     return staffInfo;
     }

@@ -3,6 +3,7 @@ package ClientModel;
 import Controller.Controller;
 import RMI.Constant;
 import RMI.RemoteMethods;
+import clientModel.Family;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
 import javafx.scene.control.Alert;
@@ -58,7 +59,6 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
                     server = (RemoteMethods) reg.lookup(Constant.Remote_ID);
 
                     bol = server.checkDatabase();
-                    System.out.println(bol);
 
                 } catch (RemoteException e) {
                     System.out.println("Client:Database:connectToServer:RemoteException");
@@ -137,6 +137,19 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean addFamilyInfo(Family family)  {
+        boolean bool;
+
+        try {
+            bool =  server.addFamilyInfo(family);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            bool = false;
+        }
+        return bool;
     }
 
     @Override

@@ -2,6 +2,7 @@ package View.ClientWindow;
 
 import Controller.Controller;
 import View.Login.LoginWindow;
+import clientModel.Family;
 import clientModel.StaffInfo;
 import javafx.geometry.*;
 import javafx.scene.Scene;
@@ -24,6 +25,8 @@ public class ClientWindow extends Stage{
 
     private static ClientWindow mainframe = new ClientWindow();
     private BorderPane root;
+    private FamilyForm fm;
+
 
     private ClientWindow(){
 
@@ -40,15 +43,30 @@ public class ClientWindow extends Stage{
         setWidth(screen.getWidth());
         setHeight(screen.getHeight());
 
+        // Listener of familyForm
+        fm = new FamilyForm();
+        fm.addFamilyFormListener(new FamilyFormListener() {
+            @Override
+            public void handle(Family family) {
+                addFamily(family);
+            }
+        });
+
         setScene(scene);
         centerOnScreen();
         show();
+    }
 
+    public void addFamily(Family family){
+
+        System.out.println(family.getFamilyinfo().getName());
+       // return Controller.getInstance().addFamilyInfo(family);
     }
 
     public static ClientWindow getInstance(){
         return mainframe;
     }
+
     public void showAccount(){
         StaffInfo staffInfo = Controller.getInstance().getStaffInfo();
         GridPane gp = new GridPane();
@@ -107,7 +125,6 @@ public class ClientWindow extends Stage{
 
     }
     public void showFamilyForm(){
-        FamilyForm fm = new FamilyForm();
         root.setCenter(null);
         root.setCenter(fm);
     }
@@ -136,7 +153,6 @@ public class ClientWindow extends Stage{
     }
     public void showClientWindow(){
         show();
-
     }
 
 

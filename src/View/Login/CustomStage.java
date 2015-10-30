@@ -8,8 +8,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -32,6 +30,12 @@ public class CustomStage extends Stage {
     private double finalWidth;
     private double finalHeight;
 
+    private Timeline t1;
+    private KeyValue kv;
+    private KeyFrame kf1;
+    private boolean isPlaying;
+    private boolean isClosing;
+
     public CustomStage(double startingWidth, double startingHeight ,double FinalWidth, double FinalHeigt) {
 
         this.finalWidth = FinalWidth;
@@ -47,44 +51,72 @@ public class CustomStage extends Stage {
 
         centerY = (screenBound.getHeight()/2 - FinalHeigt/2) -100;
 
+        t1 = new Timeline();
+
     }
 
     public void fadeShowAnimation(){
+        setOpacity(1.0);
+        if (isPlaying){
 
-        Timeline t1 = new Timeline();
+            if (isClosing){
+                close();
+                show();
+                t1.stop();
+                t1.getKeyFrames().removeAll(kf1);
+                kv = new KeyValue(this.opacityProperty(),1.0);
+                kf1 = new KeyFrame(Duration.millis(3000), kv );
+                t1.getKeyFrames().addAll(kf1);
+                t1.play();
 
-        show();
-        KeyValue kv = new KeyValue(this.opacityProperty(),1.0);
-        KeyFrame kf1 = new KeyFrame(Duration.millis(1500), kv );
-        t1.getKeyFrames().add(kf1);
+            }else {
+                close();
+                show();
+                t1.stop();
+                t1.playFromStart();
+            }
 
-        t1.play();
+        }else{
+            isPlaying = true;
+            isClosing = false;
+            t1.getKeyFrames().removeAll(kf1);
+            show();
+            kv = new KeyValue(this.opacityProperty(),1.0);
+            kf1 = new KeyFrame(Duration.millis(3000), kv );
+            t1.getKeyFrames().add(kf1);
+            t1.play();
+        }
 
         t1.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                fadeCloseAnimation();
-            }
-        });
+                @Override
+                public void handle(ActionEvent event) {
+                    fadeCloseAnimation();
+                }
+            });
 
     }
     private void fadeCloseAnimation(){
-        Timeline t1 = new Timeline();
-
-        KeyValue kv = new KeyValue(this.opacityProperty(),0.0);
-        KeyFrame kf1 = new KeyFrame(Duration.millis(1000), kv );
+        isPlaying = true;
+        isClosing = true;
+        t1.stop();
+        t1.getKeyFrames().removeAll(kf1);
+        kv = new KeyValue(this.opacityProperty(),0);
+        kf1 = new KeyFrame(Duration.millis(1000), kv );
         t1.getKeyFrames().add(kf1);
-
         t1.play();
+
+
 
         t1.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                isPlaying = false;
+                isClosing = false;
                 close();
+
             }
         });
     }
-
 
     public void clseWithAnimation(){
         show();

@@ -89,6 +89,9 @@ public class LoginWindow  {
         forgotToggle.setToggleGroup(toggleGroup);
         loginToggle.setSelected(true);
 
+        messageBox = MessageWindow.getInstance();
+
+
         // nodes for Login
         userText = new TextField();
         userPass = new PasswordField();
@@ -139,6 +142,7 @@ public class LoginWindow  {
             }
         });
 
+
         // set the loginsetup to center if connected to server
         // if not set loginDisconnected to server
 
@@ -158,7 +162,6 @@ public class LoginWindow  {
         loginStage.setX(0);
         loginStage.setY(loginStage.getScreenMaxHeight());
         loginStage.setResizable(false);
-        loginStage.initStyle(StageStyle.UNDECORATED);
         loginStage.setTitle("Log In");
 
         root.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -446,7 +449,6 @@ public class LoginWindow  {
                     double x = (loginStage.getX() + loginStage.getWidth()/2);
                     double y = (loginStage.getY() + loginStage.getHeight()/2 ) - 60;
 
-                    messageBox = new MessageWindow();
 
                     String name = nameField.getText().trim();
                     String username = userName.getText().trim();
@@ -480,14 +482,15 @@ public class LoginWindow  {
                         secretID = 3;
                         sq = SecretQuestion.BOOK;
                     }else {
-                        messageBox.showValidationInfo("Please add secret Question",x,y,width - 20);
+                        sq = null;
                     }
 
                     StaffRegister  staffRegister = new StaffRegister(name,username,contact,address,secretID,sq,secretAnswer,gender,pass,cpass);
 
                     if (!validate(staffRegister,x,y,width,messageBox,keyCode)){
                         // let the validate method to handle this
-                    }else{
+                    }
+                    else{
                         boolean isRegistered;
                         System.out.println("all registration is now validated");
                         isRegistered =  ctr.register(staffRegister);
@@ -565,78 +568,104 @@ public class LoginWindow  {
 
         boolean isValidated = false;
 
-                if (staffReg.getName().equals(null) || staffReg.getName().equals("")) {
-                    messageBox.showValidationInfo("The name you entered is empty", x, y, width - 20);
+        String name = staffReg.getName();
+        String username = staffReg.getUsername();
+        String contact = staffReg.getContact();
+        String address = staffReg.getAddress();
+        String pass  = staffReg.getPassword();
+        String cpass = staffReg.getComfirmpass();
+        SecretQuestion securityQ = staffReg.getSq();
+        String secretAnswer = staffReg.getSecretAnswer();
+
+
+
+                                         //// NAME VALIDATION
+                if (name.equals(null) || name.equals("")) {
+                    messageBox.showValidationInfo("The name you entered is empty from login", x, y, width - 20);
                     isValidated = false;
+                }else if (name.length()<4 || name.length()>30){
+                    messageBox.showValidationInfo("The name must only contain 4 to 30 characters", x, y, width - 20);
+
                 }
-                    else if (!Pattern.matches("^\\W?[a-zA-Z\\s]{4,30}$+", staffReg.getName())){
-                    messageBox.showValidationInfo("     The name should not contain \n" +
-                            "any digits or Symbol,or must not exceed to 30 characters", x, y, width - 20);
+                    else if (!Pattern.matches("^[a-zA-Z]+\\s+[a-zA-Z]+", name)){
+                    messageBox.showValidationInfo("The name should not contain \n" +
+                            "any digits or Special characters.", x, y, width - 20);
                     isValidated = false;
                     }
-
-                else if (staffReg.getUsername().equals("")|| staffReg.getUsername().equals(null)){
+                                        // USERNAME VALIDATION
+                else if (username.equals("")|| username.equals(null)){
                     messageBox.showValidationInfo("The username you entered is empty", x, y, width - 20);
-                    isValidated = false;
-                }   else  if (!Pattern.matches("^[a-zA-Z0-9_-]{6,10}$+",staffReg.getUsername())){
-                    messageBox.showValidationInfo("Username must not contain any special character \n" +
-                            "rather than - or _ , Character size: 6-10", x, y, width - 20);
-                    isValidated = false;
-                     }
-                else if (ctr.getUsername(staffReg.getUsername())){
-                    messageBox.showValidationInfo("Username is already taken \n" +
-                            "rather than - or _ , Character size: 6-10", x, y, width - 20);
                     isValidated = false;
                 }
 
-                else if (staffReg.getContact().equals("")|| staffReg.getContact().equals(null)){
+                else  if (username.length() <6 || username.length()> 10){
+                    messageBox.showValidationInfo("Username must contain of 6 to 10 characters \n", x, y, width - 20);
+                    isValidated = false;
+                }
+
+                else  if (!Pattern.matches("^[a-zA-Z0-9_-]{6,10}$+",username)){
+                    messageBox.showValidationInfo("Username must not contain any special character \n", x, y, width - 20);
+                    isValidated = false;
+                     }
+                else if (ctr.getUsername(username)){
+                    messageBox.showValidationInfo("Username is already taken \n", x, y, width - 20);
+                    isValidated = false;
+                }
+
+                                            // CONTACT VALIDATION
+                else if (contact.equals("")|| contact.equals(null)){
                     messageBox.showValidationInfo("The Contact you entered is empty", x, y, width - 20);
                     isValidated = false;
                 }
-                     else if (!Pattern.matches("^[\\d\\-]{13}$+",staffReg.getContact())) {
-                    messageBox.showValidationInfo("Your contact number must be 11 digits and have no \n" +
-                            "any special character", x, y, width - 20);
+                     else if (!Pattern.matches("^[\\d\\-]{13}$+",contact)) {
+                    messageBox.showValidationInfo("Your contact number must be 11 digits", x, y, width - 20);
                     isValidated = false;
                      }
 
-                else if (!Pattern.matches("^[\\d]+\\s?[a-zA-Z\\.\\-\\s]+",staffReg.getAddress())){
-                    messageBox.showValidationInfo("Your Address must consist of 5 digits\n" +
-                            "any special character", x, y, width - 20);
+                                            // ADDRESS VALIDATION
+                else if (!Pattern.matches("^[\\d]+\\s+[a-zA-Z\\.\\-\\s]+", address)) {
+                    messageBox.showValidationInfo("Your Address must consist of 5 digits and\n" +
+                            "not contain any special character", x, y, width - 20);
                     isValidated = false;
-                }else if (staffReg.getSq() == null){
+
+                                            // SECURITY QUESTION VALIDATION
+                }else if (securityQ == null){
                     messageBox.showValidationInfo("Please add Secret Question", x, y, width - 20);
                     isValidated = false;
                 }
-
-                else if (staffReg.getSecretAnswer().equals("")){
+                                        // SECRET ANSWER VALIDATION
+                else if (secretAnswer.equals("")){
                     messageBox.showValidationInfo("Please add Secret Answer \n for your secret question", x, y, width - 20);
                     isValidated = false;
                 }
-                else if (!Pattern.matches("^[a-zA-Z0-9\\s_.-]+",staffReg.getSecretAnswer())){
-                    messageBox.showValidationInfo("please avoid using uneccessary symbols", x, y, width - 20);
+                else if (!Pattern.matches("^[a-zA-Z0-9\\s_.-]+", secretAnswer)){
+                    messageBox.showValidationInfo("Please remove any special characters \n in your Security Answer", x, y, width - 20);
                     isValidated = false;
                 }
-                else if (staffReg.getPassword().equals("")|| staffReg.getComfirmpass().equals("")){
+                                        // PASSWORD VALIDATION
+                else if (pass.equals("") || cpass.equals("")){
                     messageBox.showValidationInfo("Please add your desired password", x, y, width - 20);
                     isValidated = false;
                 }
 
-                else if (!staffReg.getPassword().equals(staffReg.getComfirmpass())){
+                else if (!pass.equals(cpass)) {
                     messageBox.showValidationInfo("Password don't match", x, y, width - 20);
                     isValidated = false;
                 }
 
-                else if (!Pattern.matches("^[a-zA-Z0-9]{6,15}$+",staffReg.getPassword())){
-                    messageBox.showValidationInfo("Please change your password \n and avoid using special characters", x, y, width - 20);
+                else if (!Pattern.matches("^[a-zA-Z0-9]{6,15}$+", pass)){
+                    messageBox.showValidationInfo("The password you entered is Invalid", x, y, width - 20);
                     isValidated = false;
                 }
+
+                                            // KEYCODE VALIDATION
                 // match the inut keycode from database admin keycode
                 else if (keyCode.equals("")){
                     messageBox.showValidationInfo("The keyCode you entered is Empty", x, y, width - 20);
                     isValidated = false;
                 }
                 else if (!ctr.getAdminKeyCode(keyCode)){
-                    messageBox.showValidationInfo("The keyCode you entered is invalid", x, y, width - 20);
+                    messageBox.showValidationInfo("The keycode you entered is invalid", x, y, width - 20);
                     isValidated = false;
                 }
                 else {
