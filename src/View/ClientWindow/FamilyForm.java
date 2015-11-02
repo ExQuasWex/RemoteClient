@@ -2,7 +2,7 @@ package View.ClientWindow;
 
 import Controller.Controller;
 import RMI.Constant;
-import clientModel.F;
+import clientModel.Family;
 import clientModel.FamilyInfo;
 import clientModel.FamilyPoverty;
 import javafx.beans.value.ChangeListener;
