@@ -3,12 +3,15 @@ package ClientModel;
 import Controller.Controller;
 import RMI.Constant;
 import RMI.RemoteMethods;
-import clientModel.Family;
+import Family.Family;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
 import javafx.scene.control.Alert;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.rmi.ConnectException;
+import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -24,7 +27,7 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
    private RemoteMethods server;
    private Alert alertBox;
    private boolean bol;
-   private String ipAddress = "localhost"; //Local IP address
+   private String ipAddress = ""; //Local IP address
    private  Registry reg;
 
 
@@ -32,7 +35,9 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
 
         try {
              reg = LocateRegistry.getRegistry(System.setProperty("java.rmi.server.hostname",ipAddress),Constant.Remote_port);
-            //Registry reg = LocateRegistry.getRegistry("localhost",Constant.Remote_port);
+            //used only for localhost
+             //reg = LocateRegistry.getRegistry("localhost");
+             //Registry reg = LocateRegistry.getRegistry("localhost",Constant.Remote_port);
              server = (RemoteMethods) reg.lookup(Constant.Remote_ID);
         } catch (NotBoundException e) {
             e.printStackTrace();
@@ -153,15 +158,25 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
     }
 
     @Override
-    public StaffInfo Login(String user, String pass)  {
+    public StaffInfo Login(String user, String pass,String ipAddress)  {
     StaffInfo staffInfo = null;
         try {
-            staffInfo = server.Login(user,pass);
+            InetAddress rawIp  = InetAddress.getLocalHost();
+            String strIp = rawIp.toString();
+            int beginningIndex = strIp.indexOf("/");
+            String ip = strIp.substring(beginningIndex + 1, strIp.length());
+
+            System.out.println(ip);
+
+            staffInfo = server.Login(user,pass,ip);
+
         } catch (RemoteException e) {
             Controller.getInstance().setLoginToDisconnected();
             e.printStackTrace();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
         }
-    return staffInfo;
+        return staffInfo;
     }
 
 

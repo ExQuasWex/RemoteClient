@@ -2,9 +2,9 @@ package View.ClientWindow;
 
 import Controller.Controller;
 import RMI.Constant;
-import clientModel.Family;
-import clientModel.FamilyInfo;
-import clientModel.FamilyPoverty;
+import Family.Family;
+import Family.FamilyInfo;
+import Family.FamilyPoverty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -20,6 +20,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
+import javax.swing.*;
 import javax.swing.text.DateFormatter;
 import java.sql.Time;
 import java.text.DateFormat;
@@ -358,6 +359,52 @@ public class FamilyForm extends GridPane{
 
 
 
+                ///////// return to normal node if this nodes are disable spousefnameField, spouselnameField, underEmployedCBox
+
+        spousefnameField.disabledProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean notDisable, Boolean isDisable) {
+                if (isDisable){
+                    System.out.println("Disable");
+                    spousefnameField.getStyleClass().remove("text-field-error");
+                    errorNodeList.remove(spousefnameField);
+                }else{
+                    System.out.println("not disable");
+                }
+
+
+            }
+        });
+
+        spouselnameField.disabledProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean notDisable, Boolean isDisable) {
+                if (isDisable){
+                    System.out.println("Disable");
+                    spouselnameField.getStyleClass().remove("text-field-error");
+                    errorNodeList.remove(spouselnameField);
+
+                }
+
+            }
+        });
+
+        underEmployedCBox.disabledProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean notDisable, Boolean isDisable) {
+                if (isDisable){
+                    System.out.println("Disable");
+                    underEmployedCBox.getStyleClass().remove("combo-box-error");
+                    errorNodeList.remove(underEmployedCBox);
+
+                }
+
+            }
+        });
+
+
+
+
         /////////////////////////////////// MAIN PANE ///////////////////////////////////
 
         bottomPane.setHgap(10);
@@ -667,6 +714,32 @@ public class FamilyForm extends GridPane{
             else if (!Pattern.matches("^[\\d]{5}+\\s+[a-zA-Z-_.\\s]+",address)){
                 isvalidate = false;
                 showErrorMessage("Invalid Address in address field","Error Information",addressF);
+            }else if (otherIncomeCbox.getSelectionModel().isEmpty()){
+                isvalidate = false;
+                showErrorMessage("Other income resource option is empty","Error Information",otherIncomeCbox);
+            }else if (below8kCbox.getSelectionModel().isEmpty()){
+                isvalidate = false;
+                showErrorMessage("Below eight thousand option is empty","Error Information",below8kCbox);
+
+            }else if (ownershipCbox.getSelectionModel().isEmpty()){
+                isvalidate = false;
+                showErrorMessage("Ownership option is empty","Error Information",ownershipCbox);
+
+            }
+            else if (occupancyCBox.getSelectionModel().isEmpty()){
+                isvalidate = false;
+                showErrorMessage("Occupancy option is empty","Error Information",occupancyCBox);
+
+            }
+            else if (underEmployedCBox.getSelectionModel().isEmpty() && occupancyCBox.getSelectionModel().getSelectedItem().equals("Employed")){
+                isvalidate = false;
+                showErrorMessage("UnderEmployed option is empty","Error Information",underEmployedCBox);
+
+            }
+            else if (childrenSchlCBox.getSelectionModel().isEmpty()){
+                isvalidate = false;
+                showErrorMessage("Children in school option is empty","Error Information",childrenSchlCBox);
+
             }
             else {
                 isvalidate = true;
@@ -682,10 +755,15 @@ public class FamilyForm extends GridPane{
         alert.setContentText(msg);
 
         errorNodeList.add(node);
-        for (Node nodes : errorNodeList) {
 
-            if (nodes.equals(maritalCBox)|| nodes.equals(genderCB) || nodes.equals(barangayCb) ){
-                node.getStyleClass().add("combo-box-error");
+        for (Node nodes : errorNodeList) {
+            if (nodes.equals(maritalCBox) || nodes.equals(genderCB) || nodes.equals(barangayCb)
+                    || nodes.equals(otherIncomeCbox)  || nodes.equals(below8kCbox)
+                    || nodes.equals(ownershipCbox)  || nodes.equals(occupancyCBox)
+                    || nodes.equals(underEmployedCBox) || nodes.equals(childrenSchlCBox)  ){
+
+                nodes.getStyleClass().add("combo-box-error");
+
             }else{
                 nodes.getStyleClass().add("text-field-error");
             }
@@ -696,7 +774,11 @@ public class FamilyForm extends GridPane{
             nodee.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    if (nodee.equals(maritalCBox)|| nodee.equals(genderCB) || nodee.equals(barangayCb) ){
+                    if (nodee.equals(maritalCBox) || nodee.equals(genderCB) || nodee.equals(barangayCb)
+                            || nodee.equals(otherIncomeCbox)  || nodee.equals(below8kCbox)
+                            || nodee.equals(ownershipCbox)  || nodee.equals(occupancyCBox)
+                            || nodee.equals(underEmployedCBox) || nodee.equals(childrenSchlCBox)  ){
+
                         nodee.getStyleClass().remove("combo-box-error");
                         errorNodeList.remove(nodee);
 
@@ -707,7 +789,32 @@ public class FamilyForm extends GridPane{
                     }
                 }
             });
+
+                        // return to normal color after being focused
+            nodee.focusedProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean outFocused, Boolean Focused) {
+                    if (Focused){
+                        if (nodee.equals(maritalCBox) || nodee.equals(genderCB) || nodee.equals(barangayCb)
+                                || nodee.equals(otherIncomeCbox)  || nodee.equals(below8kCbox)
+                                || nodee.equals(ownershipCbox)  || nodee.equals(occupancyCBox)
+                                || nodee.equals(underEmployedCBox) || nodee.equals(childrenSchlCBox)  ){
+
+                            nodee.getStyleClass().remove("combo-box-error");
+                            errorNodeList.remove(nodee);
+
+                        }else {
+                            nodee.getStyleClass().remove("text-field-error");
+                            errorNodeList.remove(nodee);
+
+                        }
+                    }
+                }
+            });
         }
+
+
+
 
         alert.show();
     }

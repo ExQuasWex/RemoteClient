@@ -1,20 +1,8 @@
 .root{
-    -fx-focus-color: brown;
 }
 
 .text-field-error{
     -fx-text-box-border: brown;
-}
-
-
-#text-field-correct{
-    -fx-background-color: brown;
-    -fx-text-box-border: ladder(
-            -fx-background,
-            black 10%,
-            derive(-fx-background, -15%) 30%
-    );
-
 }
 
 .combo-box{

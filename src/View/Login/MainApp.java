@@ -15,10 +15,22 @@ import java.rmi.RemoteException;
 public class MainApp extends Application {
 
     public static void main(String[] arg) throws RemoteException {
+
+     Thread.setDefaultUncaughtExceptionHandler(ueh);
+
         Application.launch(arg);
 
 
     }
+
+    // handler listener
+    private static Thread.UncaughtExceptionHandler ueh = new Thread.UncaughtExceptionHandler() {
+        @Override
+        public void uncaughtException(Thread thread, Throwable ex) {
+            ex.printStackTrace();
+            System.out.println("handlesdddssdasdasd");
+        }
+    };
 
 
     @Override
@@ -34,6 +46,8 @@ public class MainApp extends Application {
             }
         });
     }
+
+
 
 
 }

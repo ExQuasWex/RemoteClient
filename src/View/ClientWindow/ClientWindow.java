@@ -2,7 +2,7 @@ package View.ClientWindow;
 
 import Controller.Controller;
 import View.Login.LoginWindow;
-import clientModel.Family;
+import Family.Family;
 import clientModel.StaffInfo;
 import javafx.geometry.*;
 import javafx.scene.Scene;

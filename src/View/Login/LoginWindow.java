@@ -234,25 +234,30 @@ public class LoginWindow  {
 
 
             if (isServerConnected()){
-                if (ctr.Login(username, password)){
+                // check whether the account is existing
+                if (ctr.Login(username, password,"")){
                     userText.setText("");
                     userPass.setText("");
 
                     StaffInfo staffInfo = ctr.getStaffInfo();
 
+                    // check if the account is already online on other terminal
                     if (staffInfo.getStatus().equals("Online")){
                         alertBox = new Alert(Alert.AlertType.ERROR);
                         alertBox.setHeaderText(null);
                         alertBox.setTitle("Error information");
                         alertBox.setContentText("The account is being used in other terminal");
                         alertBox.show();
+
                     }else {
+                        // decide whether admin or client window to be shown here
                         showClientWindow();
                         loginStage.close();
 
                     }
-                }else {
 
+                    // Invalid account
+                }else {
                     alertBox = new Alert(Alert.AlertType.ERROR);
                     alertBox.setHeaderText(null);
                     alertBox.setTitle("Error information");
@@ -347,6 +352,8 @@ public class LoginWindow  {
             public void handle(ActionEvent event) {
                 if (utility.confirmExit()){
                     loginStage.clseWithAnimation();
+
+
                 }
             }
         });

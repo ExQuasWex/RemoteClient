@@ -2,7 +2,7 @@ package Controller;
 
 import ClientModel.Database;
 import View.Login.LoginWindow;
-import clientModel.Family;
+import Family.Family;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
 
@@ -33,10 +33,10 @@ public class Controller {
         return  isServerConnected;
     }
 
-    public boolean  Login(String user, String Pass) {
-        StaffInfo staffInfo = clientDB.Login(user,Pass);
+    public boolean  Login(String user, String Pass, String ipAddress) {
+        StaffInfo staffInfo = clientDB.Login(user,Pass, ipAddress);
         this.staffInfo = staffInfo;
-        return staffInfo.isValid();
+        return staffInfo.isAccountExist();
 
     }
     public  boolean addFamilyInfo(Family family){
