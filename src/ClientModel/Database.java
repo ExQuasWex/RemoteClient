@@ -1,6 +1,7 @@
 package ClientModel;
 
 import Controller.Controller;
+import RMI.ClientInterface;
 import RMI.Constant;
 import RMI.RemoteMethods;
 import Family.Family;
@@ -10,10 +11,7 @@ import javafx.scene.control.Alert;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.rmi.ConnectException;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
+import java.rmi.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -33,11 +31,15 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
 
     public Database() throws RemoteException {
 
+       ClientCallBackInit();
+
+
         try {
-             reg = LocateRegistry.getRegistry(System.setProperty("java.rmi.server.hostname",ipAddress),Constant.Remote_port);
             //used only for localhost
-             //reg = LocateRegistry.getRegistry("localhost");
-             //Registry reg = LocateRegistry.getRegistry("localhost",Constant.Remote_port);
+            //reg = LocateRegistry.getRegistry("localhost");
+            //Registry reg = LocateRegistry.getRegistry("localhost",Constant.Remote_port);
+
+             reg = LocateRegistry.getRegistry(System.setProperty("java.rmi.server.hostname",ipAddress),Constant.Remote_port);
              server = (RemoteMethods) reg.lookup(Constant.Remote_ID);
         } catch (NotBoundException e) {
             e.printStackTrace();
@@ -179,6 +181,25 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
         return staffInfo;
     }
 
+
+    private void ClientCallBackInit(){
+        try {
+            ClientInterfaceImp clientInterfaceImp  = new ClientInterfaceImp();
+            Registry reg = LocateRegistry.createRegistry(Constant.ClientPort);
+            reg.bind(Constant.Remote_ID,clientInterfaceImp);
+
+
+
+        } catch (AlreadyBoundException e) {
+            e.printStackTrace();
+        } catch (AccessException e) {
+            e.printStackTrace();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+
+    }
 
 
 
