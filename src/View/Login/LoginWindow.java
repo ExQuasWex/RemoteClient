@@ -1,5 +1,6 @@
 package View.Login;
 
+import View.AdminGUI.prototypeGui;
 import View.ClientWindow.ClientWindow;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
@@ -24,7 +25,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import utility.Utility;
@@ -243,15 +243,19 @@ public class LoginWindow  {
 
                     // check if the account is already online on other terminal
                     if (staffInfo.getStatus().equals("Online")){
-                        alertBox = new Alert(Alert.AlertType.ERROR);
-                        alertBox.setHeaderText(null);
-                        alertBox.setTitle("Error information");
-                        alertBox.setContentText("The account is being used in other terminal");
-                        alertBox.show();
+                            alertBox = new Alert(Alert.AlertType.ERROR);
+                            alertBox.setHeaderText(null);
+                            alertBox.setTitle("Error information");
+                            alertBox.setContentText("The account is being used in other terminal");
+                            alertBox.show();
 
                     }else {
                         // decide whether admin or client window to be shown here
-                        showClientWindow();
+                            if (staffInfo.getRole().equals("Admin")){
+                                showAdminWindow();
+                            }else {
+                                showClientWindow();
+                            }
                         loginStage.close();
 
                     }
@@ -722,7 +726,15 @@ public class LoginWindow  {
             }
         });
 
+    }
 
+    private void showAdminWindow(){
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                prototypeGui.getInstance().show();
+            }
+        });
 
     }
 

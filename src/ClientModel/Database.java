@@ -138,9 +138,9 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
     }
 
     @Override
-    public void Logout(int accountID)  {
+    public void Logout(int accountID, String username)  {
         try {
-            server.Logout(accountID);
+            server.Logout(accountID, username);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -168,7 +168,6 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
             int beginningIndex = strIp.indexOf("/");
             String ip = strIp.substring(beginningIndex + 1, strIp.length());
 
-            System.out.println(ip);
 
             staffInfo = server.Login(user,pass,ip);
 
