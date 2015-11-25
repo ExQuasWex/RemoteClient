@@ -25,7 +25,7 @@ public class prototypeGui  extends Stage{
 
     public prototypeGui(){
 
-        // css settings
+        // css settingss
 
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 
