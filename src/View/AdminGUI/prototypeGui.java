@@ -31,7 +31,7 @@ public class prototypeGui  extends Stage{
 
         root = new BorderPane();
 
-        SlidePane sp = new SlidePane(400);
+        SlidePane sp = new SlidePane(600);
         root.setLeft(sp);
 
         barangayDataList = Controller.getInstance().getBarangayData();

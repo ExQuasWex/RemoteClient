@@ -33,10 +33,21 @@ public class SlidePane extends HBox{
         Label help = new Label("Help");
         Label logout = new Label("Logout");
 
+        // set the width of textfield
         accountinfo.setPrefWidth(prefWidth-4);
         form.setPrefWidth(prefWidth-4);
         help.setPrefWidth(prefWidth-4);
         logout.setPrefWidth(prefWidth-4);
+
+        // set the heights of texfields
+        accountinfo.setPrefHeight(30);
+        form.setPrefHeight(30);
+        help.setPrefHeight(30);
+        logout.setPrefHeight(30);
+
+        // set the images of textfields
+        accountinfo.getStyleClass().add("AccountTextField");
+
 
         leftVbox = new VBox();
         leftVbox.getStyleClass().add("vBox-list");

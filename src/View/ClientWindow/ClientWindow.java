@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.awt.*;
+import java.awt.Insets;
 import java.util.Optional;
 
 /**
@@ -32,6 +33,7 @@ public class ClientWindow extends Stage{
 
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 
+
         SlidePane sp = new SlidePane(500);
 
         root = new BorderPane();
@@ -39,6 +41,7 @@ public class ClientWindow extends Stage{
         root.setLeft(sp);
 
         Scene scene = new Scene(root);
+        scene.getStylesheets().add("/CSS/ClientWindowCSS.css");
 
         setWidth(screen.getWidth());
         setHeight(screen.getHeight());
