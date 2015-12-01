@@ -51,6 +51,16 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
     }
 
     @Override
+    public boolean updateStaffInfo(StaffInfo staffInfo)  {
+        try {
+            return server.updateStaffInfo(staffInfo);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
     public boolean checkDatabase() throws RemoteException, SQLException {
         connectToServer();
         return server.checkDatabase();

@@ -75,6 +75,11 @@ public class Controller {
         LoginWindow.getInstantance().setLoginStageToDisconnected();
     }
 
+    public boolean updateStaffInfo(StaffInfo staffInfo) {
+
+        return  clientDB.updateStaffInfo(staffInfo);
+    }
+
     public ArrayList getBarangayData(){
         return adminDB.getBarangayData();
     }

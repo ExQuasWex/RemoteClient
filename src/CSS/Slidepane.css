@@ -11,7 +11,7 @@
     -fx-alignment: center;
 }
 .label:hover{
-    -fx-background-color: aliceblue;
+    -fx-background-color: #00BFFF       ;
     -fx-text-fill: #383838;
 }
 
@@ -26,11 +26,9 @@
 }
 
 .AccountTextField{
-    -fx-background-size: 15%;
+    -fx-background-size: 12%;
     -fx-background-repeat: no-repeat;
-    -fx-background-image: url("/images/accountpic.png");
-    -fx-padding: 20%;
-    -fx-start-margin: inherit   ;
+    -fx-background-image: url("/images/administratorIcon.png");
      fx-background-repeat: no-repeat;
     -fx-background-position: 25%;
     -fx-font-size: 13px;
