@@ -19,6 +19,7 @@ public class Controller {
     private  StaffInfo staffInfo;
     private boolean isServerConnected;
     private AdminInterfaceImp adminDB;
+    private  String finalUsername = "";
 
 
     private static Controller controller = new Controller();
@@ -40,6 +41,7 @@ public class Controller {
     public boolean  Login(String user, String Pass, String ipAddress) {
         StaffInfo staffInfo = clientDB.Login(user,Pass, ipAddress);
         this.staffInfo = staffInfo;
+        finalUsername = staffInfo.getUsername();
         return staffInfo.isAccountExist();
 
     }
@@ -67,7 +69,7 @@ public class Controller {
     }
 
     public  void Logout(){
-            clientDB.Logout(staffInfo.getAccountID(), staffInfo.getUsername());
+            clientDB.Logout(staffInfo.getAccountID(), finalUsername);
     }
 
     // clientdb to Login
@@ -77,6 +79,8 @@ public class Controller {
 
     public boolean updateStaffInfo(StaffInfo staffInfo) {
                 this.staffInfo = staffInfo;
+        System.out.println(this.staffInfo.getUsername());
+        System.out.println(this.staffInfo.getAccountID());
         return  clientDB.updateStaffInfo(staffInfo);
     }
 
