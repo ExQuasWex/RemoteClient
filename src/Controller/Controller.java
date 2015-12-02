@@ -76,7 +76,7 @@ public class Controller {
     }
 
     public boolean updateStaffInfo(StaffInfo staffInfo) {
-
+                this.staffInfo = staffInfo;
         return  clientDB.updateStaffInfo(staffInfo);
     }
 

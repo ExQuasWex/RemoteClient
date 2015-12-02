@@ -153,19 +153,24 @@ public class ClientWindow extends Stage{
 
 
 
-                    if (newPassword != passwordConfirmField.getText()){
-                        showValidation("Password Don't match");
-                    }else if (oldPassword != staffInfo.getPassword()){
-                        showValidation("Old password don't match");
+                    if (!newPassword.equals(passwordConfirmField.getText())){
+                        showMessageBox("Password Don't match", Alert.AlertType.ERROR);
+                    }else if (!oldPassword.equals(staffInfo.getPassword())){
+                        showMessageBox("Old password don't match", Alert.AlertType.ERROR);
                     }else {
 
-                        staffInfo.setName(name);
-                        staffInfo.setUsername(username);
-                        staffInfo.setAddress(address);
-                        staffInfo.setPassword(newPassword);
-                        staffInfo.setContact(Contact);
+                            staffInfo.setName(name);
+                            staffInfo.setUsername(username);
+                            staffInfo.setAddress(address);
+                            staffInfo.setPassword(newPassword);
+                            staffInfo.setContact(Contact);
 
-                        Controller.getInstance().updateStaffInfo(staffInfo);
+                            if (Controller.getInstance().updateStaffInfo(staffInfo))  {
+                                        showMessageBox("You successfully updated your personal information", Alert.AlertType.INFORMATION);
+                            }else {
+                                         showMessageBox("failed to Update your personal information, please try again lateer", Alert.AlertType.ERROR);
+                            }
+
                     }
 
             }
@@ -173,13 +178,16 @@ public class ClientWindow extends Stage{
 
     }
 
-    private void showValidation(String msgError){
-        Alert alertBox = new Alert(Alert.AlertType.ERROR);
-        alertBox.setTitle("Error Information");
-        alertBox.setContentText(msgError);
+    private void showMessageBox(String message, Alert.AlertType alertType){
+        Alert alertBox = new Alert(alertType);
+        alertBox.setTitle("Information");
+        alertBox.setContentText(message);
         alertBox.setHeaderText(null);
+        alertBox.show();
 
     }
+
+
 
     public void showFamilyForm(){
         root.setCenter(null);

@@ -52,12 +52,14 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
 
     @Override
     public boolean updateStaffInfo(StaffInfo staffInfo)  {
+        boolean isUpdated = false;
         try {
-            return server.updateStaffInfo(staffInfo);
+            isUpdated = server.updateStaffInfo(staffInfo);
         } catch (RemoteException e) {
             e.printStackTrace();
-            return false;
+            isUpdated = false;
         }
+        return  isUpdated;
     }
 
     @Override
