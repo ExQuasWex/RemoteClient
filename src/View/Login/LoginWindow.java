@@ -108,11 +108,11 @@ public class LoginWindow  {
         contactField = new TextField();
 
 
-        // top bordderPane
+        // top borderPane
         hBox.setPadding(new Insets(1,20,0,20));
         hBox.setAlignment(Pos.CENTER);
         hBox.setPrefWidth(360);
-        hBox.setStyle("-fx-background-color: #6495ED  ");
+        hBox.getStyleClass().add("hboxToggleGroup");
         hBox.setHgrow(forgotToggle, Priority.ALWAYS);
         hBox.setHgrow(loginToggle, Priority.ALWAYS);
         hBox.setHgrow(registerToggle, Priority.ALWAYS);

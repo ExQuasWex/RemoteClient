@@ -1,5 +1,9 @@
 .progress-bar .bar{
     -fx-background-insets: 0;
     -fx-padding: 5px;
+    -fx-background-color: #3CB371;
 }
 
+.hboxToggleGroup{
+    -fx-background-color: #00a2d3;
+}

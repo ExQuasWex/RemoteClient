@@ -44,6 +44,9 @@ public class FamilyForm extends GridPane{
     private Button save;
     private  Button cancel;
 
+    private TextField searchBox;
+    private Button searchButton;
+
     //top pane
     private TextField dateField;
     private TextField surveyedDateField;
@@ -75,209 +78,80 @@ public class FamilyForm extends GridPane{
 
     private ObservableList<Node> errorNodeList;
     private int x;
+
     public FamilyForm(){
          getStylesheets().add("/CSS/familyFormCss.css");
-
-         topPane = new GridPane();
-         bottomPane = new GridPane();
 
          save = new Button("Save");
          cancel = new Button("Cancel");
 
+         topPane = getTopPane();
+         bottomPane = getBottomPane();
+
          save.setPrefWidth(80);
          cancel.setPrefWidth(80);
+         searchButton.setPrefWidth(100);
 
          clientID = Controller.getInstance().getStaffInfo().getAccountID();
 
          errorNodeList = FXCollections.observableArrayList();
 
-
-        // Top pane
+        Label bottomTitle = new Label("Poverty Assesment");
         Label topTitleL = new Label("Family Data Entry");
-        Label DateL = new Label("Date");
-        Label surveyDateL = new Label("Surveyed Year");
-        Label NameL = new Label("Name");
-        Label spouseNameL = new Label("Spouse Name");
-        Label addressL = new Label("Address");
-        Label ageL = new Label("Age");
-        Label yearofResidencyL = new Label("Year of Residency");
-        Label numofChildrenL = new Label("Number of Children");
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");  // yyyy/MM/dd HH:mm:ss
-        Date date = new Date();
-
-        dateField  = new TextField(dateFormat.format(date));
-        surveyedDateField  = new TextField();
-        fnameField = new TextField();
-        lnameField= new TextField();
-        spousefnameField = new TextField();
-        spouselnameField= new TextField();
-        agefield= new TextField();
-        addressF = new TextField();
-        yrResidency= new TextField();
-        numofChildrenF = new TextField();
-
-        dateField.setAlignment(Pos.CENTER);
-        dateField.setDisable(true);
-        numofChildrenF.setText("0");
-
-        fnameField.setPromptText("First Name");
-        lnameField.setPromptText("Last Name");
-        spousefnameField.setPromptText("First Name");
-        spouselnameField.setPromptText("Last Name");
-        surveyedDateField.setPromptText("e.g 2014");
-        agefield.setPromptText("35");
-        addressF.setPromptText("e.g 12345 Manga st. Mabalacat");
-        yrResidency.setPromptText("e.g 2012");
-        numofChildrenF.setPromptText("e.g 4");
-
-        spousefnameField.setDisable(true);
-        spouselnameField.setDisable(true);
-
-         maritalCBox = new ComboBox(getMaritalStatus());
-         barangayCb = new ComboBox(getBarangayCb());
-         genderCB    = new ComboBox(getGender());
+        topTitleL.getStyleClass().add("topPaneTitle");
+        bottomTitle.getStyleClass().add("topPaneTitle");
 
 
-        maritalCBox.setPrefWidth(140);
-        maritalCBox.setPromptText("Marital Status");
-        maritalCBox.setEditable(false);
+        /////////////////////////////////// MAIN PANE ///////////////////////////////////
 
-        genderCB.setPromptText("Gender");
-        genderCB.setPrefWidth(140);
+        bottomPane.setHgap(10);
+        bottomPane.setVgap(5);
+        bottomPane.setAlignment(Pos.CENTER_LEFT);
 
-        barangayCb.setPromptText("Barangay");
-        barangayCb.setEditable(false);
+        topPane.setVgap(10);
+        topPane.setHgap(10);
+        topPane.setAlignment(Pos.CENTER);
 
-
-        //1st row
-        int indexYTop =0;
-        topTitleL.setAlignment(Pos.CENTER);
-        topPane.setConstraints(topTitleL,0,indexYTop,6,1, HPos.CENTER, VPos.TOP);
-        //2nd row
-        indexYTop++;
-        topPane.setConstraints(DateL,    0,indexYTop,1,1, HPos.LEFT, VPos.CENTER);
-        topPane.setConstraints(dateField,1,indexYTop,1,1, HPos.CENTER, VPos.CENTER);
-
-        //3rd row
-        indexYTop++;
-        topPane.setConstraints(surveyDateL,      0, indexYTop, 1, 1, HPos.LEFT, VPos.CENTER);
-        topPane.setConstraints(surveyedDateField,1, indexYTop,1,1, HPos.CENTER, VPos.CENTER);
-        topPane.setConstraints(barangayCb,5,indexYTop,1,1, HPos.CENTER, VPos.CENTER);
-
-        //4t row
-        indexYTop++;
-        bottomPane.setConstraints(yearofResidencyL,0,indexYTop,1,1,HPos.LEFT,VPos.CENTER);
-        bottomPane.setConstraints(yrResidency,1,indexYTop,1,1,HPos.LEFT,VPos.CENTER);
-        bottomPane.setConstraints(maritalCBox,5,indexYTop,1,1,HPos.CENTER,VPos.CENTER);
-
-        //5th row
-        indexYTop++;
-        bottomPane.setConstraints(numofChildrenL,0,indexYTop,1,1,HPos.LEFT,VPos.CENTER);
-        bottomPane.setConstraints(numofChildrenF,1,indexYTop,1,1,HPos.LEFT,VPos.CENTER);
-        bottomPane.setConstraints(genderCB,5,indexYTop,1,1,HPos.CENTER,VPos.CENTER);
+        setAlignment(Pos.CENTER);
+        setPadding(new Insets(40));
+        setMargin(topPane, new Insets(10));
+        setMargin(bottomPane, new Insets(10));
 
 
-        //5th row
-        indexYTop++;
-        topPane.setConstraints(NameL,     0,indexYTop,1,1,  HPos.LEFT, VPos.CENTER);
-        topPane.setConstraints(lnameField,1,indexYTop,1,1,  HPos.CENTER, VPos.CENTER);
-        topPane.setConstraints(fnameField,2,indexYTop, 1, 1, HPos.CENTER, VPos.CENTER);
-        topPane.setConstraints(ageL,      4,indexYTop, 1, 1, HPos.CENTER, VPos.CENTER);
-        topPane.setConstraints(agefield,  5,indexYTop, 1, 1, HPos.CENTER, VPos.CENTER);
+        setConstraints(topTitleL,   0,1,1,1,HPos.CENTER,VPos.CENTER);
+        setConstraints(topPane,     0,2,1,1,HPos.CENTER,VPos.CENTER);
+        setConstraints(bottomTitle, 0,3,1,1,HPos.CENTER,VPos.CENTER);
+        setConstraints(bottomPane,  0,4,1,1,HPos.LEFT,VPos.CENTER);
 
 
-        //6t row
-        indexYTop++;
-        topPane.setConstraints(spouseNameL,     0,indexYTop,1,1, HPos.LEFT, VPos.CENTER);
-        topPane.setConstraints(spouselnameField,1,indexYTop,1,1,  HPos.CENTER, VPos.CENTER);
-        topPane.setConstraints(spousefnameField,2,indexYTop, 1, 1, HPos.CENTER, VPos.CENTER);
+        // Css styling
+        topPane.getStyleClass().add("TopPaneBorder");
+        bottomPane.getStyleClass().add("TopPaneBorder");
 
-        //6t row
-        indexYTop++;
-        topPane.setConstraints(addressL,0,indexYTop,1,1,  HPos.LEFT, VPos.CENTER);
-        topPane.setConstraints(addressF,1,indexYTop,2,1,  HPos.CENTER, VPos.CENTER);
-
-        surveyedDateField.setPrefColumnCount(6);
-        dateField.setPrefColumnCount(6);
-        lnameField.setPrefColumnCount(11);
-        agefield.setPrefColumnCount(6);
+        getChildren().addAll( topTitleL, topPane, bottomTitle,bottomPane);
 
 
-        // add Change listener to validate number of children field
-        numofChildrenF.focusedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean outFocused, Boolean focused) {
-
-                if (focused){
-
-                }else if (outFocused){
-
-                           if (numofChildrenF.getText().matches("\\d+")){
-                               int children = Integer.parseInt(numofChildrenF.getText());
-                               if (children > 0 ){
-                                   numofChildrenF.setText(String.valueOf(children));
-                               }else {
-                                   numofChildrenF.setText("0");
-                               }
-                          }else {
-                               numofChildrenF.setText("0");
-                           }
-
-                }
-
-            }
-        });
-
-        // add Change listener to validate number of children field
-        agefield.focusedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean outFocus, Boolean focus) {
-
-                if (outFocus){
-                    if (agefield.getText().matches("\\d+")){
-                        int age = Integer.parseInt(agefield.getText());
-                        agefield.setText(String.valueOf(age));
-                    }else {
-                        agefield.setText("");
-                    }
-                }
-
-
-            }
-        });
-
-
-
-        topPane.getChildren().addAll(DateL,dateField,surveyDateL,surveyedDateField, barangayCb,yearofResidencyL,yrResidency,
-                maritalCBox,numofChildrenL,numofChildrenF,genderCB,NameL,lnameField,fnameField,
-                ageL,agefield,spouseNameL,spouselnameField,spousefnameField,addressL,addressF);
-
-
-
-        maritalCBox.setOnAction(new EventHandler<ActionEvent>() {
+        save.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                String item = (String) maritalCBox.getSelectionModel().getSelectedItem();
 
-                    if (item.equals("Married") || item.equals("Live-in")){
-                        spouselnameField.setDisable(false);
-                        spousefnameField.setDisable(false);
-                    }else {
-                        spouselnameField.setText("");
-                        spousefnameField.setText("");
-                        spouselnameField.setDisable(true);
-                        spousefnameField.setDisable(true);
-                    }
+                if (isValidated()){
+                    System.out.println("All Family information are validated");
+                    //Save();
+                }else {
+                    // undecided
+                }
             }
         });
+    }
 
+    private GridPane getBottomPane(){
         ////////////////////////////////// BOTTOM PANE /////////////////////////////////////////////////
 
-
+        bottomPane = new GridPane();
 
         //Labels
-        Label bottomTitle = new Label("Poverty Assesment");
         Label underEmployedL = new Label("Under Employed");
         Label otherIncomeL = new Label("Other Income Resource");
         Label typeofOwnershipL = new Label("Ownership");
@@ -352,14 +226,14 @@ public class FamilyForm extends GridPane{
         });
 
 
-        bottomPane.getChildren().addAll(bottomTitle,
-               underEmployedL,underEmployedCBox,otherIncomeL,otherIncomeCbox,
-               typeofOwnershipL,ownershipCbox,below8kL,below8kCbox,
+        bottomPane.getChildren().addAll(
+                underEmployedL,underEmployedCBox,otherIncomeL,otherIncomeCbox,
+                typeofOwnershipL,ownershipCbox,below8kL,below8kCbox,
                 occupancyL,occupancyCBox,schoolage,childrenSchlCBox,save,cancel);
 
 
 
-                ///////// return to normal node if this nodes are disable spousefnameField, spouselnameField, underEmployedCBox
+        ///////// return to normal node if this nodes are disable spousefnameField, spouselnameField, underEmployedCBox
 
         spousefnameField.disabledProperty().addListener(new ChangeListener<Boolean>() {
             @Override
@@ -401,47 +275,208 @@ public class FamilyForm extends GridPane{
 
             }
         });
+        return bottomPane;
+    }
+
+    private GridPane getTopPane(){
+        topPane = new GridPane();
+
+        // Top pane
+        Label DateL = new Label("Date");
+        Label surveyDateL = new Label("Surveyed Year");
+        Label NameL = new Label("Name");
+        Label spouseNameL = new Label("Spouse Name");
+        Label addressL = new Label("Address");
+        Label ageL = new Label("Age");
+        Label yearofResidencyL = new Label("Year of Residency");
+        Label numofChildrenL = new Label("Number of Children");
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");  // yyyy/MM/dd HH:mm:ss
+        Date date = new Date();
+
+        // search nodes declaration
+
+        searchBox = new TextField();
+        searchButton = new Button("Search");
+
+        searchButton.setPrefHeight(27);
+        searchBox.setPromptText("Search");
+        searchBox.setAlignment(Pos.CENTER);
+        searchBox.setPrefWidth(20);
+
+        // topPane nodes declaration
+        dateField  = new TextField(dateFormat.format(date));
+        surveyedDateField  = new TextField();
+        fnameField = new TextField();
+        lnameField= new TextField();
+        spousefnameField = new TextField();
+        spouselnameField= new TextField();
+        agefield= new TextField();
+        addressF = new TextField();
+        yrResidency= new TextField();
+        numofChildrenF = new TextField();
+
+        //nodes initialization
+        dateField.setAlignment(Pos.CENTER);
+        dateField.setDisable(true);
+        numofChildrenF.setText("0");
+
+        fnameField.setPromptText("First Name");
+        lnameField.setPromptText("Last Name");
+        spousefnameField.setPromptText("First Name");
+        spouselnameField.setPromptText("Last Name");
+        surveyedDateField.setPromptText("e.g 2014");
+        agefield.setPromptText("35");
+        addressF.setPromptText("e.g 12345 Manga st. Mabalacat");
+        yrResidency.setPromptText("e.g 2012");
+        numofChildrenF.setPromptText("e.g 4");
+
+        spousefnameField.setDisable(true);
+        spouselnameField.setDisable(true);
+
+        maritalCBox = new ComboBox(getMaritalStatus());
+        barangayCb = new ComboBox(getBarangayCb());
+        genderCB    = new ComboBox(getGender());
+
+
+        maritalCBox.setPrefWidth(140);
+        maritalCBox.setPromptText("Marital Status");
+        maritalCBox.setEditable(false);
+
+        genderCB.setPromptText("Gender");
+        genderCB.setPrefWidth(140);
+
+        barangayCb.setPromptText("Barangay");
+        barangayCb.setEditable(false);
+
+        /////////////// LAYOUTING //////////////
+
+        //1st row
+        int indexYTop =0;
+        topPane.setMargin(searchBox, new Insets(0, 75, 25, 150));
+        topPane.setMargin(searchButton, new Insets(0, -28, 25, 0));
+        topPane.setConstraints(searchBox, 0, indexYTop, 5, 1, HPos.CENTER, VPos.CENTER);
+        topPane.setConstraints(searchButton, 0, indexYTop, 5, 1, HPos.RIGHT, VPos.CENTER);
+
+        //2nd row
+        indexYTop++;
+        topPane.setConstraints(DateL,    0,indexYTop,1,1, HPos.LEFT, VPos.CENTER);
+        topPane.setConstraints(dateField,1,indexYTop,1,1, HPos.CENTER, VPos.CENTER);
+
+        //3rd row
+        indexYTop++;
+        topPane.setConstraints(surveyDateL,      0, indexYTop, 1, 1, HPos.LEFT, VPos.CENTER);
+        topPane.setConstraints(surveyedDateField,1, indexYTop,1,1, HPos.CENTER, VPos.CENTER);
+        topPane.setConstraints(barangayCb,5,indexYTop,1,1, HPos.CENTER, VPos.CENTER);
+
+        //4t row
+        indexYTop++;
+        bottomPane.setConstraints(yearofResidencyL,0,indexYTop,1,1,HPos.LEFT,VPos.CENTER);
+        bottomPane.setConstraints(yrResidency,1,indexYTop,1,1,HPos.LEFT,VPos.CENTER);
+        bottomPane.setConstraints(maritalCBox,5,indexYTop,1,1,HPos.CENTER,VPos.CENTER);
+
+        //5th row
+        indexYTop++;
+        bottomPane.setConstraints(numofChildrenL,0,indexYTop,1,1,HPos.LEFT,VPos.CENTER);
+        bottomPane.setConstraints(numofChildrenF,1,indexYTop,1,1,HPos.LEFT,VPos.CENTER);
+        bottomPane.setConstraints(genderCB,5,indexYTop,1,1,HPos.CENTER,VPos.CENTER);
+
+
+        //5th row
+        indexYTop++;
+        topPane.setConstraints(NameL,     0,indexYTop,1,1,  HPos.LEFT, VPos.CENTER);
+        topPane.setConstraints(lnameField,1,indexYTop,1,1,  HPos.CENTER, VPos.CENTER);
+        topPane.setConstraints(fnameField,2,indexYTop, 1, 1, HPos.CENTER, VPos.CENTER);
+        topPane.setConstraints(ageL,      4,indexYTop, 1, 1, HPos.CENTER, VPos.CENTER);
+        topPane.setConstraints(agefield,  5,indexYTop, 1, 1, HPos.CENTER, VPos.CENTER);
+
+
+        //6t row
+        indexYTop++;
+        topPane.setConstraints(spouseNameL,     0,indexYTop,1,1, HPos.LEFT, VPos.CENTER);
+        topPane.setConstraints(spouselnameField,1,indexYTop,1,1,  HPos.CENTER, VPos.CENTER);
+        topPane.setConstraints(spousefnameField,2,indexYTop, 1, 1, HPos.CENTER, VPos.CENTER);
+
+        //6t row
+        indexYTop++;
+        topPane.setConstraints(addressL,0,indexYTop,1,1,  HPos.LEFT, VPos.CENTER);
+        topPane.setConstraints(addressF,1,indexYTop,2,1,  HPos.CENTER, VPos.CENTER);
+
+        surveyedDateField.setPrefColumnCount(6);
+        dateField.setPrefColumnCount(6);
+        lnameField.setPrefColumnCount(11);
+        agefield.setPrefColumnCount(6);
+
+
+        // add Change listener to validate number of children field
+        numofChildrenF.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean outFocused, Boolean focused) {
+
+                if (focused){
+
+                }else if (outFocused){
+
+                    if (numofChildrenF.getText().matches("\\d+")){
+                        int children = Integer.parseInt(numofChildrenF.getText());
+                        if (children > 0 ){
+                            numofChildrenF.setText(String.valueOf(children));
+                        }else {
+                            numofChildrenF.setText("0");
+                        }
+                    }else {
+                        numofChildrenF.setText("0");
+                    }
+
+                }
+
+            }
+        });
+
+        // add Change listener to validate number of children field
+        agefield.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean outFocus, Boolean focus) {
+
+                if (outFocus){
+                    if (agefield.getText().matches("\\d+")){
+                        int age = Integer.parseInt(agefield.getText());
+                        agefield.setText(String.valueOf(age));
+                    }else {
+                        agefield.setText("");
+                    }
+                }
+
+
+            }
+        });
+
+
+            // adding nodes to the top gridpane
+        topPane.getChildren().addAll(searchBox, searchButton ,DateL,dateField,surveyDateL,surveyedDateField,
+                barangayCb,yearofResidencyL,yrResidency, maritalCBox,numofChildrenL,numofChildrenF,genderCB,
+                NameL,lnameField,fnameField, ageL,agefield,spouseNameL,spouselnameField,spousefnameField,addressL,addressF);
 
 
 
-
-        /////////////////////////////////// MAIN PANE ///////////////////////////////////
-
-        bottomPane.setHgap(10);
-        bottomPane.setVgap(5);
-        bottomPane.setAlignment(Pos.CENTER_LEFT);
-
-
-        topPane.setVgap(10);
-        topPane.setHgap(10);
-        topPane.setAlignment(Pos.CENTER);
-
-        setAlignment(Pos.CENTER);
-        setPadding(new Insets(40));
-        setMargin(topPane, new Insets(20));
-        setMargin(bottomPane, new Insets(20));
-
-        setConstraints(topTitleL,0,0,1,1,HPos.CENTER,VPos.CENTER);
-        setConstraints(topPane,  0,1,1,1,HPos.CENTER,VPos.CENTER);
-        setConstraints(bottomTitle,0,2,1,1,HPos.CENTER,VPos.CENTER);
-        setConstraints(bottomPane,0,3,1,1,HPos.LEFT,VPos.CENTER);
-
-
-        getChildren().addAll(topTitleL,topPane,bottomTitle,bottomPane);
-
-
-        save.setOnAction(new EventHandler<ActionEvent>() {
+        maritalCBox.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                String item = (String) maritalCBox.getSelectionModel().getSelectedItem();
 
-                if (isValidated()){
-                    System.out.println("All Family information are validated");
-                    //Save();
+                if (item.equals("Married") || item.equals("Live-in")){
+                    spouselnameField.setDisable(false);
+                    spousefnameField.setDisable(false);
                 }else {
-                    // undecided
+                    spouselnameField.setText("");
+                    spousefnameField.setText("");
+                    spouselnameField.setDisable(true);
+                    spousefnameField.setDisable(true);
                 }
             }
         });
+
+        return  topPane;
     }
 
     private ObservableList getBarangayCb(){
@@ -604,21 +639,6 @@ public class FamilyForm extends GridPane{
 
 
         }
-
-
-
-        //familyFormListener.handle(Family);
-
-/*
-        boolean isValidated = validate(Family);
-
-        if (isValidated){
-            familyFormListener.handle(Family);
-        }else{
-            // let the validation method hanlde this
-        }
-
-*/
 
     }
 
@@ -813,16 +833,9 @@ public class FamilyForm extends GridPane{
             });
         }
 
-
-
-
         alert.show();
     }
 
-
-    private boolean validate(Family family){
-        return false;
-    }
 
     public void addFamilyFormListener (FamilyFormListener familyFormListener){
         this.familyFormListener = familyFormListener;

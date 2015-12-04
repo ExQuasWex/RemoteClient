@@ -103,7 +103,6 @@ public class SlidePane extends HBox{
 
         //splitpane
         getChildren().addAll(leftVbox, rightVbox);
-        setStyle("-fx-border-color: #585858");
 
     }
 
