@@ -170,7 +170,6 @@ public class LoginWindow  {
                 dragX = loginStage.getX() - event.getScreenX() ;
                 dragY = loginStage.getY() - event.getScreenY() ;
 
-
             }
         });
 

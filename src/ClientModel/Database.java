@@ -51,10 +51,10 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
     }
 
     @Override
-    public boolean updateStaffInfo(StaffInfo staffInfo)  {
+    public boolean updateStaffInfo(StaffInfo staffInfo, String oldUsername)  {
         boolean isUpdated = false;
         try {
-            isUpdated = server.updateStaffInfo(staffInfo);
+            isUpdated = server.updateStaffInfo(staffInfo, oldUsername);
         } catch (RemoteException e) {
             e.printStackTrace();
             isUpdated = false;

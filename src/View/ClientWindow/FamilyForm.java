@@ -11,10 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.geometry.VPos;
+import javafx.geometry.*;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -69,7 +66,6 @@ public class FamilyForm extends GridPane{
     private ComboBox barangayCb;
     private ComboBox genderCB;
 
-
     // bottom
     private ComboBox underEmployedCBox;
     private ComboBox otherIncomeCbox;
@@ -83,10 +79,14 @@ public class FamilyForm extends GridPane{
     private Family family;
 
     private ObservableList<Node> errorNodeList;
-    private int x;
+
+    private Bounds layoutBounds;
 
     public FamilyForm(){
          getStylesheets().add("/CSS/familyFormCss.css");
+
+/*        layoutBounds =  getLayoutBounds();
+        System.out.println(layoutBounds.getWidth());*/
 
          save = new Button("Save");
          cancel = new Button("Cancel");

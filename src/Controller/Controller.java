@@ -69,7 +69,7 @@ public class Controller {
     }
 
     public  void Logout(){
-            clientDB.Logout(staffInfo.getAccountID(), finalUsername);
+            clientDB.Logout(staffInfo.getAccountID(), staffInfo.getUsername()   );
     }
 
     // clientdb to Login
@@ -81,7 +81,7 @@ public class Controller {
                 this.staffInfo = staffInfo;
         System.out.println(this.staffInfo.getUsername());
         System.out.println(this.staffInfo.getAccountID());
-        return  clientDB.updateStaffInfo(staffInfo);
+        return  clientDB.updateStaffInfo(staffInfo,finalUsername);
     }
 
     public ArrayList getBarangayData(){
