@@ -29,4 +29,11 @@
     -fx-text-fill: #00a2d3;
 
 }
+.scroll-pane{
+    -fx-background-color:transparent;
+}
+.scroll-pane:hover{
+    -fx-focus-color: transparent;
+}
+
 

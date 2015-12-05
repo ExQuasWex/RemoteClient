@@ -19,6 +19,8 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 import javax.swing.*;
 import javax.swing.text.DateFormatter;
@@ -46,6 +48,10 @@ public class FamilyForm extends GridPane{
 
     private TextField searchBox;
     private Button searchButton;
+
+    private ScrollPane scrollPane;
+
+    private GridPane subGrid;
 
     //top pane
     private TextField dateField;
@@ -85,8 +91,7 @@ public class FamilyForm extends GridPane{
          save = new Button("Save");
          cancel = new Button("Cancel");
 
-         topPane = getTopPane();
-         bottomPane = getBottomPane();
+         scrollPane = new ScrollPane(getSubGrid());
 
          save.setPrefWidth(80);
          cancel.setPrefWidth(80);
@@ -96,40 +101,13 @@ public class FamilyForm extends GridPane{
 
          errorNodeList = FXCollections.observableArrayList();
 
-        Label bottomTitle = new Label("Poverty Assesment");
-        Label topTitleL = new Label("Family Data Entry");
-
-        topTitleL.getStyleClass().add("topPaneTitle");
-        bottomTitle.getStyleClass().add("topPaneTitle");
-
 
         /////////////////////////////////// MAIN PANE ///////////////////////////////////
 
-        bottomPane.setHgap(10);
-        bottomPane.setVgap(5);
-        bottomPane.setAlignment(Pos.CENTER_LEFT);
+        setMargin(scrollPane, new Insets(0,0,0,200));
+        setConstraints(scrollPane, 0, 0, 1, 1, HPos.CENTER, VPos.CENTER);
 
-        topPane.setVgap(10);
-        topPane.setHgap(10);
-        topPane.setAlignment(Pos.CENTER);
-
-        setAlignment(Pos.CENTER);
-        setPadding(new Insets(40));
-        setMargin(topPane, new Insets(10));
-        setMargin(bottomPane, new Insets(10));
-
-
-        setConstraints(topTitleL,   0,1,1,1,HPos.CENTER,VPos.CENTER);
-        setConstraints(topPane,     0,2,1,1,HPos.CENTER,VPos.CENTER);
-        setConstraints(bottomTitle, 0,3,1,1,HPos.CENTER,VPos.CENTER);
-        setConstraints(bottomPane,  0,4,1,1,HPos.LEFT,VPos.CENTER);
-
-
-        // Css styling
-        topPane.getStyleClass().add("TopPaneBorder");
-        bottomPane.getStyleClass().add("TopPaneBorder");
-
-        getChildren().addAll( topTitleL, topPane, bottomTitle,bottomPane);
+        getChildren().addAll(scrollPane);
 
 
         save.setOnAction(new EventHandler<ActionEvent>() {
@@ -144,6 +122,47 @@ public class FamilyForm extends GridPane{
                 }
             }
         });
+    }
+
+    private GridPane getSubGrid(){
+        subGrid = new GridPane();
+
+        topPane = getTopPane();
+        bottomPane = getBottomPane();
+
+        // Css styling
+        topPane.getStyleClass().add("TopPaneBorder");
+        bottomPane.getStyleClass().add("TopPaneBorder");
+
+        Label bottomTitle = new Label("Poverty Assesment");
+        Label topTitleL = new Label("Family Data Entry");
+
+        topTitleL.getStyleClass().add("topPaneTitle");
+        bottomTitle.getStyleClass().add("topPaneTitle");
+
+        bottomPane.setHgap(10);
+        bottomPane.setVgap(5);
+        bottomPane.setAlignment(Pos.CENTER_LEFT);
+
+        topPane.setVgap(10);
+        topPane.setHgap(10);
+        topPane.setAlignment(Pos.CENTER);
+
+        subGrid.setAlignment(Pos.CENTER);
+        subGrid.setPadding(new Insets(20));
+        subGrid.setMargin(topPane, new Insets(10));
+        subGrid.setMargin(bottomPane, new Insets(10));
+
+
+        subGrid.setConstraints(topTitleL, 0, 1, 1, 1, HPos.CENTER, VPos.CENTER);
+        subGrid.setConstraints(topPane, 0, 2, 1, 1, HPos.CENTER, VPos.CENTER);
+        subGrid.setConstraints(bottomTitle, 0, 3, 1, 1, HPos.CENTER, VPos.CENTER);
+        subGrid.setConstraints(bottomPane, 0, 4, 1, 1, HPos.LEFT, VPos.CENTER);
+
+        subGrid.getChildren().addAll(topTitleL,topPane,bottomTitle,bottomPane);
+
+
+        return subGrid;
     }
 
     private GridPane getBottomPane(){
