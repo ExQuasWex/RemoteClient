@@ -27,6 +27,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -106,6 +107,8 @@ public class FamilyForm extends GridPane{
 
         setMargin(scrollPane, new Insets(0,0,0,200));
         setConstraints(scrollPane, 0, 0, 1, 1, HPos.CENTER, VPos.CENTER);
+
+
 
         getChildren().addAll(scrollPane);
 
@@ -492,6 +495,28 @@ public class FamilyForm extends GridPane{
                     spouselnameField.setDisable(true);
                     spousefnameField.setDisable(true);
                 }
+            }
+        });
+
+
+
+        searchButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                String Searchedname = searchBox.getText();
+
+
+                ArrayList list = Controller.getInstance().searchedList(Searchedname);
+
+                if (Searchedname.equals("")){
+
+                }else if (list.isEmpty()){
+                    System.out.println("no records found");
+                }else {
+                    System.out.println("show records");
+                }
+
+
             }
         });
 

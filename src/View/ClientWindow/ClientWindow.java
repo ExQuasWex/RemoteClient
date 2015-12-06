@@ -87,16 +87,17 @@ public class ClientWindow extends Stage{
         Label passwordL = new Label("Password");
         Label passwordConfirmL = new Label("Retype Password");
         Label entriesL = new Label("Total Entries");
+        Label OldPassword = new Label("Old Password");
 
         //TextField
         TextField nameField = new TextField(staffInfo.getName());
         TextField usernameField = new TextField(staffInfo.getUsername());
         TextField addresField = new TextField(staffInfo.getAddress());
         TextField contactField = new TextField(staffInfo.getContact());
-        TextField passwordField = new TextField();
-        TextField passwordConfirmField = new TextField();
+        PasswordField passwordField = new PasswordField();
+        PasswordField passwordConfirmField = new PasswordField();
         TextField entriesField = new TextField();
-        TextField oldPasswordField = new TextField();
+        PasswordField oldPasswordField = new PasswordField();
 
         entriesField.setEditable(false);
 
@@ -113,7 +114,7 @@ public class ClientWindow extends Stage{
         gp.setConstraints(passwordL,0,4,1,1, HPos.CENTER, VPos.CENTER);
         gp.setConstraints(passwordConfirmL,0,5,1,1, HPos.CENTER, VPos.CENTER);
         gp.setConstraints(entriesL, 0,6,1,1, HPos.CENTER, VPos.CENTER);
-        gp.setConstraints(new Label("Old Password"), 0,7,1,1, HPos.CENTER, VPos.CENTER);
+        gp.setConstraints(OldPassword, 0,7,1,1, HPos.CENTER, VPos.CENTER);
 
 
 
@@ -135,7 +136,7 @@ public class ClientWindow extends Stage{
 
         gp.getChildren().addAll(nameL, usernameL,addressL,contactL, passwordL, passwordConfirmL, entriesL,
                 nameField,usernameField,addresField,contactField, passwordField, passwordConfirmField,
-                entriesField, oldPasswordField, updateButton );
+                entriesField, OldPassword, oldPasswordField, updateButton );
 
         root.setCenter(null);
         root.setCenter(gp);

@@ -6,6 +6,7 @@ import View.Login.LoginWindow;
 import Family.Family;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
+import javafx.collections.ObservableList;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -71,20 +72,24 @@ public class Controller {
     public  void Logout(){
             clientDB.Logout(staffInfo.getAccountID(), staffInfo.getUsername()   );
     }
+    public ArrayList getBarangayData(){
+        return adminDB.getBarangayData();
+    }
 
-    // clientdb to Login
+    public ArrayList searchedList (String name){
+        return clientDB.searchedList(name);
+    }
     public void setLoginToDisconnected(){
         LoginWindow.getInstantance().setLoginStageToDisconnected();
     }
 
+
+    // backend to front end
     public boolean updateStaffInfo(StaffInfo staffInfo) {
                 this.staffInfo = staffInfo;
-        System.out.println(this.staffInfo.getUsername());
-        System.out.println(this.staffInfo.getAccountID());
         return  clientDB.updateStaffInfo(staffInfo,finalUsername);
     }
 
-    public ArrayList getBarangayData(){
-        return adminDB.getBarangayData();
-    }
+
 }
+

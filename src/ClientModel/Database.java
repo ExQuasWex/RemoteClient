@@ -7,6 +7,8 @@ import RMI.RemoteMethods;
 import Family.Family;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 
 import java.net.InetAddress;
@@ -16,6 +18,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * Created by Didoy on 8/24/2015.
@@ -60,6 +63,19 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
             isUpdated = false;
         }
         return  isUpdated;
+    }
+
+    @Override
+    public ArrayList searchedList(String name)  {
+        ArrayList list = new ArrayList();
+        try {
+
+            list =  server.searchedList(name);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            list.clear();
+        }
+        return list;
     }
 
     @Override
