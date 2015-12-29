@@ -7,11 +7,19 @@ import javafx.animation.Timeline;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
+import javafx.geometry.VPos;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+
 
 /**
  * Created by Didoy on 8/31/2015.
@@ -52,6 +60,10 @@ public class CustomStage extends Stage {
         centerY = (screenBound.getHeight()/2 - FinalHeigt/2) -100;
 
         t1 = new Timeline();
+
+    }
+
+    public CustomStage(){
 
     }
 
@@ -254,5 +266,38 @@ public class CustomStage extends Stage {
         }
     };
 
+
+    public void ShowConnectingWindow(BorderPane root){
+
+        GridPane grid = new GridPane();
+
+        ProgressBar pb = new ProgressBar();
+        pb.setPrefWidth(190);
+
+        Label connectingL = new Label("Connecting to Server. . .");
+
+        Timeline t = new Timeline();
+        t.setCycleCount(Timeline.INDEFINITE);
+        t.setAutoReverse(true);
+        KeyValue kv = new KeyValue(connectingL.opacityProperty(), 0.0);
+        KeyFrame kf = new KeyFrame(Duration.millis(2000), kv);
+
+        KeyValue kv2 = new KeyValue(connectingL.opacityProperty(), 1.0);
+        KeyFrame kf2 = new KeyFrame(Duration.millis(2000), kv2);
+        t.getKeyFrames().addAll(kf, kf2);
+        t.play();
+
+        grid.setConstraints(connectingL, 0, 0, 1,1, HPos.CENTER, VPos.CENTER);
+        grid.setConstraints(pb, 0, 1, 1,1, HPos.CENTER, VPos.CENTER);
+
+        grid.setAlignment(Pos.CENTER);
+
+        grid.getChildren().addAll(connectingL,pb);
+
+        root.setDisable(true);
+        root.setCenter(grid);
+
+
+    }
 
 }

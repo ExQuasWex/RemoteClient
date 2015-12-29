@@ -1,7 +1,6 @@
 package View.ClientWindow;
 
 import Controller.Controller;
-import RMI.Constant;
 import Family.Family;
 import Family.FamilyInfo;
 import Family.FamilyPoverty;
@@ -16,21 +15,12 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 
-import javax.swing.*;
-import javax.swing.text.DateFormatter;
-import java.sql.Time;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 import java.util.regex.Pattern;
 
 
@@ -82,6 +72,8 @@ public class FamilyForm extends GridPane{
     private ObservableList<Node> errorNodeList;
 
     private Bounds layoutBounds;
+
+    private SearchListener searchlistener;
 
     public FamilyForm(){
          getStylesheets().add("/CSS/familyFormCss.css");
@@ -505,23 +497,19 @@ public class FamilyForm extends GridPane{
             public void handle(ActionEvent event) {
                 String Searchedname = searchBox.getText();
 
-
-                ArrayList list = Controller.getInstance().searchedList(Searchedname);
-
-                if (Searchedname.equals("")){
-
-                }else if (list.isEmpty()){
-                    System.out.println("no records found");
-                }else {
-                    System.out.println("show records");
-                }
-
+                searchlistener.SearchEvent(Searchedname);
 
             }
         });
 
         return  topPane;
     }
+
+
+    public void addsearchListener(SearchListener listener){
+        searchlistener = listener;
+    }
+
 
     private ObservableList getBarangayCb(){
         ObservableList<String> baranagayList = FXCollections.observableArrayList();

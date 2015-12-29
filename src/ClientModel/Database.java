@@ -79,6 +79,18 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
     }
 
     @Override
+    public int getPendingAccounts(){
+        int pendingAccounts = 0;
+        try {
+            pendingAccounts = server.getPendingAccounts();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+        return pendingAccounts;
+    }
+
+    @Override
     public boolean checkDatabase() throws RemoteException, SQLException {
         connectToServer();
         return server.checkDatabase();
@@ -126,18 +138,6 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
 
     // CLIENT BASIC METHODS
 
-    @Override
-    public boolean getAdminKeyCode(String keycode) {
-        boolean bool = false;
-        try {
-                bool = server.getAdminKeyCode(keycode);
-        }catch (RemoteException e){
-            e.printStackTrace();
-            System.out.println("Client:Database:getAdminkeyCode:RemoteException");
-        }
-
-        return bool;
-    }
 
     @Override
     public boolean register(StaffRegister staffRegister){

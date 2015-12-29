@@ -1,6 +1,6 @@
 package View.Login;
 
-import View.AdminGUI.prototypeGui;
+import View.AdminGUI.AdminWindow;
 import View.ClientWindow.ClientWindow;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
@@ -82,7 +82,7 @@ public class LoginWindow  {
         toggleGroup = new ToggleGroup();
         loginToggle = new ToggleButton("Login");
         registerToggle = new ToggleButton("Register");
-        forgotToggle = new ToggleButton("Forgot");
+        forgotToggle = new         ToggleButton("Forgot");
 
         loginToggle.setToggleGroup(toggleGroup);
         registerToggle.setToggleGroup(toggleGroup);
@@ -182,7 +182,6 @@ public class LoginWindow  {
                 loginStage.setX(dragX);
                 loginStage.setY(dragY);
 
-
             }
         });
 
@@ -273,7 +272,6 @@ public class LoginWindow  {
                 userPass.setText("");
                setLoginStageToDisconnected();
             }
-
 
 
 
@@ -476,7 +474,7 @@ public class LoginWindow  {
                         gender = "Male";
                     }
 
-                    // format contact string
+                    // format contact
                     contact = contact.replaceFirst("(\\d{4})(\\d{3})(\\d{4})","$1-$2-$3");
                     contactField.setText(contact);
 
@@ -574,7 +572,7 @@ public class LoginWindow  {
                 root.setCenter(pane);
     }
 
-    public  boolean validate(StaffRegister staffReg, double x, double y, double width,MessageWindow messageBox, String keyCode){
+    public  boolean validate(StaffRegister staffReg, double x, double y, double width, MessageWindow messageBox, String keyCode){
 
         boolean isValidated = false;
 
@@ -674,10 +672,7 @@ public class LoginWindow  {
                     messageBox.showValidationInfo("The keyCode you entered is Empty", x, y, width - 20);
                     isValidated = false;
                 }
-                else if (!ctr.getAdminKeyCode(keyCode)){
-                    messageBox.showValidationInfo("The keycode you entered is invalid", x, y, width - 20);
-                    isValidated = false;
-                }
+
                 else {
                     isValidated = true;
                 }
@@ -715,8 +710,13 @@ public class LoginWindow  {
     }
 
     public void showClientWindow(){
-        ClientWindow cw = ClientWindow.getInstance();
 
+        // show Client Window
+        ClientWindow cw = ClientWindow.getInstance();
+        cw.show();
+
+
+        // list to ClientWindow when to close
         cw.show();
         cw.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
@@ -731,7 +731,8 @@ public class LoginWindow  {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                prototypeGui.getInstance().show();
+                AdminWindow.getInstance().show();
+
             }
         });
 

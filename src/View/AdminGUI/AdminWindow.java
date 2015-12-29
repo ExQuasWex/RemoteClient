@@ -7,7 +7,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -17,13 +16,13 @@ import java.util.ArrayList;
 /**
  * Created by Didoy on 10/9/2015.
  */
-public class prototypeGui  extends Stage{
+public class AdminWindow extends Stage{
 
-    private static prototypeGui adminWindow = new prototypeGui();
+    private static AdminWindow adminWindow = new AdminWindow();
     private BorderPane root;
     private ArrayList barangayDataList;
 
-    public prototypeGui(){
+    public AdminWindow(){
 
         // css settingss
 
@@ -31,8 +30,8 @@ public class prototypeGui  extends Stage{
 
         root = new BorderPane();
 
-        SlidePane sp = new SlidePane(600);
-        root.setLeft(sp);
+        SlidePane slidePane = new SlidePane(500);
+        root.setLeft(slidePane);
 
         barangayDataList = Controller.getInstance().getBarangayData();
         showInitialReports();
@@ -64,6 +63,11 @@ public class prototypeGui  extends Stage{
     }
 
 
-    public static prototypeGui getInstance(){
+    public static AdminWindow getInstance(){
         return adminWindow;}
+
+    public  void ShowManagement(String totalRequest){
+        ManagementPane mp =  new ManagementPane(totalRequest);
+        root.setCenter(mp);
+    }
 }

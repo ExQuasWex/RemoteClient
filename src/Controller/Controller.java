@@ -2,11 +2,13 @@ package Controller;
 
 import AdminModel.AdminInterfaceImp;
 import ClientModel.Database;
+import View.ClientWindow.ClientWindow;
 import View.Login.LoginWindow;
 import Family.Family;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ public class Controller {
 
 
     private static Controller controller = new Controller();
+
     private Controller() {
 
         try {
@@ -34,7 +37,10 @@ public class Controller {
         }
     }
 
-    public boolean isServerConnected(){           // check the server if is UP
+
+    // ==================== GLOBAL METHODS ==================//
+
+    public boolean isServerConnected(){
        isServerConnected  = clientDB.connectToServer();
         return  isServerConnected;
     }
@@ -46,6 +52,9 @@ public class Controller {
         return staffInfo.isAccountExist();
 
     }
+
+
+    // ====================== Encoder methods =================//
     public  boolean addFamilyInfo(Family family){
         return clientDB.addFamilyInfo(family);
     }
@@ -54,9 +63,7 @@ public class Controller {
     return staffInfo;
     }
 
-    public boolean  getAdminKeyCode(String keycode) {
-        return  clientDB.getAdminKeyCode(keycode);
-    }
+
 
     public  boolean register(StaffRegister staffRegister){
            return clientDB.register(staffRegister);
@@ -84,12 +91,27 @@ public class Controller {
     }
 
 
-    // backend to front end
+    public int getPendingAccounts(){
+
+        return clientDB.getPendingAccounts();
+    }
+
+
+
+    ////////////////////// BACKEND TO FRONT END ///////////////////
     public boolean updateStaffInfo(StaffInfo staffInfo) {
                 this.staffInfo = staffInfo;
         return  clientDB.updateStaffInfo(staffInfo,finalUsername);
     }
 
+    public static void showMessageBox(String message, Alert.AlertType alertType){
+        ClientWindow.showMessageBox(message,alertType);
+
+    }
+
+    public  void showSearchedList(ArrayList data){
+        ClientWindow.getInstance().showSearchedTable(data);
+    }
 
 }
 

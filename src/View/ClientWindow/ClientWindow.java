@@ -1,9 +1,11 @@
 package View.ClientWindow;
 
 import Controller.Controller;
+import View.Login.CustomStage;
 import View.Login.LoginWindow;
 import Family.Family;
 import clientModel.StaffInfo;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.*;
@@ -13,16 +15,16 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import javafx.scene.control.Button;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Optional;
 
 /**
  * Created by Didoy on 9/30/2015.
  */
-public class ClientWindow extends Stage{
+public class ClientWindow extends CustomStage implements Runnable{
 
     private static ClientWindow mainframe = new ClientWindow();
     private BorderPane root;
@@ -34,7 +36,6 @@ public class ClientWindow extends Stage{
     private ClientWindow(){
 
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-
 
         SlidePane sp = new SlidePane(500);
 
@@ -60,9 +61,73 @@ public class ClientWindow extends Stage{
             }
         });
 
+        fm.addsearchListener(new SearchListener() {
+            @Override
+            public void SearchEvent(String searchName) {
+                search(searchName);
+                System.out.println(searchName);
+            }
+        });
+
+
         setScene(scene);
         centerOnScreen();
-        show();
+
+    }
+
+    private void search(String Searchedname){
+        if (Controller.getInstance().isServerConnected()){
+
+                ArrayList list = Controller.getInstance().searchedList(Searchedname);
+
+                if (Searchedname.equals("")){
+                    Controller.showMessageBox("Search Box is empty", Alert.AlertType.ERROR);
+                }else if (list.isEmpty()){
+                    Controller.showMessageBox("No records found", Alert.AlertType.ERROR);
+                }else {
+                    System.out.println("show records");
+                    Controller.getInstance().showSearchedList(list);
+                }
+        }else{
+                ShowConnectingWindow(root);
+                connect();
+        }
+
+
+
+    }
+
+    private void connect(){
+
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                        public void run() {
+
+                            try {
+                                Thread.sleep(3000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            while(!Controller.getInstance().isServerConnected()){
+                                }
+                                if (Controller.getInstance().isServerConnected()){
+
+                                    Platform.runLater(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            root.setDisable(false);
+                                            root.setCenter(null);
+                                            root.setCenter(fm);
+                                            System.out.println("CONNECTED");
+                                        }
+                                    });
+
+                                }
+                        }
+                });
+
+            thread.start();
+
     }
 
     public void addFamily(Family family){
@@ -179,16 +244,14 @@ public class ClientWindow extends Stage{
 
     }
 
-    private void showMessageBox(String message, Alert.AlertType alertType){
+    public static void showMessageBox(String message, Alert.AlertType alertType){
         Alert alertBox = new Alert(alertType);
         alertBox.setTitle("Information");
         alertBox.setContentText(message);
         alertBox.setHeaderText(null);
         alertBox.show();
 
-    }
-
-
+}
 
     public void showFamilyForm(){
         root.setCenter(null);
@@ -217,9 +280,21 @@ public class ClientWindow extends Stage{
         close();
 
     }
+
+    public  void showSearchedTable(ArrayList<Family> data){
+        SearchedTable table = new SearchedTable();
+        table.setData(data);
+
+        root.setRight(table);
+
+    }
     public void showClientWindow(){
         show();
     }
 
 
+    @Override
+    public void run() {
+
+    }
 }

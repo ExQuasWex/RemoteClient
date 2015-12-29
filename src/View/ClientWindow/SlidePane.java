@@ -57,22 +57,23 @@ public class SlidePane extends HBox{
         leftVbox.getChildren().addAll(accountinfo,form,help,logout);
 
         Image arrow = new Image(getClass().getResourceAsStream("/images/leftArrow.png"),60,80,false,true);
-        Label slideB = new Label();
-        slideB.setGraphic(new ImageView(arrow));
+        Label ArrowButton = new Label();
+        ArrowButton.setGraphic(new ImageView(arrow));
 
         VBox rightVbox = new VBox();
-        rightVbox.getChildren().add(slideB);
+        rightVbox.getChildren().add(ArrowButton);
         rightVbox.setAlignment(Pos.CENTER);
 
 
-            slideB.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        // --------------------- ADD EVENT LISTENER TO ARROW BUTTON -------------------//
+            ArrowButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    if (isOFF){
-                        animateOn();
+                    if (isOFF) {
+                        showMenu();
                         isOFF = false;
-                    }else {
-                        animateOff();
+                    } else {
+                        closeMenu();
                         isOFF = true;
                     }
                 }
@@ -107,7 +108,7 @@ public class SlidePane extends HBox{
     }
 
 
-    public  void animateOn(){
+    public  void showMenu(){
         getChildren().add(0,leftVbox);
         KeyValue kv = new KeyValue(leftVbox.prefWidthProperty(), prefWidth);
         KeyFrame kf = new KeyFrame(Duration.millis(300), kv);
@@ -118,11 +119,10 @@ public class SlidePane extends HBox{
         Timeline t = new Timeline();
 
         t.getKeyFrames().addAll(kf,kf2);
-        t.getKeyFrames().add(kf);
 
         t.play();
     }
-    public  void animateOff(){
+    public  void closeMenu(){
         KeyValue kv = new KeyValue(leftVbox.prefWidthProperty(),0);
         KeyFrame kf = new KeyFrame(Duration.millis(300), kv);
         Timeline t = new Timeline();

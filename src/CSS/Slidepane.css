@@ -8,7 +8,7 @@
 .label {
     -fx-text-fill: aliceblue;
     -fx-border-color: #585858;
-    -fx-alignment: center;
+    -fx-alignment: Center;
 }
 .label:hover{
     -fx-background-color: #00a2d3     ;
