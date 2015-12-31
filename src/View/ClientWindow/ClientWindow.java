@@ -61,7 +61,7 @@ public class ClientWindow extends CustomStage implements Runnable{
             }
         });
 
-        fm.addsearchListener(new SearchListener() {
+        fm.addSearchListener(new SearchListener() {
             @Override
             public void SearchEvent(String searchName) {
                 search(searchName);
@@ -86,7 +86,8 @@ public class ClientWindow extends CustomStage implements Runnable{
                     Controller.showMessageBox("No records found", Alert.AlertType.ERROR);
                 }else {
                     System.out.println("show records");
-                    Controller.getInstance().showSearchedList(list);
+                   // Controller.getInstance().showSearchedList(list);
+                    showSearchedTable(list);
                 }
         }else{
                 ShowConnectingWindow(root);
@@ -282,9 +283,8 @@ public class ClientWindow extends CustomStage implements Runnable{
     }
 
     public  void showSearchedTable(ArrayList<Family> data){
-        SearchedTable table = new SearchedTable();
+        SearchTable table = new SearchTable();
         table.setData(data);
-
         root.setRight(table);
 
     }

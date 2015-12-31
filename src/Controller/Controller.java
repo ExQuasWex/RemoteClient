@@ -95,6 +95,10 @@ public class Controller {
 
         return clientDB.getPendingAccounts();
     }
+    public ArrayList getRequestAccounts(){
+
+        return clientDB.getRequestAccounts();
+    }
 
 
 

@@ -506,7 +506,7 @@ public class FamilyForm extends GridPane{
     }
 
 
-    public void addsearchListener(SearchListener listener){
+    public void addSearchListener(SearchListener listener){
         searchlistener = listener;
     }
 

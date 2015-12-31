@@ -34,6 +34,7 @@ public class SlidePane extends HBox{
     private  Label Management;
     private StackPane sp;
     private String totalRequest = "";
+    private    boolean  isNotificationOut;
 
     public SlidePane(double prefW){
 
@@ -84,10 +85,18 @@ public class SlidePane extends HBox{
         addMouseListenerToSlideButton(slideArrow);
 
 
+            isNotificationOut = false;
             Management.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
-                public void handle(MouseEvent event) {
-                    AdminWindow.getInstance().ShowManagement(totalRequest);
+                public void handle(MouseEvent event)
+                {
+                    if (isNotificationOut){
+                        AdminWindow.getInstance().ShowManagement(totalRequest);
+                    }else{
+                        isNotificationOut = true;
+                        sp.getChildren().remove(1,3);
+                        AdminWindow.getInstance().ShowManagement(totalRequest);
+                    }
                 }
             });
 

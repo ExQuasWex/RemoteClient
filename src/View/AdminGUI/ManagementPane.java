@@ -1,5 +1,11 @@
 package View.AdminGUI;
 
+import AdminModel.RequestAccounts;
+import Controller.Controller;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -16,6 +22,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.util.Callback;
+
+import java.util.ArrayList;
 
 
 /**
@@ -26,7 +35,7 @@ public class ManagementPane extends  BorderPane {
     private ToggleGroup toggleGroup;
 
     private GridPane grid;
-
+    private boolean isNoTificationOut;
     public ManagementPane(String totalRequest){
 
         grid = initialize(totalRequest);
@@ -77,11 +86,18 @@ public class ManagementPane extends  BorderPane {
         gp.setConstraints(manageToggle, 1,0,1,1, HPos.CENTER, VPos.TOP);
         gp.getChildren().addAll(sp, manageToggle);
 
+        isNoTificationOut = false;
         requestToggle.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                sp.getChildren().removeAll(redRect,text);
-                getRequestTable();
+
+                if (isNoTificationOut) {
+                    getRequestTable();
+                } else{
+                    isNoTificationOut = true;
+                    sp.getChildren().removeAll(redRect,text);
+                    getRequestTable();
+                }
             }
         });
 
@@ -90,11 +106,24 @@ public class ManagementPane extends  BorderPane {
     }
 
     private void getRequestTable(){
+
+        ArrayList requestList = Controller.getInstance().getRequestAccounts();
+        ObservableList Data = FXCollections.observableArrayList(requestList);
+
         TableView table = new TableView();
+
+        table.setItems(Data);
 
         TableColumn nameCol = new TableColumn("Name");
 
         table.getColumns().add(nameCol);
+
+        nameCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<RequestAccounts,String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<RequestAccounts,String> param) {
+                return new ReadOnlyObjectWrapper(param.getValue().getName());
+            }
+        });
 
         setCenter(table);
         setMargin(table,new Insets(10,40,20,20));
