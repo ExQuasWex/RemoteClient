@@ -91,11 +91,11 @@ public class SlidePane extends HBox{
                 public void handle(MouseEvent event)
                 {
                     if (isNotificationOut){
-                        AdminWindow.getInstance().ShowManagement(totalRequest);
+                        AdminWindow.getInstance().ShowManagement();
                     }else{
                         isNotificationOut = true;
                         sp.getChildren().remove(1,3);
-                        AdminWindow.getInstance().ShowManagement(totalRequest);
+                        AdminWindow.getInstance().ShowManagement();
                     }
                 }
             });
@@ -107,6 +107,8 @@ public class SlidePane extends HBox{
 
                 }
             });
+
+
 
 
         //splitpane

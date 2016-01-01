@@ -1,10 +1,12 @@
 package ClientModel;
 
+import AdminModel.RequestAccounts;
 import Controller.Controller;
 import RMI.ClientInterface;
 import RMI.Constant;
 import RMI.RemoteMethods;
 import Family.Family;
+import View.AdminGUI.TableItemListener;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
 import javafx.collections.FXCollections;
@@ -23,7 +25,7 @@ import java.util.ArrayList;
 /**
  * Created by Didoy on 8/24/2015.
  */
-public class Database extends UnicastRemoteObject implements RemoteMethods {
+public class Database extends UnicastRemoteObject implements RemoteMethods, TableItemListener {
 
    private RemoteMethods server;
    private Alert alertBox;
@@ -242,4 +244,27 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
 
 
 
+// methods from TableItemListener interface
+    @Override
+    public boolean Approve(RequestAccounts ra) {
+        boolean x = false;
+
+        try {
+            x = server.Approve(ra);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+        return x;
+    }
+
+    @Override
+    public boolean ApproveAdmin(RequestAccounts ra) {
+        return false;
+    }
+
+    @Override
+    public boolean Reject(RequestAccounts ra) {
+        return false;
+    }
 }

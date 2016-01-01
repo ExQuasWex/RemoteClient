@@ -32,13 +32,13 @@ public class SearchTable extends VBox {
     public SearchTable(){
 
         table = new TableView();
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         idCol = new TableColumn("ID");
         nameCol = new TableColumn("Name");
         spouseCol = new TableColumn("Spouse Name");
 
         table.getColumns().addAll(idCol,nameCol,spouseCol);
-
 
         getChildren().add(table);
 

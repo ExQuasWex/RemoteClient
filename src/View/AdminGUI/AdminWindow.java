@@ -1,6 +1,7 @@
 package View.AdminGUI;
 
 import AdminModel.BarangayData;
+import AdminModel.RequestAccounts;
 import Controller.Controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,21 +22,46 @@ public class AdminWindow extends Stage{
     private static AdminWindow adminWindow = new AdminWindow();
     private BorderPane root;
     private ArrayList barangayDataList;
+    private   ManagementPane mp ;
+
 
     public AdminWindow(){
 
-        // css settingss
-
-        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        Controller ctr = Controller.getInstance();
+        //Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 
         root = new BorderPane();
 
         SlidePane slidePane = new SlidePane(500);
         root.setLeft(slidePane);
 
-        barangayDataList = Controller.getInstance().getBarangayData();
+        barangayDataList = ctr.getBarangayData();
         showInitialReports();
 
+
+        // Components
+        mp =  new ManagementPane(root);
+
+            mp.addTableListener(new TableItemListener() {
+                @Override
+                public boolean Approve(RequestAccounts ra) {
+                    System.out.println("from adminwindow " + ra.getName());
+
+                    return ctr.Approve(ra);
+                }
+
+                @Override
+                public boolean ApproveAdmin(RequestAccounts ra) {
+                    return false;
+                }
+
+                @Override
+                public boolean Reject(RequestAccounts ra) {
+                    return false;
+                }
+            });
+
+        // main settings
         Scene scene = new Scene(root, 800,600);
         setScene(scene);
         initStyle(StageStyle.TRANSPARENT);
@@ -66,8 +92,8 @@ public class AdminWindow extends Stage{
     public static AdminWindow getInstance(){
         return adminWindow;}
 
-    public  void ShowManagement(String totalRequest){
-        ManagementPane mp =  new ManagementPane(totalRequest);
+    public  void ShowManagement(){
+
         root.setCenter(mp);
     }
 }

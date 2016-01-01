@@ -23,8 +23,8 @@ public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInter
         ipAddress = "localhost";
         try {
 
-            System.setProperty("java.rmi.server.hostname", ipAddress);
-            Registry reg = LocateRegistry.getRegistry(ipAddress, Constant.Adminport);
+
+            Registry reg = LocateRegistry.getRegistry( System.setProperty("java.rmi.server.hostname", ipAddress), Constant.Adminport);
             server = (AdminInterface) reg.lookup(Constant.RMIAdminID);
 
         } catch (NotBoundException e) {

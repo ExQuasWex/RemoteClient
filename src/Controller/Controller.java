@@ -1,7 +1,9 @@
 package Controller;
 
 import AdminModel.AdminInterfaceImp;
+import AdminModel.RequestAccounts;
 import ClientModel.Database;
+import View.AdminGUI.TableItemListener;
 import View.ClientWindow.ClientWindow;
 import View.Login.LoginWindow;
 import Family.Family;
@@ -16,7 +18,7 @@ import java.util.ArrayList;
 /**
  * Created by Didoy on 8/25/2015.
  */
-public class Controller {
+public class Controller implements TableItemListener {
 
     Database clientDB ;
     private  StaffInfo staffInfo;
@@ -27,7 +29,7 @@ public class Controller {
 
     private static Controller controller = new Controller();
 
-    private Controller() {
+    private Controller()  {
 
         try {
             clientDB = new Database();
@@ -117,5 +119,21 @@ public class Controller {
         ClientWindow.getInstance().showSearchedTable(data);
     }
 
+
+
+    @Override
+    public boolean Approve(RequestAccounts ra) {
+        return clientDB.Approve(ra);
+    }
+
+    @Override
+    public boolean ApproveAdmin(RequestAccounts ra) {
+        return false;
+    }
+
+    @Override
+    public boolean Reject(RequestAccounts ra) {
+        return false;
+    }
 }
 

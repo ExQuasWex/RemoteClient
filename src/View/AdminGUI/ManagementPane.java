@@ -12,10 +12,9 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -33,18 +32,73 @@ import java.util.ArrayList;
 public class ManagementPane extends  BorderPane {
 
     private ToggleGroup toggleGroup;
+    private  ContextMenu contextMenu;
+    private  TableView table;
 
     private GridPane grid;
     private boolean isNoTificationOut;
-    public ManagementPane(String totalRequest){
 
-        grid = initialize(totalRequest);
+    private TableItemListener tableListener;
+
+    private String totalRequest;
+
+    private   TableColumn nameCol;
+
+    public ManagementPane(BorderPane root){
+
+        totalRequest = getRequestNumber();
+
+        contextMenu = new ContextMenu();
+
+        MenuItem approveItem = new MenuItem("Approve");
+        MenuItem AdminItem = new MenuItem("Approve as Admin");
+        MenuItem reject = new MenuItem("Reject");
+
+        approveItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                RequestAccounts  ra = (RequestAccounts) table.getSelectionModel().getSelectedItem();
+                System.out.println(ra.getId() +" " + ra.getName() + " is now approved");
+                boolean x = tableListener.Approve(ra);
+                        if (x){
+                            refreshTable();
+                        }
+
+            }
+        });
+
+
+        AdminItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                RequestAccounts  ra = (RequestAccounts) table.getSelectionModel().getSelectedItem();
+                System.out.println(ra.getId() +" " + ra.getName() + " is now approved as admin");
+                tableListener.ApproveAdmin(ra);
+            }
+        });
+
+        reject.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                RequestAccounts  ra = (RequestAccounts) table.getSelectionModel().getSelectedItem();
+                System.out.println(ra.getId() +" " + ra.getName() + " is now reject");
+                tableListener.Reject(ra);
+            }
+        });
+
+
+
+        contextMenu.getItems().addAll(approveItem,AdminItem,reject);
+
+
+        // Initialize
+        grid = initialize(root, totalRequest);
 
         setTop(grid);
 
     }
 
-    private GridPane initialize(String totalRequest){
+    private GridPane initialize(BorderPane root, String totalRequest){
         final StackPane sp = new StackPane();
         final Rectangle redRect = new Rectangle();
         final Text text  = new Text();
@@ -92,11 +146,11 @@ public class ManagementPane extends  BorderPane {
             public void handle(ActionEvent event) {
 
                 if (isNoTificationOut) {
-                    getRequestTable();
+                    getRequestTable(root);
                 } else{
                     isNoTificationOut = true;
                     sp.getChildren().removeAll(redRect,text);
-                    getRequestTable();
+                    getRequestTable(root);
                 }
             }
         });
@@ -105,18 +159,32 @@ public class ManagementPane extends  BorderPane {
 
     }
 
-    private void getRequestTable(){
+    private void getRequestTable(BorderPane root){
 
-        ArrayList requestList = Controller.getInstance().getRequestAccounts();
-        ObservableList Data = FXCollections.observableArrayList(requestList);
+        table = new TableView();
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        TableView table = new TableView();
+        ObservableList Data = FXCollections.observableArrayList(getRequestAccounts());
 
         table.setItems(Data);
 
-        TableColumn nameCol = new TableColumn("Name");
 
-        table.getColumns().add(nameCol);
+        // create columns
+         nameCol = new TableColumn("Name");
+        TableColumn IdCol = new TableColumn("ID");
+
+
+        nameCol.setPrefWidth(400);
+
+        table.getColumns().addAll(IdCol, nameCol);
+
+
+        IdCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<RequestAccounts, String>, ObservableValue<Integer>>() {
+            @Override
+            public ObservableValue<Integer> call(TableColumn.CellDataFeatures<RequestAccounts, String> param) {
+                return new ReadOnlyObjectWrapper(param.getValue().getId());
+            }
+        });
 
         nameCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<RequestAccounts,String>, ObservableValue<String>>() {
             @Override
@@ -125,11 +193,67 @@ public class ManagementPane extends  BorderPane {
             }
         });
 
+
+
+        table.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                    if (event.getButton().equals(MouseButton.SECONDARY)){
+                      double x  = event.getScreenX();
+                      double y = event.getScreenY();
+                      showOption(root,x,y);
+                    }
+            }
+        });
+
+        table.setOnMouseReleased(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                    closeOptions();
+            }
+        });
+
+
+
         setCenter(table);
         setMargin(table,new Insets(10,40,20,20));
 
     }
 
+    private void  showOption(BorderPane root, double x, double y){
 
+        contextMenu.show(root,x,y);
+
+    }
+
+    private void closeOptions(){
+        contextMenu.hide();
+    }
+
+    public void addTableListener(TableItemListener tableItemListener){
+        tableListener = tableItemListener;
+    }
+
+    private String getRequestNumber(){
+        int pendingAccounts = Controller.getInstance().getPendingAccounts();
+        String pendingStr = String.valueOf(pendingAccounts);
+
+        return pendingStr;
+    }
+
+    private ArrayList  getRequestAccounts(){
+        ArrayList requestList = Controller.getInstance().getRequestAccounts();
+        return requestList;
+    }
+
+    private void refreshTable(){
+
+        table.getItems().clear();
+        ObservableList Data = FXCollections.observableArrayList(getRequestAccounts());
+        table.setItems(Data);
+
+        table.refresh();
+
+    }
 
 }
