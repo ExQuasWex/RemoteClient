@@ -58,9 +58,12 @@ public class ManagementPane extends  BorderPane {
             @Override
             public void handle(ActionEvent event) {
                 RequestAccounts  ra = (RequestAccounts) table.getSelectionModel().getSelectedItem();
-                System.out.println(ra.getId() +" " + ra.getName() + " is now approved");
-                boolean x = tableListener.Approve(ra);
-                        if (x){
+                boolean isActivated = tableListener.Approve(ra);
+                        if (isActivated){
+                            Controller.showMessageBox("Account Activated as Encoder", Alert.AlertType.INFORMATION);
+                            refreshTable();
+                        }else{
+                            Controller.showMessageBox("Cannot grant your request right now please try again later", Alert.AlertType.ERROR);
                             refreshTable();
                         }
 
@@ -72,8 +75,15 @@ public class ManagementPane extends  BorderPane {
             @Override
             public void handle(ActionEvent event) {
                 RequestAccounts  ra = (RequestAccounts) table.getSelectionModel().getSelectedItem();
-                System.out.println(ra.getId() +" " + ra.getName() + " is now approved as admin");
-                tableListener.ApproveAdmin(ra);
+                 boolean isActivated =  tableListener.ApproveAdmin(ra);
+
+                        if (isActivated){
+                            Controller.showMessageBox("Account Activated as Admin", Alert.AlertType.INFORMATION);
+                            refreshTable();
+                        }else{
+                            Controller.showMessageBox("Cannot grant your request right now please try again later", Alert.AlertType.ERROR);
+                            refreshTable();
+                        }
             }
         });
 
@@ -81,8 +91,16 @@ public class ManagementPane extends  BorderPane {
             @Override
             public void handle(ActionEvent event) {
                 RequestAccounts  ra = (RequestAccounts) table.getSelectionModel().getSelectedItem();
-                System.out.println(ra.getId() +" " + ra.getName() + " is now reject");
-                tableListener.Reject(ra);
+
+                boolean isRejected =  tableListener.Reject(ra);
+
+                        if (isRejected){
+                            Controller.showMessageBox("Account is Now Rejected", Alert.AlertType.INFORMATION);
+                            refreshTable();
+                        }else{
+                            Controller.showMessageBox("Cannot grant your request right now please try again later", Alert.AlertType.ERROR);
+                            refreshTable();
+                        }
             }
         });
 

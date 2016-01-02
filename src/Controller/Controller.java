@@ -128,12 +128,12 @@ public class Controller implements TableItemListener {
 
     @Override
     public boolean ApproveAdmin(RequestAccounts ra) {
-        return false;
+        return clientDB.ApproveAdmin(ra);
     }
 
     @Override
     public boolean Reject(RequestAccounts ra) {
-        return false;
+        return clientDB.Reject(ra);
     }
 }
 

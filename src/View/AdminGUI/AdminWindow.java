@@ -45,19 +45,18 @@ public class AdminWindow extends Stage{
             mp.addTableListener(new TableItemListener() {
                 @Override
                 public boolean Approve(RequestAccounts ra) {
-                    System.out.println("from adminwindow " + ra.getName());
 
                     return ctr.Approve(ra);
                 }
 
                 @Override
                 public boolean ApproveAdmin(RequestAccounts ra) {
-                    return false;
+                    return ctr.ApproveAdmin(ra);
                 }
 
                 @Override
                 public boolean Reject(RequestAccounts ra) {
-                    return false;
+                    return ctr.Reject(ra);
                 }
             });
 

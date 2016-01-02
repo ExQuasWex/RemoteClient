@@ -260,11 +260,28 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
 
     @Override
     public boolean ApproveAdmin(RequestAccounts ra) {
-        return false;
+        boolean isActivated = false;
+
+            try {
+                isActivated = server.ApproveAdmin(ra);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+
+        return isActivated;
     }
 
     @Override
     public boolean Reject(RequestAccounts ra) {
-        return false;
+        boolean isRejected = false;
+
+
+        try {
+            isRejected =  server.Reject(ra);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+        return isRejected;
     }
 }
