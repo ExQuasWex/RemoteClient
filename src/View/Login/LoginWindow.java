@@ -381,7 +381,6 @@ public class LoginWindow  {
         TextField userName = new TextField();
         PasswordField password = new PasswordField();
         PasswordField confirmPass = new PasswordField();
-        PasswordField adminPass = new PasswordField();
         RadioButton tbMale = new RadioButton("Male");
         RadioButton tbFemale = new RadioButton("FeMale");
         Button save = new Button("Save");
@@ -402,7 +401,6 @@ public class LoginWindow  {
         homeAdress.setPrefWidth(240);
         password.setPrefWidth(240);
         confirmPass.setPrefWidth(240);
-        adminPass.setPrefWidth(240);
         statusLabel.setPrefWidth(240);
         secretQ.setPrefWidth(240);
         secretAns.setPrefWidth(240);
@@ -418,7 +416,6 @@ public class LoginWindow  {
         homeAdress.setAlignment(Pos.CENTER);
         password.setAlignment(Pos.CENTER);
         confirmPass.setAlignment(Pos.CENTER);
-        adminPass.setAlignment(Pos.CENTER);
         secretAns.setAlignment(Pos.CENTER);
 
         // set prompt
@@ -428,7 +425,6 @@ public class LoginWindow  {
         homeAdress.setPromptText("Current Home Address");
         password.setPromptText("Password");
         confirmPass.setPromptText("Confirm Password");
-        adminPass.setPromptText("Admin Key Code");
         secretAns.setPromptText("Your secret answer");
 
         // set The radioButton
@@ -438,7 +434,7 @@ public class LoginWindow  {
 
         registerVbox.setPadding(new Insets(5, 5, 0, 5));
         registerVbox.getChildren().addAll(nameField,userName, contactField, homeAdress,secretQ, secretAns,
-                password,confirmPass,adminPass,hBox, save);
+                password,confirmPass,hBox, save);
 
         // setting this height will also set the height of the window
         registerVbox.setPrefHeight(380);
@@ -465,7 +461,6 @@ public class LoginWindow  {
                     String pass  = password.getText().trim();
                     String cpass = confirmPass.getText().trim();
                     String secretAnswer = secretAns.getText().trim();
-                    String keyCode = adminPass.getText().trim();
                     String gender = null;
 
                     if (tg.getSelectedToggle() == tbFemale){
@@ -495,7 +490,7 @@ public class LoginWindow  {
 
                     StaffRegister  staffRegister = new StaffRegister(name,username,contact,address,secretID,sq,secretAnswer,gender,pass,cpass);
 
-                    if (!validate(staffRegister,x,y,width,messageBox,keyCode)){
+                    if (!validate(staffRegister,x,y,width,messageBox)){
                         // let the validate method to handle this
                     }
                     else{
@@ -517,7 +512,6 @@ public class LoginWindow  {
                             contactField.setText("");
                             confirmPass.setText("");
                             homeAdress.setText("");
-                            adminPass.setText("");
                             secretAns.setText("");
 
                         }else{
@@ -572,7 +566,7 @@ public class LoginWindow  {
                 root.setCenter(pane);
     }
 
-    public  boolean validate(StaffRegister staffReg, double x, double y, double width, MessageWindow messageBox, String keyCode){
+    public  boolean validate(StaffRegister staffReg, double x, double y, double width, MessageWindow messageBox){
 
         boolean isValidated = false;
 
@@ -666,12 +660,6 @@ public class LoginWindow  {
                     isValidated = false;
                 }
 
-                                            // KEYCODE VALIDATION
-                // match the inut keycode from database admin keycode
-                else if (keyCode.equals("")){
-                    messageBox.showValidationInfo("The keyCode you entered is Empty", x, y, width - 20);
-                    isValidated = false;
-                }
 
                 else {
                     isValidated = true;

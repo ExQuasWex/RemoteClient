@@ -39,8 +39,9 @@ public class SlidePane extends HBox{
     public SlidePane(double prefW){
 
         getStylesheets().add("/css/Slidepane.css");
-        prefWidth = prefW/2;
-        setPrefWidth(prefWidth * 1.5);
+
+        prefWidth = prefW;
+        setPrefWidth(prefWidth );
 
         Management = new Label("Management");
         Label home = new Label( "Home");
@@ -196,7 +197,7 @@ public class SlidePane extends HBox{
         KeyValue kv1 = new KeyValue(leftVbox.prefWidthProperty(),prefWidth, Interpolator.EASE_BOTH);
         KeyFrame kf1 = new KeyFrame(Duration.millis(200), kv1);
 
-        KeyValue kv2 = new KeyValue(prefWidthProperty(),prefWidth*1.2);
+        KeyValue kv2 = new KeyValue(prefWidthProperty(),prefWidth);
         KeyFrame kf2 = new KeyFrame(Duration.millis(200), kv2);
 
         Timeline t = new Timeline();

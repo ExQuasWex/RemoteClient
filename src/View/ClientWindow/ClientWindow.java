@@ -16,6 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.control.Button;
+import javafx.stage.Screen;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -37,7 +38,11 @@ public class ClientWindow extends CustomStage implements Runnable{
 
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 
-        SlidePane sp = new SlidePane(500);
+        System.out.println(screen.getWidth());
+        System.out.println(screen.getWidth());
+
+
+        SlidePane sp = new SlidePane(screen.getWidth()/4);
 
         root = new BorderPane();
         root.setCenter(new Label("Center"));
@@ -52,22 +57,23 @@ public class ClientWindow extends CustomStage implements Runnable{
         setWidth(screen.getWidth());
         setHeight(screen.getHeight());
 
-        // Listener of familyForm
+        // Listener for familyForm
         fm = new FamilyForm();
-        fm.addFamilyFormListener(new FamilyFormListener() {
-            @Override
-            public void handle(Family family) {
-                addFamily(family);
-            }
-        });
 
-        fm.addSearchListener(new SearchListener() {
-            @Override
-            public void SearchEvent(String searchName) {
-                search(searchName);
-                System.out.println(searchName);
-            }
-        });
+                fm.addFamilyFormListener(new FamilyFormListener() {
+                    @Override
+                    public void handle(Family family) {
+                        addFamily(family);
+                    }
+                });
+
+                fm.addSearchListener(new SearchListener() {
+                    @Override
+                    public void SearchEvent(String searchName) {
+                        search(searchName);
+                        System.out.println(searchName);
+                    }
+                });
 
 
         setScene(scene);
@@ -285,8 +291,13 @@ public class ClientWindow extends CustomStage implements Runnable{
     public  void showSearchedTable(ArrayList<Family> data){
         SearchTable table = new SearchTable();
         table.setData(data);
+
         root.setRight(table);
 
+    }
+
+    public  void  removeSearchTable(){
+        root.setRight(null);
     }
     public void showClientWindow(){
         show();

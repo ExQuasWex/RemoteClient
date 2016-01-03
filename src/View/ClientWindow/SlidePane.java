@@ -25,8 +25,14 @@ public class SlidePane extends HBox{
 
     public SlidePane(double prefW){
         getStylesheets().add("/CSS/Slidepane.css");
-        prefWidth = prefW/2;
-        setPrefWidth(prefWidth * 1.2);
+
+        prefWidth = prefW;
+        setPrefWidth(prefWidth );
+
+        setStyle("-fx-border-color: #0082b2");
+
+//        prefWidth = prefW/2;
+//        setPrefWidth(prefWidth * 1.2);
 
         Label accountinfo = new Label( "Account");
         Label form = new Label("Form");
@@ -113,7 +119,9 @@ public class SlidePane extends HBox{
         KeyValue kv = new KeyValue(leftVbox.prefWidthProperty(), prefWidth);
         KeyFrame kf = new KeyFrame(Duration.millis(300), kv);
 
-        KeyValue kv2 = new KeyValue(prefWidthProperty(),prefWidth * 1.2);
+ //       KeyValue kv2 = new KeyValue(prefWidthProperty(),prefWidth * 1.2);
+        KeyValue kv2 = new KeyValue(prefWidthProperty(),prefWidth);
+
         KeyFrame kf2 = new KeyFrame(Duration.millis(300), kv2);
 
         Timeline t = new Timeline();

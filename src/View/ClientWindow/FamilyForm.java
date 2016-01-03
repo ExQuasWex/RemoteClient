@@ -11,11 +11,17 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.*;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
+import java.awt.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -71,15 +77,14 @@ public class FamilyForm extends GridPane{
 
     private ObservableList<Node> errorNodeList;
 
-    private Bounds layoutBounds;
-
     private SearchListener searchlistener;
 
     public FamilyForm(){
+
+          setStyle("-fx-border-color: brown");
          getStylesheets().add("/CSS/familyFormCss.css");
 
-/*        layoutBounds =  getLayoutBounds();
-        System.out.println(layoutBounds.getWidth());*/
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 
          save = new Button("Save");
          cancel = new Button("Cancel");
@@ -96,11 +101,10 @@ public class FamilyForm extends GridPane{
 
 
         /////////////////////////////////// MAIN PANE ///////////////////////////////////
+        double gap = (screen.getWidth()/4)/2;
 
-        setMargin(scrollPane, new Insets(0,0,0,200));
+        setMargin(scrollPane, new Insets(0,0,0,gap));
         setConstraints(scrollPane, 0, 0, 1, 1, HPos.CENTER, VPos.CENTER);
-
-
 
         getChildren().addAll(scrollPane);
 
@@ -144,7 +148,7 @@ public class FamilyForm extends GridPane{
         topPane.setAlignment(Pos.CENTER);
 
         subGrid.setAlignment(Pos.CENTER);
-        subGrid.setPadding(new Insets(20));
+        subGrid.setPadding(new Insets(10));
         subGrid.setMargin(topPane, new Insets(10));
         subGrid.setMargin(bottomPane, new Insets(10));
 

@@ -28,11 +28,11 @@ public class AdminWindow extends Stage{
     public AdminWindow(){
 
         Controller ctr = Controller.getInstance();
-        //Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 
         root = new BorderPane();
 
-        SlidePane slidePane = new SlidePane(500);
+        SlidePane slidePane = new SlidePane(screen.getWidth()/4);
         root.setLeft(slidePane);
 
         barangayDataList = ctr.getBarangayData();
