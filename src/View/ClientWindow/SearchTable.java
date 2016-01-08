@@ -13,11 +13,14 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
@@ -30,8 +33,6 @@ import java.util.ArrayList;
  * Created by Didoy on 12/6/2015.
  */
 public class SearchTable extends VBox {
-
-
     private TableView<Family> table;
 
     private  TableColumn idCol;
@@ -39,10 +40,24 @@ public class SearchTable extends VBox {
     private  TableColumn spouseCol;
     private  Button upButton;
 
+    private ContextMenu contextMenu;
+    private MenuItem viewItem;
+
+    private BorderPane root;
+
     private VBox innerVBox;
 
-    public SearchTable(){
+    private SearchTabWindow searchTabWindow;
 
+    public SearchTable(BorderPane root){
+
+        searchTabWindow = new SearchTabWindow();
+
+        this.root = root;
+
+        contextMenu = new ContextMenu();
+        viewItem = new MenuItem("View");
+        contextMenu.getItems().add(viewItem);
 
         innerVBox = new VBox();
 
@@ -71,8 +86,30 @@ public class SearchTable extends VBox {
             }
         });
 
+
+
+        table.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getButton().equals(MouseButton.SECONDARY)){
+                    double x  = event.getScreenX();
+                    double y = event.getScreenY();
+                    showContextMenu(root, x, y);
+                }
+            }
+        });
+
+        viewItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Family family = table.getSelectionModel().getSelectedItem();
+                System.out.println(family.getFamilyinfo().getAddress());
+            }
+        });
+
+
         innerVBox.setPrefHeight(330);
-        innerVBox.setPrefWidth(450);
+        innerVBox.setPrefWidth(300);
         innerVBox.setAlignment(Pos.TOP_CENTER);
 
         innerVBox.getChildren().addAll(table, upButton);
@@ -81,6 +118,11 @@ public class SearchTable extends VBox {
 
     }
 
+
+    private void showContextMenu(BorderPane root, double x, double y){
+        contextMenu.show(root, x, y);
+
+    }
 
     public void setData(ArrayList data){
 

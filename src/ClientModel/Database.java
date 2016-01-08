@@ -21,6 +21,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Didoy on 8/24/2015.
@@ -30,28 +31,20 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
    private RemoteMethods server;
    private Alert alertBox;
    private boolean bol;
-   private String ipAddress = ""; //Local IP address
+   private String ipAddress = "localhost"; //Local IP address
    private  Registry reg;
+    private int PORT;
+    private String REMOTE_ID;
 
 
     public Database() throws RemoteException {
 
-       ClientCallBackInit();
+        PORT = generatePort();
+        REMOTE_ID = generateRemoteID();
+        ClientCallBackInit();
+        RegisterServer();
 
 
-        try {
-            //used only for localhost
-            //reg = LocateRegistry.getRegistry("localhost");
-            //Registry reg = LocateRegistry.getRegistry("localhost",Constant.Remote_port);
-
-             reg = LocateRegistry.getRegistry(System.setProperty("java.rmi.server.hostname",ipAddress),Constant.Remote_port);
-             server = (RemoteMethods) reg.lookup(Constant.Remote_ID);
-        } catch (NotBoundException e) {
-            e.printStackTrace();
-        } catch (ConnectException ce){
-            ce.printStackTrace();
-
-        }
 
     }
 
@@ -202,7 +195,7 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
     }
 
     @Override
-    public StaffInfo Login(String user, String pass,String ipAddress)  {
+    public StaffInfo Login(String user, String pass,String ipAddress, int port, String remoteID)  {
     StaffInfo staffInfo = null;
         try {
             InetAddress rawIp  = InetAddress.getLocalHost();
@@ -210,8 +203,7 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
             int beginningIndex = strIp.indexOf("/");
             String ip = strIp.substring(beginningIndex + 1, strIp.length());
 
-
-            staffInfo = server.Login(user,pass,ip);
+            staffInfo = server.Login(user,pass,ip, PORT, REMOTE_ID);
 
         } catch (RemoteException e) {
             Controller.getInstance().setLoginToDisconnected();
@@ -222,15 +214,35 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
         return staffInfo;
     }
 
+    private void RegisterServer(){
+        try {
+            //used only for localhost
+            //reg = LocateRegistry.getRegistry("localhost");
+            //Registry reg = LocateRegistry.getRegistry("localhost",Constant.Remote_port);
+
+            reg = LocateRegistry.getRegistry(System.setProperty("java.rmi.server.hostname",ipAddress),Constant.Remote_port);
+            server = (RemoteMethods) reg.lookup(Constant.Remote_ID);
+
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+        } catch (ConnectException ce){
+            ce.printStackTrace();
+
+        } catch (AccessException e) {
+            e.printStackTrace();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void ClientCallBackInit(){
         try {
             ClientInterfaceImp clientInterfaceImp  = new ClientInterfaceImp();
-            Registry reg = LocateRegistry.createRegistry(Constant.ClientPort);
-            reg.bind(Constant.Remote_ID,clientInterfaceImp);
+            Registry reg = LocateRegistry.createRegistry(PORT);
+            reg.bind(REMOTE_ID, clientInterfaceImp);
 
-
-
+            System.out.println("Successfully created callback port: " + PORT);
         } catch (AlreadyBoundException e) {
             e.printStackTrace();
         } catch (AccessException e) {
@@ -240,6 +252,32 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
         }
 
 
+    }
+
+    private int generatePort(){
+        int port = 0;
+
+        Random ran = new Random();
+
+        for (int i = 0; i < 10; i++) {
+            port= (10000 + ran.nextInt(50000));
+        }
+
+        return port;
+    }
+
+    private String generateRemoteID(){
+        int ID = 0;
+
+        Random ran = new Random();
+
+        for (int i = 0; i < 10; i++) {
+            ID= (1000 + ran.nextInt(3560));
+        }
+
+        String Remoteid = String.valueOf(ID);
+
+        return Remoteid;
     }
 
 
@@ -284,4 +322,6 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
 
         return isRejected;
     }
+
+
 }

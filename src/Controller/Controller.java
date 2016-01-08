@@ -48,8 +48,9 @@ public class Controller implements TableItemListener {
     }
 
     public boolean  Login(String user, String Pass, String ipAddress) {
-        StaffInfo staffInfo = clientDB.Login(user,Pass, ipAddress);
+        StaffInfo staffInfo = clientDB.Login(user,Pass, ipAddress, 0, "");
         this.staffInfo = staffInfo;
+        System.out.println("Controller: Client Status " + staffInfo.getStatus());
         finalUsername = staffInfo.getUsername();
         return staffInfo.isAccountExist();
 

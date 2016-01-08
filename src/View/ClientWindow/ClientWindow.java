@@ -100,8 +100,6 @@ public class ClientWindow extends CustomStage implements Runnable{
                 connect();
         }
 
-
-
     }
 
     private void connect(){
@@ -289,7 +287,7 @@ public class ClientWindow extends CustomStage implements Runnable{
     }
 
     public  void showSearchedTable(ArrayList<Family> data){
-        SearchTable table = new SearchTable();
+        SearchTable table = new SearchTable(root);
         table.setData(data);
 
         root.setRight(table);

@@ -81,7 +81,6 @@ public class FamilyForm extends GridPane{
 
     public FamilyForm(){
 
-          setStyle("-fx-border-color: brown");
          getStylesheets().add("/CSS/familyFormCss.css");
 
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
@@ -875,6 +874,11 @@ public class FamilyForm extends GridPane{
 
     public void addFamilyFormListener (FamilyFormListener familyFormListener){
         this.familyFormListener = familyFormListener;
+
+    }
+
+    public void setDate(String date){
+        dateField.setText(date);
 
     }
 

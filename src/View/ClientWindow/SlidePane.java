@@ -29,7 +29,6 @@ public class SlidePane extends HBox{
         prefWidth = prefW;
         setPrefWidth(prefWidth );
 
-        setStyle("-fx-border-color: #0082b2");
 
 //        prefWidth = prefW/2;
 //        setPrefWidth(prefWidth * 1.2);
