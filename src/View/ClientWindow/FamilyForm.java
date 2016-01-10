@@ -1,9 +1,9 @@
 package View.ClientWindow;
 
 import Controller.Controller;
-import Family.Family;
-import Family.FamilyInfo;
-import Family.FamilyPoverty;
+import Remote.Method.FamilyModel.Family;
+import Remote.Method.FamilyModel.FamilyInfo;
+import Remote.Method.FamilyModel.FamilyPoverty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -24,7 +24,6 @@ import javafx.scene.layout.GridPane;
 import java.awt.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Pattern;
@@ -114,7 +113,7 @@ public class FamilyForm extends GridPane{
 
                 if (isValidated()){
                     System.out.println("All Family information are validated");
-                    //Save();
+                    Save();
                 }else {
                     // undecided
                 }
@@ -606,8 +605,7 @@ public class FamilyForm extends GridPane{
 
     private void Save(){
 
-        if (underEmployedCBox.getSelectionModel().isEmpty()){
-
+            // Family Information
             String inputedDate = dateField.getText();
             int surveyedYr = Integer.parseInt(surveyedDateField.getText());
             int residencyYr = Integer.parseInt(yrResidency.getText());
@@ -629,6 +627,12 @@ public class FamilyForm extends GridPane{
             String isunderEmployed = "";
             String childrenScl = childrenSchlCBox.getSelectionModel().getSelectedItem().toString();
 
+                    if (underEmployedCBox.getSelectionModel().isEmpty()){
+                        isunderEmployed = "";
+                    }else {
+                         isunderEmployed = underEmployedCBox.getSelectionModel().getSelectedItem().toString();
+                    }
+
 
             FamilyInfo familyInfo = new FamilyInfo(clientID,inputedDate,surveyedYr,residencyYr,
                     numofchildren,name,spousename,age,maritalStatus,barangay,gender,address );
@@ -637,43 +641,7 @@ public class FamilyForm extends GridPane{
                     occupancy,isunderEmployed,childrenScl);
 
             family = new Family(familyInfo,familyPoverty);
-            System.out.println("no error");
-
-
-        }else{
-
-            String inputedDate = dateField.getText();
-            int surveyedYr = Integer.parseInt(surveyedDateField.getText());
-            int residencyYr = Integer.parseInt(yrResidency.getText());
-            int numofchildren = Integer.parseInt(numofChildrenF.getText());
-            String name = fnameField.getText() + " " + lnameField.getText();
-            String spousename = spousefnameField.getText() + " " + spouselnameField.getText();
-            String age = agefield.getText();
-            String maritalStatus =  maritalCBox.getSelectionModel().getSelectedItem().toString();
-            String barangay = barangayCb.getSelectionModel().getSelectedItem().toString();
-            String gender =  genderCB.getSelectionModel().getSelectedItem().toString();
-            String address =  addressF.getText();
-
-
-            //poverty factors
-            String hasOtherIncome = otherIncomeCbox.getSelectionModel().getSelectedItem().toString();
-            String isBelow8k = below8kCbox.getSelectionModel().getSelectedItem().toString();
-            String ownership = ownershipCbox.getSelectionModel().getSelectedItem().toString();
-            String occupancy = occupancyCBox.getSelectionModel().getSelectedItem().toString();
-            String isunderEmployed = underEmployedCBox.getSelectionModel().getSelectedItem().toString();
-            String childrenScl = childrenSchlCBox.getSelectionModel().getSelectedItem().toString();
-
-            FamilyInfo familyInfo = new FamilyInfo(clientID,inputedDate,surveyedYr,residencyYr,
-                    numofchildren,name,spousename,age,maritalStatus,barangay,gender,address );
-
-            FamilyPoverty familyPoverty  = new FamilyPoverty(hasOtherIncome,isBelow8k,ownership,
-                    occupancy,isunderEmployed,childrenScl);
-
-            family = new Family(familyInfo,familyPoverty);
-            System.out.println("no error");
-
-
-        }
+            familyFormListener.handle(family);
 
     }
 
@@ -876,16 +844,6 @@ public class FamilyForm extends GridPane{
         this.familyFormListener = familyFormListener;
 
     }
-
-    public void setDate(String date){
-        dateField.setText(date);
-
-    }
-
-
-
-
-
 
 
 }

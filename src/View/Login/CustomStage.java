@@ -297,7 +297,6 @@ public class CustomStage extends Stage {
         root.setDisable(true);
         root.setCenter(grid);
 
-
     }
 
 }

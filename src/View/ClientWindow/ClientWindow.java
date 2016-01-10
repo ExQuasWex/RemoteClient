@@ -3,7 +3,7 @@ package View.ClientWindow;
 import Controller.Controller;
 import View.Login.CustomStage;
 import View.Login.LoginWindow;
-import Family.Family;
+import Remote.Method.FamilyModel.Family;
 import clientModel.StaffInfo;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -16,7 +16,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.control.Button;
-import javafx.stage.Screen;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -71,7 +70,6 @@ public class ClientWindow extends CustomStage implements Runnable{
                     @Override
                     public void SearchEvent(String searchName) {
                         search(searchName);
-                        System.out.println(searchName);
                     }
                 });
 
@@ -135,10 +133,24 @@ public class ClientWindow extends CustomStage implements Runnable{
 
     }
 
-    public void addFamily(Family family){
+    public boolean addFamily(Family family){
 
-        System.out.println(family.getFamilyinfo().getName());
-       // return Controller.getInstance().addFamilyInfo(Family);
+    boolean success = false;
+
+      if (Controller.getInstance().isServerConnected()){
+
+          success = Controller.getInstance().addFamilyInfo(family);
+
+                if (success){
+                    Controller.showMessageBox("Successfully Save Family Information", Alert.AlertType.INFORMATION);
+                }else {
+                    Controller.showMessageBox("There was problem occur, please try again after few seconds", Alert.AlertType.ERROR);
+                }
+      }else {
+                 ShowConnectingWindow(root);
+                 // Add connection functionality here
+      }
+       return success;
     }
 
     public static ClientWindow getInstance(){

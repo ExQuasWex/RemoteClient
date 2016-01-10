@@ -2,15 +2,12 @@ package ClientModel;
 
 import AdminModel.RequestAccounts;
 import Controller.Controller;
-import RMI.ClientInterface;
 import RMI.Constant;
 import RMI.RemoteMethods;
-import Family.Family;
+import Remote.Method.FamilyModel.Family;
 import View.AdminGUI.TableItemListener;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 
 import java.net.InetAddress;
@@ -129,16 +126,13 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
         });
 
 
+        t1.start();
+
         try {
             t1.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        t1.start();
-
-
-
         return bol;
     }
 

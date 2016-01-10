@@ -16,9 +16,7 @@ public class MainApp extends Application {
 
     public static void main(String[] arg) throws RemoteException {
 
-
         Application.launch(arg);
-
 
     }
 

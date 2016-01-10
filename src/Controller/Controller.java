@@ -6,10 +6,9 @@ import ClientModel.Database;
 import View.AdminGUI.TableItemListener;
 import View.ClientWindow.ClientWindow;
 import View.Login.LoginWindow;
-import Family.Family;
+import Remote.Method.FamilyModel.Family;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
-import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 
 import java.rmi.RemoteException;
@@ -43,7 +42,7 @@ public class Controller implements TableItemListener {
     // ==================== GLOBAL METHODS ==================//
 
     public boolean isServerConnected(){
-       isServerConnected  = clientDB.connectToServer();
+        isServerConnected  = clientDB.connectToServer();
         return  isServerConnected;
     }
 

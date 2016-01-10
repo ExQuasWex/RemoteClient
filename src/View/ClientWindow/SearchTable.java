@@ -1,12 +1,10 @@
 package View.ClientWindow;
 
-import Family.Family;
-import javafx.animation.Interpolator;
+import Remote.Method.FamilyModel.Family;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,12 +19,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import javafx.util.Duration;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -47,11 +43,8 @@ public class SearchTable extends VBox {
 
     private VBox innerVBox;
 
-    private SearchTabWindow searchTabWindow;
 
     public SearchTable(BorderPane root){
-
-        searchTabWindow = new SearchTabWindow();
 
         this.root = root;
 
@@ -99,11 +92,18 @@ public class SearchTable extends VBox {
             }
         });
 
+        /*
+         Trigger to create new window
+         and view the Information
+         of the searched
+         person
+          */
         viewItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 Family family = table.getSelectionModel().getSelectedItem();
-                System.out.println(family.getFamilyinfo().getAddress());
+                SearchTabWindow.getInstance().addTab(family.getFamilyinfo().getName(), family);
+
             }
         });
 
