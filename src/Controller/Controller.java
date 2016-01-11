@@ -10,9 +10,11 @@ import Remote.Method.FamilyModel.Family;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * Created by Didoy on 8/25/2015.
@@ -103,8 +105,9 @@ public class Controller implements TableItemListener {
     }
 
 
+    // ======================bACK TO FRONT END=================//
 
-    ////////////////////// BACKEND TO FRONT END ///////////////////
+
     public boolean updateStaffInfo(StaffInfo staffInfo) {
                 this.staffInfo = staffInfo;
         return  clientDB.updateStaffInfo(staffInfo,finalUsername);
@@ -115,8 +118,18 @@ public class Controller implements TableItemListener {
 
     }
 
+    public boolean showConfirmationMessage(String message, Alert.AlertType alertType, ArrayList list){
+        return ClientWindow.getInstance().showConfirmationMessage("We found similar data your trying to add, would you like to check before proceeding?",
+                Alert.AlertType.CONFIRMATION, list);
+
+    }
+
     public  void showSearchedList(ArrayList data){
         ClientWindow.getInstance().showSearchedTable(data);
+    }
+
+    public String getMethodIdenifier(){
+        return clientDB.getMethodIdentifiers();
     }
 
 

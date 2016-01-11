@@ -32,7 +32,7 @@ public class ClientWindow extends CustomStage implements Runnable{
     private Button updateButton;
     private    StaffInfo staffInfo;
 
-
+    private boolean isNotified = false;
     private ClientWindow(){
 
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
@@ -143,8 +143,15 @@ public class ClientWindow extends CustomStage implements Runnable{
 
                 if (success){
                     Controller.showMessageBox("Successfully Save Family Information", Alert.AlertType.INFORMATION);
+
                 }else {
-                    Controller.showMessageBox("There was problem occur, please try again after few seconds", Alert.AlertType.ERROR);
+
+                    if (Controller.getInstance().getMethodIdenifier().equals("NOTIFY")){
+
+                    }else {
+                        Controller.showMessageBox("There was problem occur, please try again after few seconds", Alert.AlertType.ERROR);
+                    }
+
                 }
       }else {
                  ShowConnectingWindow(root);
@@ -268,7 +275,28 @@ public class ClientWindow extends CustomStage implements Runnable{
         alertBox.setHeaderText(null);
         alertBox.show();
 
-}
+        }
+
+    public  boolean showConfirmationMessage(String message,Alert.AlertType alertType, ArrayList list){
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                Alert alert = new Alert(alertType);
+                alert.setTitle("Information Message");
+                alert.setHeaderText(message);
+                alert.setContentText(null);
+
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK){
+                    showSearchedTable(list);
+                } else {
+                    isNotified = false;
+                }
+            }
+        });
+
+        return  isNotified;
+    }
 
     public void showFamilyForm(){
         root.setCenter(null);

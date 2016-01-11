@@ -189,7 +189,7 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
     }
 
     @Override
-    public StaffInfo Login(String user, String pass,String ipAddress, int port, String remoteID)  {
+    public StaffInfo Login(String user, String pass, String ipAddress, int port, String remoteID)  {
     StaffInfo staffInfo = null;
         try {
             InetAddress rawIp  = InetAddress.getLocalHost();
@@ -315,6 +315,18 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
         }
 
         return isRejected;
+    }
+
+    @Override
+    public String getMethodIdentifiers() {
+        String methodName =  "";
+
+        try {
+            methodName =  server.getMethodIdentifiers();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return methodName;
     }
 
 

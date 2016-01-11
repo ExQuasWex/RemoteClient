@@ -82,7 +82,7 @@ public class FamilyForm extends GridPane{
 
          getStylesheets().add("/CSS/familyFormCss.css");
 
-        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 
          save = new Button("Save");
          cancel = new Button("Cancel");
@@ -163,7 +163,7 @@ public class FamilyForm extends GridPane{
     }
 
     private GridPane getBottomPane(){
-        ////////////////////////////////// BOTTOM PANE /////////////////////////////////////////////////
+        //======================================= BOTTOM PANE =======================================//
 
         bottomPane = new GridPane();
 
@@ -186,6 +186,7 @@ public class FamilyForm extends GridPane{
 
         ownershipCbox.setPrefWidth(115);
         childrenSchlCBox.setPrefWidth(115);
+        childrenSchlCBox.setDisable(true);
         occupancyCBox.setPrefWidth(115);
 
         underEmployedCBox.setDisable(true);
@@ -437,8 +438,11 @@ public class FamilyForm extends GridPane{
                         int children = Integer.parseInt(numofChildrenF.getText());
                         if (children > 0 ){
                             numofChildrenF.setText(String.valueOf(children));
+                            childrenSchlCBox.setDisable(false);
                         }else {
                             numofChildrenF.setText("0");
+                            childrenSchlCBox.setDisable(true);
+                            childrenSchlCBox.getSelectionModel().clearSelection();
                         }
                     }else {
                         numofChildrenF.setText("0");
@@ -448,6 +452,7 @@ public class FamilyForm extends GridPane{
 
             }
         });
+
 
         // add Change listener to validate number of children field
         agefield.focusedProperty().addListener(new ChangeListener<Boolean>() {
@@ -462,7 +467,6 @@ public class FamilyForm extends GridPane{
                         agefield.setText("");
                     }
                 }
-
 
             }
         });
@@ -491,6 +495,8 @@ public class FamilyForm extends GridPane{
                 }
             }
         });
+
+
 
 
 
@@ -625,7 +631,13 @@ public class FamilyForm extends GridPane{
             String ownership = ownershipCbox.getSelectionModel().getSelectedItem().toString();
             String occupancy = occupancyCBox.getSelectionModel().getSelectedItem().toString();
             String isunderEmployed = "";
-            String childrenScl = childrenSchlCBox.getSelectionModel().getSelectedItem().toString();
+            String childrenScl;
+
+                    if (childrenSchlCBox.getSelectionModel().isEmpty()){
+                        childrenScl = "";
+                    }else {
+                        childrenScl = childrenSchlCBox.getSelectionModel().getSelectedItem().toString();
+                    }
 
                     if (underEmployedCBox.getSelectionModel().isEmpty()){
                         isunderEmployed = "";
@@ -760,10 +772,15 @@ public class FamilyForm extends GridPane{
 
             }
             else if (childrenSchlCBox.getSelectionModel().isEmpty()){
-                isvalidate = false;
-                showErrorMessage("Children in school option is empty","Error Information",childrenSchlCBox);
+                    int children = Integer.parseInt(numofChildrenF.getText());
+                          if (children == 0){
+                                isvalidate = true;
+                          }else if (children >= 1){
+                              isvalidate = false;
+                              showErrorMessage("Children in school option is empty","Error Information",childrenSchlCBox);
+                          }
 
-            }
+                 }
             else {
                 isvalidate = true;
             }
