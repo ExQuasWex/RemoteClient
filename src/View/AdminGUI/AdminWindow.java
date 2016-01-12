@@ -3,6 +3,7 @@ package View.AdminGUI;
 import AdminModel.BarangayData;
 import AdminModel.RequestAccounts;
 import Controller.Controller;
+import View.Login.LoginWindow;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -25,18 +26,17 @@ public class AdminWindow extends Stage{
     private   ManagementPane mp ;
 
 
-    public AdminWindow(){
+    private AdminWindow(){
 
         Controller ctr = Controller.getInstance();
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 
         root = new BorderPane();
-
-        SlidePane slidePane = new SlidePane(screen.getWidth()/4);
-        root.setLeft(slidePane);
+        AdminSlidePane adminSlidePane = new AdminSlidePane(screen.getWidth()/4);
+        root.setLeft(adminSlidePane);
 
         barangayDataList = ctr.getBarangayData();
-        showInitialReports();
+        showInitialReports(barangayDataList);
 
 
         // Components
@@ -61,13 +61,14 @@ public class AdminWindow extends Stage{
             });
 
         // main settings
-        Scene scene = new Scene(root, 800,600);
+        Scene scene = new Scene(root, 1000,600);
+        scene.getStylesheets().add("/CSS/ClientWindowCSS.css");
         setScene(scene);
         initStyle(StageStyle.TRANSPARENT);
         centerOnScreen();
 
     }
-    private void showInitialReports(){
+    private void showInitialReports(ArrayList barangayDataList){
         int x = 0;
         BorderPane bp = new BorderPane();
         System.out.println("Initial size:" + barangayDataList.size());
@@ -87,12 +88,18 @@ public class AdminWindow extends Stage{
 
     }
 
-
     public static AdminWindow getInstance(){
         return adminWindow;}
 
     public  void ShowManagement(){
 
         root.setCenter(mp);
+    }
+
+    public  void AdminLogout(){
+         getInstance().close();
+        LoginWindow.getInstantance().showLoginWindow(true);
+
+        System.out.println("Admin logut called");
     }
 }

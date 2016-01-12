@@ -26,7 +26,7 @@ import javafx.util.Duration;
 /**
  * Created by Didoy on 10/1/2015.
  */
-public class SlidePane extends HBox{
+public class AdminSlidePane extends HBox{
 
     private VBox leftVbox;
     private boolean isOFF;
@@ -36,9 +36,9 @@ public class SlidePane extends HBox{
     private String totalRequest = "";
     private    boolean  isNotificationOut;
 
-    public SlidePane(double prefW){
+    public AdminSlidePane(double prefW){
 
-        getStylesheets().add("/css/Slidepane.css");
+        getStylesheets().add("/CSS/AdminSlidepane.css");
 
         prefWidth = prefW;
         setPrefWidth(prefWidth );
@@ -48,6 +48,8 @@ public class SlidePane extends HBox{
         Label work = new Label("Work");
         Label reports = new Label("Reports");
         Label help = new Label("Help");
+        Label logout = new Label("Logout");
+
 
 
         // sizing width
@@ -55,12 +57,15 @@ public class SlidePane extends HBox{
         work.setPrefWidth(prefWidth-2);
         reports.setPrefWidth(prefWidth-2);
         help.setPrefWidth(prefWidth-2);
+        logout.setPrefWidth(prefWidth-2);
+
 
         // sizing height
         home.setPrefHeight(30);
         work.setPrefHeight(30);
         reports.setPrefHeight(30);
         help.setPrefHeight(30);
+        logout.setPrefHeight(30);
 
 
         Image arrow = new Image(getClass().getResourceAsStream("/images/leftArrow.png"),40,70,false,true);
@@ -80,7 +85,7 @@ public class SlidePane extends HBox{
         leftVbox.setFillWidth(true);
         leftVbox.setAlignment(Pos.TOP_CENTER);
         leftVbox.setPrefWidth(prefWidth);
-        leftVbox.getChildren().addAll(home,work,sp,reports);
+        leftVbox.getChildren().addAll(home,work,sp,reports, logout);
 
 
         addMouseListenerToSlideButton(slideArrow);
@@ -111,9 +116,18 @@ public class SlidePane extends HBox{
 
 
 
+        logout.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+               AdminWindow.getInstance().AdminLogout();
+            }
+        });
+
+
+
 
         //splitpane
-        setPrefWidth(prefWidth*1.2);
+        setPrefWidth(prefWidth * 1.2);
         getChildren().addAll(leftVbox, rightVbox);
 
     }

@@ -1,0 +1,38 @@
+.root{
+
+}
+.vBox-list{
+    -fx-background-color: #383838;
+}
+
+.label {
+    -fx-text-fill: aliceblue;
+    -fx-border-color: #585858;
+    -fx-alignment: Center;
+}
+.label:hover{
+    -fx-background-color: #00a2d3     ;
+    -fx-text-fill: #383838;
+}
+
+.label-arrow{
+    -fx-border-color: null ;
+
+}
+.label-arrow:hover{
+    -fx-background-color: null;
+    -fx-text-fill: null;
+
+}
+
+.AccountTextField{
+    -fx-background-size: 12%;
+    -fx-background-repeat: no-repeat;
+    -fx-background-image: url("/images/administratorIcon.png");
+     fx-background-repeat: no-repeat;
+    -fx-background-position: 25%;
+    -fx-font-size: 13px;
+
+}
+
+

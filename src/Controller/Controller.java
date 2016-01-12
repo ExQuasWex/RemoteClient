@@ -84,6 +84,10 @@ public class Controller implements TableItemListener {
             clientDB.Logout(staffInfo.getAccountID(), staffInfo.getUsername()   );
     }
     public ArrayList getBarangayData(){
+        ArrayList list = adminDB.getBarangayData();
+            if (list.isEmpty()){
+                System.out.println("Barangay list is empty detected fromm Contoller ");
+            }
         return adminDB.getBarangayData();
     }
 

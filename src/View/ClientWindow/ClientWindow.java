@@ -319,9 +319,11 @@ public class ClientWindow extends CustomStage implements Runnable{
     }
 
     public void closeClientWindow(){
+        // logout from database
         Controller.getInstance().Logout();
+        // logout UI
         LoginWindow.getInstantance().showLoginWindow(true);
-        System.out.println("log out fnish");
+        System.out.println("log out fnish from clientWindow");
         close();
 
     }

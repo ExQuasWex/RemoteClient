@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ArtifactManager">
     <artifact type="jar" name="RemoteClient:jar">
-      <output-path>$USER_HOME$/Desktop</output-path>
+      <output-path>$USER_HOME$/Desktop/META-INF/</output-path>
       <root id="archive" name="RemoteClient.jar">
         <element id="directory" name="META-INF">
           <element id="file-copy" path="$USER_HOME$/Desktop/META-INF/MANIFEST.MF" />

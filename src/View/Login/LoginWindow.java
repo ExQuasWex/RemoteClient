@@ -720,10 +720,8 @@ public class LoginWindow  {
             @Override
             public void run() {
                 AdminWindow.getInstance().show();
-
             }
         });
-
     }
 
 }
