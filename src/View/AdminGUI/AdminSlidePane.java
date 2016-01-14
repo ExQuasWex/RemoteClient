@@ -92,6 +92,17 @@ public class AdminSlidePane extends HBox{
 
 
             isNotificationOut = false;
+
+        // ==================== Adding actionEvent to Labels =============//
+
+            reports.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    AdminWindow.getInstance().ShowReport();
+                }
+            });
+
+
             Management.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event)
@@ -115,14 +126,12 @@ public class AdminSlidePane extends HBox{
             });
 
 
-
         logout.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                AdminWindow.getInstance().AdminLogout();
             }
         });
-
 
 
 

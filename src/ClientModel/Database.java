@@ -1,7 +1,9 @@
 package ClientModel;
 
+import AdminModel.Params;
 import AdminModel.RequestAccounts;
 import Controller.Controller;
+import RMI.AdminInterface;
 import RMI.Constant;
 import RMI.RemoteMethods;
 import Remote.Method.FamilyModel.Family;
@@ -40,8 +42,6 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
         REMOTE_ID = generateRemoteID();
         ClientCallBackInit();
         RegisterServer();
-
-
 
     }
 
@@ -245,7 +245,6 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
             e.printStackTrace();
         }
 
-
     }
 
     private int generatePort(){
@@ -328,6 +327,9 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
         }
         return methodName;
     }
+
+
+
 
 
 }

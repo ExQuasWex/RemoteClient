@@ -3,6 +3,7 @@ package View.AdminGUI;
 import AdminModel.BarangayData;
 import AdminModel.RequestAccounts;
 import Controller.Controller;
+import View.AdminGUI.Report.Report.Layouts.MainReportPane;
 import View.Login.LoginWindow;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -70,7 +71,6 @@ public class AdminWindow extends Stage{
     }
     private void showInitialReports(ArrayList barangayDataList){
         int x = 0;
-        BorderPane bp = new BorderPane();
         System.out.println("Initial size:" + barangayDataList.size());
 
         ObservableList<PieChart.Data>  pieData = FXCollections.observableArrayList();
@@ -83,8 +83,7 @@ public class AdminWindow extends Stage{
         PieChart pc = new PieChart(pieData);
         pc.setTitle("General Reports");
 
-        bp.setCenter(pc);
-        root.setCenter(bp);
+        root.setCenter(pc);
 
     }
 
@@ -94,6 +93,10 @@ public class AdminWindow extends Stage{
     public  void ShowManagement(){
 
         root.setCenter(mp);
+    }
+
+    public  void ShowReport(){
+        root.setCenter(MainReportPane.getInstance());
     }
 
     public  void AdminLogout(){

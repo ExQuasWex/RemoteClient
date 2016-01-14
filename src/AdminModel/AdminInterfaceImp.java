@@ -11,6 +11,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -19,12 +20,44 @@ import java.util.ArrayList;
 public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInterface {
 
     private String ipAddress = "localhost";
-    private AdminInterface server;
+    private static AdminInterface server = null;
+    private boolean isConnected = false;
 
     public AdminInterfaceImp() throws RemoteException {
 
-        RegisterServer();
+        connectToServer();
 
+    }
+
+    public boolean connectToServer(){
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    Registry reg = LocateRegistry.getRegistry(System.setProperty("java.rmi.server.hostname", ipAddress), Constant.Adminport);
+                    server = (AdminInterface) reg.lookup(Constant.RMIAdminID);
+                    isConnected = server.checkConnectDB();
+
+                } catch (RemoteException e) {
+                    System.out.println("Client:Database:connectToServer:RemoteException");
+                    isConnected = false;
+
+                } catch (NotBoundException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        t1.start();
+
+        try {
+            t1.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return isConnected;
     }
 
     @Override
@@ -40,26 +73,65 @@ public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInter
         return list;
     }
 
+    @Override
+    public boolean checkConnectDB() throws RemoteException {
+        return false;
+    }
 
-    private void RegisterServer() {
+    // ==================== ADMIN REPORTS ===================//
+    @Override
+    public OverViewReportObject getOverViewData(Params params, String type){
+        OverViewReportObject overViewReportObject = null;
         try {
-            //used only for localhost
-            //reg = LocateRegistry.getRegistry("localhost");
-            //Registry reg = LocateRegistry.getRegistry("localhost",Constant.Remote_port);
-
-            Registry reg = LocateRegistry.getRegistry(System.setProperty("java.rmi.server.hostname", ipAddress), Constant.Adminport);
-            server = (AdminInterface) reg.lookup(Constant.RMIAdminID);
-
-        } catch (NotBoundException e) {
-            e.printStackTrace();
-        } catch (ConnectException ce) {
-            ce.printStackTrace();
-
-        } catch (AccessException e) {
-            e.printStackTrace();
+            overViewReportObject =  server.getOverViewData(params, type);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-
+        return  overViewReportObject;
     }
+    @Override
+    public ArrayList getCompareOverViewData(Params params, String type){
+        ArrayList list = new ArrayList();
+
+        try {
+            list =  server.getCompareOverViewData(params, type);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return  list;
+    }
+    @Override
+    public ArrayList getCompareSpecificData(Params params, String type){
+        ArrayList list = new ArrayList();
+
+        try {
+            list =  server.getCompareSpecificData(params, type);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return  list;
+    }
+    @Override
+    public ArrayList getSpecificOverViewData(Params params, String type){
+        ArrayList list = new ArrayList();
+
+        try {
+            list =  server.getSpecificOverViewData(params, type);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return  list;
+    }
+    @Override
+    public ArrayList getSpecific(Params params, String type){
+        ArrayList list = new ArrayList();
+
+        try {
+            list =  server.getSpecific(params, type);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return  list;
+    }
+
 }

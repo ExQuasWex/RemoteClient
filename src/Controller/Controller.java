@@ -1,6 +1,8 @@
 package Controller;
 
 import AdminModel.AdminInterfaceImp;
+import AdminModel.OverViewReportObject;
+import AdminModel.Params;
 import AdminModel.RequestAccounts;
 import ClientModel.Database;
 import View.AdminGUI.TableItemListener;
@@ -35,6 +37,7 @@ public class Controller implements TableItemListener {
         try {
             clientDB = new Database();
             adminDB = new AdminInterfaceImp();
+
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -45,7 +48,13 @@ public class Controller implements TableItemListener {
 
     public boolean isServerConnected(){
         isServerConnected  = clientDB.connectToServer();
-        return  isServerConnected;
+        boolean isAdminServerConnected = adminDB.connectToServer();
+
+            if (isAdminServerConnected && isServerConnected){
+                return true;
+            }else {
+                return false;
+            }
     }
 
     public boolean  Login(String user, String Pass, String ipAddress) {
@@ -152,5 +161,35 @@ public class Controller implements TableItemListener {
     public boolean Reject(RequestAccounts ra) {
         return clientDB.Reject(ra);
     }
+
+
+
+    // ==================== ADMIN REPORTS ===================//
+
+    public OverViewReportObject getOverViewData(Params params, String type){
+
+        return adminDB.getOverViewData( params,  type);
+    }
+    public ArrayList getCompareOverViewData(Params params, String type){
+
+        return adminDB.getCompareOverViewData( params,  type);
+    }
+
+    public ArrayList getCompareSpecificData(Params params, String type){
+
+        return adminDB.getCompareSpecificData( params,  type);
+    }
+
+    public ArrayList getSpecificOverViewData(Params params, String type){
+
+        return adminDB.getSpecificOverViewData( params,  type);
+    }
+
+    public ArrayList getSpecific(Params params, String type){
+
+        return adminDB.getSpecific(params, type);
+    }
+
+
 }
 

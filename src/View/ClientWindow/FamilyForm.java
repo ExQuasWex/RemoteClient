@@ -4,6 +4,7 @@ import Controller.Controller;
 import Remote.Method.FamilyModel.Family;
 import Remote.Method.FamilyModel.FamilyInfo;
 import Remote.Method.FamilyModel.FamilyPoverty;
+import View.AdminGUI.Report.DateUtil.DateUtil;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -24,6 +25,7 @@ import javafx.scene.layout.GridPane;
 import java.awt.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Pattern;
@@ -48,7 +50,7 @@ public class FamilyForm extends GridPane{
 
     //top pane
     private TextField dateField;
-    private TextField surveyedDateField;
+    private DatePicker datePicker;
     private TextField fnameField;
     private TextField lnameField;
     private TextField spousefnameField;
@@ -119,6 +121,17 @@ public class FamilyForm extends GridPane{
                 }
             }
         });
+
+        datePicker.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                String x = datePicker.getValue().toString();
+                LocalDate date = LocalDate.parse(x);
+                System.out.println(date.getMonth());
+
+            }
+        });
+
     }
 
     private GridPane getSubGrid(){
@@ -163,6 +176,7 @@ public class FamilyForm extends GridPane{
     }
 
     private GridPane getBottomPane(){
+
         //======================================= BOTTOM PANE =======================================//
 
         bottomPane = new GridPane();
@@ -323,7 +337,7 @@ public class FamilyForm extends GridPane{
 
         // topPane nodes declaration
         dateField  = new TextField(dateFormat.format(date));
-        surveyedDateField  = new TextField();
+        datePicker = new DatePicker();
         fnameField = new TextField();
         lnameField= new TextField();
         spousefnameField = new TextField();
@@ -342,7 +356,7 @@ public class FamilyForm extends GridPane{
         lnameField.setPromptText("Last Name");
         spousefnameField.setPromptText("First Name");
         spouselnameField.setPromptText("Last Name");
-        surveyedDateField.setPromptText("e.g 2014");
+        datePicker.setPromptText("e.g 2014");
         agefield.setPromptText("35");
         addressF.setPromptText("e.g 12345 Manga st. Mabalacat");
         yrResidency.setPromptText("e.g 2012");
@@ -383,7 +397,7 @@ public class FamilyForm extends GridPane{
         //3rd row
         indexYTop++;
         topPane.setConstraints(surveyDateL,      0, indexYTop, 1, 1, HPos.LEFT, VPos.CENTER);
-        topPane.setConstraints(surveyedDateField,1, indexYTop,1,1, HPos.CENTER, VPos.CENTER);
+        topPane.setConstraints(datePicker,1, indexYTop,1,1, HPos.CENTER, VPos.CENTER);
         topPane.setConstraints(barangayCb,5,indexYTop,1,1, HPos.CENTER, VPos.CENTER);
 
         //4t row
@@ -419,7 +433,6 @@ public class FamilyForm extends GridPane{
         topPane.setConstraints(addressL,0,indexYTop,1,1,  HPos.LEFT, VPos.CENTER);
         topPane.setConstraints(addressF,1,indexYTop,2,1,  HPos.CENTER, VPos.CENTER);
 
-        surveyedDateField.setPrefColumnCount(6);
         dateField.setPrefColumnCount(6);
         lnameField.setPrefColumnCount(11);
         agefield.setPrefColumnCount(6);
@@ -473,7 +486,7 @@ public class FamilyForm extends GridPane{
 
 
             // adding nodes to the top gridpane
-        topPane.getChildren().addAll(searchBox, searchButton ,DateL,dateField,surveyDateL,surveyedDateField,
+        topPane.getChildren().addAll(searchBox, searchButton ,DateL,dateField,surveyDateL, datePicker,
                 barangayCb,yearofResidencyL,yrResidency, maritalCBox,numofChildrenL,numofChildrenF,genderCB,
                 NameL,lnameField,fnameField, ageL,agefield,spouseNameL,spouselnameField,spousefnameField,addressL,addressF);
 
@@ -613,7 +626,7 @@ public class FamilyForm extends GridPane{
 
             // Family Information
             String inputedDate = dateField.getText();
-            int surveyedYr = Integer.parseInt(surveyedDateField.getText());
+            LocalDate dateissued = datePicker.getValue();
             int residencyYr = Integer.parseInt(yrResidency.getText());
             int numofchildren = Integer.parseInt(numofChildrenF.getText());
             String name = fnameField.getText() + " " + lnameField.getText();
@@ -646,11 +659,11 @@ public class FamilyForm extends GridPane{
                     }
 
 
-            FamilyInfo familyInfo = new FamilyInfo(clientID,inputedDate,surveyedYr,residencyYr,
+            FamilyInfo familyInfo = new FamilyInfo(clientID,inputedDate, dateissued,residencyYr,
                     numofchildren,name,spousename,age,maritalStatus,barangay,gender,address );
 
             FamilyPoverty familyPoverty  = new FamilyPoverty(hasOtherIncome,isBelow8k,ownership,
-                    occupancy,isunderEmployed,childrenScl);
+                    occupancy,isunderEmployed,childrenScl, dateissued, DateUtil.getMonth());
 
             family = new Family(familyInfo,familyPoverty);
             familyFormListener.handle(family);
@@ -660,7 +673,7 @@ public class FamilyForm extends GridPane{
     private boolean isValidated(){
 
         boolean isvalidate = false;
-        String surveyedyr = surveyedDateField.getText();
+        String surveyedyr = datePicker.getValue().toString();
         int  yrNow = Calendar.getInstance().get(Calendar.YEAR);
         String residencyYr = yrResidency.getText();
         String name = fnameField.getText() + " " + lnameField.getText();
@@ -673,19 +686,19 @@ public class FamilyForm extends GridPane{
             if (surveyedyr.equals("")){
 
                 isvalidate = false;
-                showErrorMessage("Please add surveyed year in year field", "Error Information",surveyedDateField);
+                showErrorMessage("Please add surveyed year in year field", "Error Information", datePicker);
 
             }
-            else if (!Pattern.matches("^[\\d]{4}+",surveyedyr)){
+            else if (!Pattern.matches("^\\d{4}-\\d{2}-\\d{2}$",surveyedyr)){
 
-                showErrorMessage("Invalid Surveyed Year", "Error Information",surveyedDateField);
+                showErrorMessage("Invalid Surveyed Year", "Error Information", datePicker);
                 System.out.println(yrNow);
                 isvalidate = false;
 
             }
-            else if (Integer.parseInt(surveyedyr) > yrNow){
+            else if (datePicker.getValue().getYear() > yrNow){
                 System.out.println(yrNow);
-                showErrorMessage("Invalid surveyed year, surveyed year is later than the current year", "Error Information", surveyedDateField);
+                showErrorMessage("Invalid surveyed year, surveyed year is later than the current year", "Error Information", datePicker);
                 isvalidate = false;
 
             }
