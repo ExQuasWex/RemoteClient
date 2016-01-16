@@ -26,12 +26,7 @@ public class ClientInterfaceImp extends UnicastRemoteObject implements ClientInt
     @Override
     public void notifyClient(ArrayList familyList) throws RemoteException {
 
-        if (Controller.getInstance().showConfirmationMessage("We found Similar record of the person, Would You like to see it before proceeding?",
-                Alert.AlertType.CONFIRMATION, familyList)){
-
-        }else {
-                // do nothing
-        }
-
+        Controller.getInstance().notifyClient(familyList);;
+        System.out.println("passed to contoller");
     }
 }

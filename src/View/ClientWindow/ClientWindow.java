@@ -16,6 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.control.Button;
+import utility.Utility;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -34,18 +35,17 @@ public class ClientWindow extends CustomStage implements Runnable{
 
     private boolean isNotified = false;
     private ClientWindow(){
-
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 
         System.out.println(screen.getWidth());
         System.out.println(screen.getWidth());
-
 
         SlidePane sp = new SlidePane(screen.getWidth()/4);
 
         root = new BorderPane();
         root.setCenter(new Label("Center"));
         root.setLeft(sp);
+
 
         updateButton = new Button();
         updateButton.setText("Update");
@@ -63,6 +63,7 @@ public class ClientWindow extends CustomStage implements Runnable{
                     @Override
                     public void handle(Family family) {
                         addFamily(family);
+                        System.out.println("SAve family");
                     }
                 });
 
@@ -286,6 +287,8 @@ public class ClientWindow extends CustomStage implements Runnable{
                 alert.setHeaderText(message);
                 alert.setContentText(null);
 
+
+                System.out.println("shoowww");
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == ButtonType.OK){
                     showSearchedTable(list);
@@ -322,6 +325,9 @@ public class ClientWindow extends CustomStage implements Runnable{
         // logout from database
         Controller.getInstance().Logout();
         // logout UI
+        root.setRight(null);
+        Utility.ClearComponents(fm);
+        SearchTabWindow.getInstance().close();
         LoginWindow.getInstantance().showLoginWindow(true);
         System.out.println("log out fnish from clientWindow");
         close();

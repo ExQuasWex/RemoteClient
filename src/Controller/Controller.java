@@ -132,8 +132,8 @@ public class Controller implements TableItemListener {
     }
 
     public boolean showConfirmationMessage(String message, Alert.AlertType alertType, ArrayList list){
-        return ClientWindow.getInstance().showConfirmationMessage("We found similar data your trying to add, would you like to check before proceeding?",
-                Alert.AlertType.CONFIRMATION, list);
+        return ClientWindow.getInstance().showConfirmationMessage(message,
+                alertType, list);
 
     }
 
@@ -145,7 +145,11 @@ public class Controller implements TableItemListener {
         return clientDB.getMethodIdentifiers();
     }
 
+    public void notifyClient(ArrayList familyList){
+        showConfirmationMessage("We found Similar record of the person, Would You like to see it before proceeding?",
+                Alert.AlertType.CONFIRMATION, familyList);
 
+    }
 
     @Override
     public boolean Approve(RequestAccounts ra) {

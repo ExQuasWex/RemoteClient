@@ -35,6 +35,8 @@ public class ViewReportColumn extends VBox implements ReportMethods {
         ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList();
         while (x <= povertyList.size() - 1){
 
+            System.out.println(povertyList.size());
+
             BarangayData bd = (BarangayData) povertyList.get(x);
             pieData.add(new PieChart.Data(bd.getBarangayName(),bd.getUnresolvePopulation()));
             x++;

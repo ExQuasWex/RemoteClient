@@ -101,6 +101,7 @@ public class SlidePane extends HBox{
             logout.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
+
                     ClientWindow.getInstance().Logout();
                 }
             });
@@ -153,6 +154,8 @@ public class SlidePane extends HBox{
         return  this;
     }
 
+    private void clear(){
 
+    }
 
 }

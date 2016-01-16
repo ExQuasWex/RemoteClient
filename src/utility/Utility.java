@@ -1,8 +1,9 @@
 package utility;
 
 import Controller.Controller;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -45,6 +46,45 @@ public class Utility {
             boo = false;
         }
         return boo;
+    }
+
+    public static void ClearComponents(Pane mainpane){
+        for (Node node: mainpane.getChildren()){
+
+                        if (node.getClass().equals(GridPane.class) || node.getClass().equals(VBox.class) ||
+                                node.getClass().equals(HBox.class) || node.getClass().equals(BorderPane.class)){
+
+                                Pane childrenPane = (Pane) node;
+
+                                    for (Node childrenNode : childrenPane.getChildren()){
+
+                                        if (childrenNode.getClass().equals(TextField.class)){
+                                            ((TextField) childrenNode).setText("");
+                                        }
+                                    }
+
+                        }else if (node.getClass().equals(ScrollPane.class)){
+                                    ScrollPane scrollPane =  ((ScrollPane) node);
+                                    Pane pane1 =  (Pane)scrollPane.getContent();
+                                    ClearComponents(pane1);
+                        }
+                        else{
+                                for (Node childrenNode : mainpane.getChildren()){
+
+                                    if (childrenNode.getClass().equals(TextField.class)){
+                                        ((TextField) childrenNode).setText("");
+                                    }else if (childrenNode.getClass().equals(ComboBox.class)){
+                                        ((ComboBox) childrenNode).getSelectionModel().clearSelection();
+
+                                    }
+
+                                }
+
+                        }
+
+
+        }
+
     }
 
 

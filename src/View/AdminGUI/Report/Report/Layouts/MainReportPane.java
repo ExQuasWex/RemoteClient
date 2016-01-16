@@ -165,7 +165,6 @@ public class MainReportPane extends VBox {
 
         if (method == ReportCategoryMethod.OVERVIEW){
             data = controller.getOverViewData(param, type);
-            System.out.println(data.getFactorList().get(0));
             System.out.println("OVERVIEW");
         }else if (method == ReportCategoryMethod.COMPARE_OVERVIEW){
            // data = controller.getCompareOverViewData(param, type);
@@ -190,7 +189,6 @@ public class MainReportPane extends VBox {
         if (columnView.isSelected()){
             ViewReportColumn columnview = new ViewReportColumn();
             columnview.setData(reportObject);
-
             getChildren().add(columnview);
         }else {
             ViewReportGrid columnview = new ViewReportGrid();

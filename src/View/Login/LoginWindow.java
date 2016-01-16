@@ -585,11 +585,11 @@ public class LoginWindow  {
                 if (name.equals(null) || name.equals("")) {
                     messageBox.showValidationInfo("The name you entered is empty from login", x, y, width - 20);
                     isValidated = false;
-                }else if (name.length()<4 || name.length()>30){
+                }else if (name.length()<4 || name.length()>70){
                     messageBox.showValidationInfo("The name must only contain 4 to 30 characters", x, y, width - 20);
 
                 }
-                    else if (!Pattern.matches("^[a-zA-Z]+\\s+[a-zA-Z]+", name)){
+                    else if (!Pattern.matches("^[a-zA-Z\\s]+[a-zA-Z\\s]", name)){
                     messageBox.showValidationInfo("The name should not contain \n" +
                             "any digits or Special characters.", x, y, width - 20);
                     isValidated = false;
@@ -605,7 +605,7 @@ public class LoginWindow  {
                     isValidated = false;
                 }
 
-                else  if (!Pattern.matches("^[a-zA-Z0-9_-]{6,10}$+",username)){
+                else  if (!Pattern.matches("^[a-zA-Z0-9_-]{6,12}$+",username)){
                     messageBox.showValidationInfo("Username must not contain any special character \n", x, y, width - 20);
                     isValidated = false;
                      }
@@ -625,7 +625,7 @@ public class LoginWindow  {
                      }
 
                                             // ADDRESS VALIDATION
-                else if (!Pattern.matches("^[\\d]+\\s+[a-zA-Z\\.\\-\\s]+", address)) {
+                else if (!Pattern.matches("^[a-zA-Z0-9\\.\\-\\s]+", address)) {
                     messageBox.showValidationInfo("Your Address must consist of 5 digits and\n" +
                             "not contain any special character", x, y, width - 20);
                     isValidated = false;

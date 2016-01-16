@@ -21,6 +21,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import utility.Utility;
 
 import java.awt.*;
 import java.text.DateFormat;
@@ -112,7 +113,7 @@ public class FamilyForm extends GridPane{
         save.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
+                System.out.println("save buttong i called");
                 if (isValidated()){
                     System.out.println("All Family information are validated");
                     Save();
@@ -171,7 +172,7 @@ public class FamilyForm extends GridPane{
 
         subGrid.getChildren().addAll(topTitleL,topPane,bottomTitle,bottomPane);
 
-
+        System.out.println("Get Grid called");
         return subGrid;
     }
 
@@ -449,13 +450,23 @@ public class FamilyForm extends GridPane{
 
                     if (numofChildrenF.getText().matches("\\d+")){
                         int children = Integer.parseInt(numofChildrenF.getText());
-                        if (children > 0 ){
-                            numofChildrenF.setText(String.valueOf(children));
-                            childrenSchlCBox.setDisable(false);
-                        }else {
-                            numofChildrenF.setText("0");
-                            childrenSchlCBox.setDisable(true);
-                            childrenSchlCBox.getSelectionModel().clearSelection();
+                        if (children > 1 ){
+                                numofChildrenF.setText(String.valueOf(children));
+                                if (childrenSchlCBox.getItems().contains("Some")){
+
+                                }else {
+                                    childrenSchlCBox.getItems().add("Some");
+                                }
+                                childrenSchlCBox.setDisable(false);
+                        }else if (children == 1){
+                                numofChildrenF.setText(String.valueOf(children));
+                                childrenSchlCBox.setDisable(false);
+                                childrenSchlCBox.getItems().remove("Some");
+                        }
+                        else {
+                                numofChildrenF.setText("0");
+                                childrenSchlCBox.setDisable(true);
+                                childrenSchlCBox.getSelectionModel().clearSelection();
                         }
                     }else {
                         numofChildrenF.setText("0");
@@ -472,24 +483,17 @@ public class FamilyForm extends GridPane{
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean outFocus, Boolean focus) {
 
-                if (outFocus){
-                    if (agefield.getText().matches("\\d+")){
+                if (outFocus) {
+                    if (agefield.getText().matches("\\d+")) {
                         int age = Integer.parseInt(agefield.getText());
                         agefield.setText(String.valueOf(age));
-                    }else {
+                    } else {
                         agefield.setText("");
                     }
                 }
 
             }
         });
-
-
-            // adding nodes to the top gridpane
-        topPane.getChildren().addAll(searchBox, searchButton ,DateL,dateField,surveyDateL, datePicker,
-                barangayCb,yearofResidencyL,yrResidency, maritalCBox,numofChildrenL,numofChildrenF,genderCB,
-                NameL,lnameField,fnameField, ageL,agefield,spouseNameL,spouselnameField,spousefnameField,addressL,addressF);
-
 
 
         maritalCBox.setOnAction(new EventHandler<ActionEvent>() {
@@ -511,8 +515,6 @@ public class FamilyForm extends GridPane{
 
 
 
-
-
         searchButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -522,6 +524,14 @@ public class FamilyForm extends GridPane{
 
             }
         });
+
+
+        // adding nodes to the top gridpane
+        topPane.getChildren().addAll(searchBox, searchButton ,DateL,dateField,surveyDateL, datePicker,
+                barangayCb,yearofResidencyL,yrResidency, maritalCBox,numofChildrenL,numofChildrenF,genderCB,
+                NameL,lnameField,fnameField, ageL,agefield,spouseNameL,spouselnameField,spousefnameField,addressL,addressF);
+
+        Utility.ClearComponents(topPane);
 
         return  topPane;
     }
@@ -668,12 +678,14 @@ public class FamilyForm extends GridPane{
             family = new Family(familyInfo,familyPoverty);
             familyFormListener.handle(family);
 
+            Utility.ClearComponents(subGrid);
+
     }
 
     private boolean isValidated(){
-
+        System.out.println("isValdiated is called");
         boolean isvalidate = false;
-        String surveyedyr = datePicker.getValue().toString();
+        String surveyedyr = "";
         int  yrNow = Calendar.getInstance().get(Calendar.YEAR);
         String residencyYr = yrResidency.getText();
         String name = fnameField.getText() + " " + lnameField.getText();
@@ -681,19 +693,22 @@ public class FamilyForm extends GridPane{
         String age = agefield.getText();
         String address =  addressF.getText();
         String maritalStatus = null;
+
                                 ////////---- Year of residency ----////////
 
-            if (surveyedyr.equals("")){
-
+            if(datePicker.getValue() == null ) {
                 isvalidate = false;
                 showErrorMessage("Please add surveyed year in year field", "Error Information", datePicker);
-
             }
-            else if (!Pattern.matches("^\\d{4}-\\d{2}-\\d{2}$",surveyedyr)){
+             else if (datePicker.getValue() != null){
+                surveyedyr = datePicker.getValue().toString();
 
-                showErrorMessage("Invalid Surveyed Year", "Error Information", datePicker);
-                System.out.println(yrNow);
-                isvalidate = false;
+                 if (!Pattern.matches("^\\d{4}-\\d{2}-\\d{2}$",surveyedyr)){
+                    showErrorMessage("Invalid Surveyed Year", "Error Information", datePicker);
+                    System.out.println(yrNow);
+                    isvalidate = false;
+
+                }
 
             }
             else if (datePicker.getValue().getYear() > yrNow){
@@ -750,16 +765,16 @@ public class FamilyForm extends GridPane{
                     maritalCBox.getSelectionModel().getSelectedItem().toString().equals("Live-in"))){
 
                         isvalidate = false;
-                        errorNodeList.add(spousefnameField);
+                errorNodeList.add(spousefnameField);
                         showErrorMessage("Please add spouse name in spouse name fields", "Error Information", spouselnameField);
 
             }
                                               ////////---- Address ----////////
             else if (address.equals("")){
                 isvalidate = false;
-                showErrorMessage("Please add address in address field","Error Information",addressF);
+                showErrorMessage("Please add address in address field", "Error Information", addressF);
             }
-            else if (!Pattern.matches("^[\\d]{5}+\\s+[a-zA-Z-_.\\s]+",address)){
+            else if (!Pattern.matches("^[a-zA-Z0-9\\.\\-\\s]+",address)){
                 isvalidate = false;
                 showErrorMessage("Invalid Address in address field","Error Information",addressF);
             }else if (otherIncomeCbox.getSelectionModel().isEmpty()){
@@ -810,17 +825,12 @@ public class FamilyForm extends GridPane{
         errorNodeList.add(node);
 
         for (Node nodes : errorNodeList) {
-            if (nodes.equals(maritalCBox) || nodes.equals(genderCB) || nodes.equals(barangayCb)
-                    || nodes.equals(otherIncomeCbox)  || nodes.equals(below8kCbox)
-                    || nodes.equals(ownershipCbox)  || nodes.equals(occupancyCBox)
-                    || nodes.equals(underEmployedCBox) || nodes.equals(childrenSchlCBox)  ){
-
+            if (nodes.getClass().equals(ComboBox.class) ){
                 nodes.getStyleClass().add("combo-box-error");
 
             }else{
                 nodes.getStyleClass().add("text-field-error");
             }
-
         }
 
         for (Node nodee : errorNodeList){
@@ -848,11 +858,7 @@ public class FamilyForm extends GridPane{
                 @Override
                 public void changed(ObservableValue<? extends Boolean> observable, Boolean outFocused, Boolean Focused) {
                     if (Focused){
-                        if (nodee.equals(maritalCBox) || nodee.equals(genderCB) || nodee.equals(barangayCb)
-                                || nodee.equals(otherIncomeCbox)  || nodee.equals(below8kCbox)
-                                || nodee.equals(ownershipCbox)  || nodee.equals(occupancyCBox)
-                                || nodee.equals(underEmployedCBox) || nodee.equals(childrenSchlCBox)  ){
-
+                        if (nodee.getClass().equals(ComboBox.class) ){
                             nodee.getStyleClass().remove("combo-box-error");
                             errorNodeList.remove(nodee);
 
