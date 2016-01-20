@@ -245,9 +245,9 @@ public class ClientWindow extends CustomStage implements Runnable{
 
 
                     if (!newPassword.equals(passwordConfirmField.getText())){
-                        showMessageBox("Password Don't match", Alert.AlertType.ERROR);
+                        Utility.showMessageBox("Password Don't match", Alert.AlertType.ERROR);
                     }else if (!oldPassword.equals(staffInfo.getPassword())){
-                        showMessageBox("Old password don't match", Alert.AlertType.ERROR);
+                        Utility.showMessageBox("Old password don't match", Alert.AlertType.ERROR);
                     }else {
 
                             staffInfo.setName(name);
@@ -257,9 +257,9 @@ public class ClientWindow extends CustomStage implements Runnable{
                             staffInfo.setContact(Contact);
 
                             if (Controller.getInstance().updateStaffInfo(staffInfo))  {
-                                        showMessageBox("You successfully updated your personal information", Alert.AlertType.INFORMATION);
+                                Utility.showMessageBox("You successfully updated your personal information", Alert.AlertType.INFORMATION);
                             }else {
-                                         showMessageBox("failed to Update your personal information, please try again lateer", Alert.AlertType.ERROR);
+                                Utility.showMessageBox("failed to Update your personal information, please try again lateer", Alert.AlertType.ERROR);
                             }
 
                     }
@@ -269,14 +269,6 @@ public class ClientWindow extends CustomStage implements Runnable{
 
     }
 
-    public static void showMessageBox(String message, Alert.AlertType alertType){
-        Alert alertBox = new Alert(alertType);
-        alertBox.setTitle("Information");
-        alertBox.setContentText(message);
-        alertBox.setHeaderText(null);
-        alertBox.show();
-
-        }
 
     public  boolean showConfirmationMessage(String message,Alert.AlertType alertType, ArrayList list){
         Platform.runLater(new Runnable() {

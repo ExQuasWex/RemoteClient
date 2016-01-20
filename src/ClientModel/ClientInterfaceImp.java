@@ -27,6 +27,5 @@ public class ClientInterfaceImp extends UnicastRemoteObject implements ClientInt
     public void notifyClient(ArrayList familyList) throws RemoteException {
 
         Controller.getInstance().notifyClient(familyList);;
-        System.out.println("passed to contoller");
     }
 }

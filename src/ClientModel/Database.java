@@ -1,16 +1,16 @@
 package ClientModel;
 
-import AdminModel.Params;
 import AdminModel.RequestAccounts;
 import Controller.Controller;
-import RMI.AdminInterface;
 import RMI.Constant;
 import RMI.RemoteMethods;
 import Remote.Method.FamilyModel.Family;
 import View.AdminGUI.TableItemListener;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
+import global.Credentials;
 import javafx.scene.control.Alert;
+import utility.Utility;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -28,19 +28,13 @@ import java.util.Random;
 public class Database extends UnicastRemoteObject implements RemoteMethods, TableItemListener {
 
    private RemoteMethods server;
-   private Alert alertBox;
    private boolean bol;
    private String ipAddress = "localhost"; //Local IP address
    private  Registry reg;
-    private int PORT;
-    private String REMOTE_ID;
-
+    private Credentials credentials;
 
     public Database() throws RemoteException {
 
-        PORT = generatePort();
-        REMOTE_ID = generateRemoteID();
-        ClientCallBackInit();
         RegisterServer();
 
     }
@@ -104,27 +98,11 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
         Thread t1 = new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    reg = LocateRegistry.getRegistry(System.setProperty("java.rmi.server.hostname",ipAddress),Constant.Remote_port);
-                    //Registry reg = LocateRegistry.getRegistry("localhost",Constant.Remote_port);
-                    server = (RemoteMethods) reg.lookup(Constant.Remote_ID);
 
-                    bol = server.checkDatabase();
-
-                } catch (RemoteException e) {
-                    System.out.println("Client:Database:connectToServer:RemoteException");
-                    bol = false;
-
-                } catch (SQLException s){
-                    System.out.println("Client:Database:connectToServer:SQLException");
-                    bol = false;
-                } catch (NotBoundException e) {
-                    e.printStackTrace();
-                }
+                  bol = RegisterServer();
 
             }
         });
-
 
         t1.start();
 
@@ -176,11 +154,19 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
     }
 
     @Override
-    public boolean addFamilyInfo(Family family)  {
+    public boolean addFamilyInfo(boolean instantSave, Family family)  {
         boolean bool;
 
         try {
-            bool =  server.addFamilyInfo(family);
+            if (Controller.getInstance().isNotified()){
+                bool =  server.addFamilyInfo(true, family);
+                    if (bool){
+                        Controller.getInstance().setNotified(false);
+                    }
+            }else{
+                bool =  server.addFamilyInfo(instantSave, family);
+            }
+
         } catch (RemoteException e) {
             e.printStackTrace();
             bool = false;
@@ -192,12 +178,23 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
     public StaffInfo Login(String user, String pass, String ipAddress, int port, String remoteID)  {
     StaffInfo staffInfo = null;
         try {
-            InetAddress rawIp  = InetAddress.getLocalHost();
-            String strIp = rawIp.toString();
-            int beginningIndex = strIp.indexOf("/");
-            String ip = strIp.substring(beginningIndex + 1, strIp.length());
 
-            staffInfo = server.Login(user,pass,ip, PORT, REMOTE_ID);
+            // establish callback rmi after  login
+            credentials = getCredentials(user);
+
+                if (credentials == null){
+                    Utility.showMessageBox("Invalid username or password", Alert.AlertType.INFORMATION);
+                }else {
+                    InetAddress rawIp  = InetAddress.getLocalHost();
+                    String strIp = rawIp.toString();
+                    int beginningIndex = strIp.indexOf("/");
+                    String ip = strIp.substring(beginningIndex + 1, strIp.length());
+
+                    staffInfo = server.Login(user,pass,ip, credentials.getRemotePort(), credentials.getRemoteID());
+                    EstablishCallBack(credentials);
+
+                }
+
 
         } catch (RemoteException e) {
             Controller.getInstance().setLoginToDisconnected();
@@ -208,35 +205,37 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
         return staffInfo;
     }
 
-    private void RegisterServer(){
+    private boolean RegisterServer(){
         try {
-            //used only for localhost
-            //reg = LocateRegistry.getRegistry("localhost");
-            //Registry reg = LocateRegistry.getRegistry("localhost",Constant.Remote_port);
-
             reg = LocateRegistry.getRegistry(System.setProperty("java.rmi.server.hostname",ipAddress),Constant.Remote_port);
+            //Registry reg = LocateRegistry.getRegistry("localhost",Constant.Remote_port);
             server = (RemoteMethods) reg.lookup(Constant.Remote_ID);
 
+            bol = server.checkDatabase();
+
+        } catch (RemoteException e) {
+            System.out.println("Client:Database:connectToServer:RemoteException");
+            bol = false;
+
+        } catch (SQLException s){
+            System.out.println("Client:Database:connectToServer:SQLException");
+            bol = false;
         } catch (NotBoundException e) {
             e.printStackTrace();
-        } catch (ConnectException ce){
-            ce.printStackTrace();
-
-        } catch (AccessException e) {
-            e.printStackTrace();
-        } catch (RemoteException e) {
-            e.printStackTrace();
         }
+
+        return bol;
     }
 
 
-    private void ClientCallBackInit(){
+    private void EstablishCallBack(Credentials credentials){
         try {
-            ClientInterfaceImp clientInterfaceImp  = new ClientInterfaceImp();
-            Registry reg = LocateRegistry.createRegistry(PORT);
-            reg.bind(REMOTE_ID, clientInterfaceImp);
 
-            System.out.println("Successfully created callback port: " + PORT);
+            ClientInterfaceImp clientInterfaceImp  = new ClientInterfaceImp();
+            Registry reg = LocateRegistry.createRegistry(credentials.getRemotePort());
+            reg.bind(credentials.getRemoteID(), clientInterfaceImp);
+
+            System.out.println("Successfully created callback port: " + credentials.getRemotePort());
         } catch (AlreadyBoundException e) {
             e.printStackTrace();
         } catch (AccessException e) {
@@ -247,31 +246,6 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
 
     }
 
-    private int generatePort(){
-        int port = 0;
-
-        Random ran = new Random();
-
-        for (int i = 0; i < 10; i++) {
-            port= (10000 + ran.nextInt(50000));
-        }
-
-        return port;
-    }
-
-    private String generateRemoteID(){
-        int ID = 0;
-
-        Random ran = new Random();
-
-        for (int i = 0; i < 10; i++) {
-            ID= (1000 + ran.nextInt(3560));
-        }
-
-        String Remoteid = String.valueOf(ID);
-
-        return Remoteid;
-    }
 
 
 
@@ -328,8 +302,13 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
         return methodName;
     }
 
+    @Override
+    public Credentials getCredentials(String username) throws RemoteException {
 
+        Credentials credentials = server.getCredentials(username);
 
+        return credentials;
+    }
 
 
 }

@@ -7,12 +7,14 @@ import AdminModel.RequestAccounts;
 import ClientModel.Database;
 import View.AdminGUI.TableItemListener;
 import View.ClientWindow.ClientWindow;
+import View.ClientWindow.FamilyForm;
 import View.Login.LoginWindow;
 import Remote.Method.FamilyModel.Family;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import utility.Utility;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -29,6 +31,16 @@ public class Controller implements TableItemListener {
     private AdminInterfaceImp adminDB;
     private  String finalUsername = "";
 
+
+    private boolean isNotified;
+
+    public boolean isNotified() {
+        return isNotified;
+    }
+
+    public void setNotified(boolean isNotified) {
+        this.isNotified = isNotified;
+    }
 
     private static Controller controller = new Controller();
 
@@ -69,7 +81,7 @@ public class Controller implements TableItemListener {
 
     // ====================== Encoder methods =================//
     public  boolean addFamilyInfo(Family family){
-        return clientDB.addFamilyInfo(family);
+        return clientDB.addFamilyInfo(false ,family);
     }
 
     public  StaffInfo getStaffInfo(){
@@ -127,7 +139,7 @@ public class Controller implements TableItemListener {
     }
 
     public static void showMessageBox(String message, Alert.AlertType alertType){
-        ClientWindow.showMessageBox(message,alertType);
+                  Utility.showMessageBox(message, alertType);
 
     }
 
@@ -146,6 +158,8 @@ public class Controller implements TableItemListener {
     }
 
     public void notifyClient(ArrayList familyList){
+        isNotified = true;
+
         showConfirmationMessage("We found Similar record of the person, Would You like to see it before proceeding?",
                 Alert.AlertType.CONFIRMATION, familyList);
 
