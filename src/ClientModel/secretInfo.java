@@ -1,5 +1,6 @@
 package ClientModel;
 
+
 import clientModel.SecretQuestion;
 
 import java.io.Serializable;

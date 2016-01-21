@@ -1,11 +1,11 @@
 package View.Login;
 
+import Controller.Controller;
 import View.AdminGUI.AdminWindow;
 import View.ClientWindow.ClientWindow;
+import clientModel.SecretQuestion;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
-import Controller.Controller;
-import clientModel.SecretQuestion;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -18,9 +18,6 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -488,7 +485,7 @@ public class LoginWindow  {
                         sq = null;
                     }
 
-                    StaffRegister  staffRegister = new StaffRegister(name,username,contact,address,secretID,sq,secretAnswer,gender,pass,cpass);
+                    StaffRegister staffRegister = new StaffRegister(name,username,contact,address,secretID,sq,secretAnswer,gender,pass,cpass);
 
                     if (!validate(staffRegister,x,y,width,messageBox)){
                         // let the validate method to handle this

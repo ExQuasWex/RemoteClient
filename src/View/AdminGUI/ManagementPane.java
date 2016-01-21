@@ -57,7 +57,7 @@ public class ManagementPane extends  BorderPane {
         approveItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                RequestAccounts  ra = (RequestAccounts) table.getSelectionModel().getSelectedItem();
+                RequestAccounts ra = (RequestAccounts) table.getSelectionModel().getSelectedItem();
                 boolean isActivated = tableListener.Approve(ra);
                         if (isActivated){
                             Controller.showMessageBox("Account Activated as Encoder", Alert.AlertType.INFORMATION);

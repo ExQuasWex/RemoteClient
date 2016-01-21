@@ -2,13 +2,12 @@ package View.AdminGUI.Report.Report.Layouts;
 
 import AdminModel.BarangayData;
 import AdminModel.OverViewReportObject;
-import Remote.Method.FamilyModel.FamilyPoverty;
 import View.AdminGUI.Report.Enums.ReportType;
 import View.AdminGUI.Report.interfaces.ReportMethods;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
-import javafx.scene.chart.*;
+import javafx.scene.chart.PieChart;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;

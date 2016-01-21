@@ -1,6 +1,5 @@
 package View.Login;
 
-import View.Login.LoginWindow;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;

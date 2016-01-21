@@ -1,21 +1,23 @@
 package View.ClientWindow;
 
 import Controller.Controller;
+import Remote.Method.FamilyModel.Family;
 import View.Login.CustomStage;
 import View.Login.LoginWindow;
-import Remote.Method.FamilyModel.Family;
 import clientModel.StaffInfo;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.*;
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.control.Button;
 import utility.Utility;
 
 import java.awt.*;
@@ -31,7 +33,7 @@ public class ClientWindow extends CustomStage implements Runnable{
     private BorderPane root;
     private FamilyForm fm;
     private Button updateButton;
-    private    StaffInfo staffInfo;
+    private StaffInfo staffInfo;
 
     private boolean isNotified = false;
     private ClientWindow(){

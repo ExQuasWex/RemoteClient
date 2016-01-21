@@ -14,13 +14,15 @@ import utility.Utility;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.rmi.*;
+import java.rmi.AccessException;
+import java.rmi.AlreadyBoundException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Created by Didoy on 8/24/2015.
@@ -36,7 +38,6 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
     public Database() throws RemoteException {
 
         RegisterServer();
-
     }
 
     @Override
@@ -179,20 +180,19 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
     StaffInfo staffInfo = null;
         try {
 
+            InetAddress rawIp  = InetAddress.getLocalHost();
+            String strIp = rawIp.toString();
+            int beginningIndex = strIp.indexOf("/");
+            String ip = strIp.substring(beginningIndex + 1, strIp.length());
+
             // establish callback rmi after  login
-            credentials = getCredentials(user);
+             credentials = getCredentials(user, ip);
 
                 if (credentials == null){
                     Utility.showMessageBox("Invalid username or password", Alert.AlertType.INFORMATION);
                 }else {
-                    InetAddress rawIp  = InetAddress.getLocalHost();
-                    String strIp = rawIp.toString();
-                    int beginningIndex = strIp.indexOf("/");
-                    String ip = strIp.substring(beginningIndex + 1, strIp.length());
-
                     staffInfo = server.Login(user,pass,ip, credentials.getRemotePort(), credentials.getRemoteID());
                     EstablishCallBack(credentials);
-
                 }
 
 
@@ -207,7 +207,7 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
 
     private boolean RegisterServer(){
         try {
-            reg = LocateRegistry.getRegistry(System.setProperty("java.rmi.server.hostname",ipAddress),Constant.Remote_port);
+            reg = LocateRegistry.getRegistry(System.setProperty("java.rmi.server.hostname",ipAddress), Constant.Remote_port);
             //Registry reg = LocateRegistry.getRegistry("localhost",Constant.Remote_port);
             server = (RemoteMethods) reg.lookup(Constant.Remote_ID);
 
@@ -303,12 +303,13 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
     }
 
     @Override
-    public Credentials getCredentials(String username) throws RemoteException {
+    public Credentials getCredentials(String username, String ipAddress) throws RemoteException {
 
-        Credentials credentials = server.getCredentials(username);
+        Credentials credentials = server.getCredentials(username, ipAddress);
 
         return credentials;
     }
+
 
 
 }

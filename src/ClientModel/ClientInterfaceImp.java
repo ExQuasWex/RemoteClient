@@ -2,7 +2,6 @@ package ClientModel;
 
 import Controller.Controller;
 import RMI.ClientInterface;
-import javafx.scene.control.Alert;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
