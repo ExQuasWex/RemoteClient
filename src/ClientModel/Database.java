@@ -33,7 +33,11 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
    private boolean bol;
    private String ipAddress = "localhost"; //Local IP address
    private  Registry reg;
-    private Credentials credentials;
+   private Credentials credentials;
+
+    // call back objects
+   private  Registry myRegistry;
+   private ClientInterfaceImp myClientInterface;
 
     public Database() throws RemoteException {
 
@@ -149,6 +153,8 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
     public void Logout(int accountID, String username)  {
         try {
             server.Logout(accountID, username);
+            DemolishCallBack();
+
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -231,9 +237,11 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
     private void EstablishCallBack(Credentials credentials){
         try {
 
-            ClientInterfaceImp clientInterfaceImp  = new ClientInterfaceImp();
-            Registry reg = LocateRegistry.createRegistry(credentials.getRemotePort());
-            reg.bind(credentials.getRemoteID(), clientInterfaceImp);
+            myClientInterface  = new ClientInterfaceImp();
+            myRegistry = LocateRegistry.createRegistry(credentials.getRemotePort());
+            myRegistry.bind(credentials.getRemoteID(), myClientInterface);
+
+            System.out.println("EstablishCallBack: " + credentials.getRemoteID());
 
             System.out.println("Successfully created callback port: " + credentials.getRemotePort());
         } catch (AlreadyBoundException e) {
@@ -246,6 +254,15 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
 
     }
 
+    private void DemolishCallBack(){
+        try {
+            System.out.println("DemolishCallBack: " + credentials.getRemoteID());
+            UnicastRemoteObject.unexportObject(myRegistry, true);
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 

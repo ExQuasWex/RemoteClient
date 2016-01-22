@@ -25,19 +25,18 @@ public class AdminWindow extends Stage{
     private BorderPane root;
     private ArrayList barangayDataList;
     private   ManagementPane mp ;
-
+    private   Controller ctr;
 
     private AdminWindow(){
 
-        Controller ctr = Controller.getInstance();
+       ctr = Controller.getInstance();
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 
         root = new BorderPane();
         AdminSlidePane adminSlidePane = new AdminSlidePane(screen.getWidth()/4);
         root.setLeft(adminSlidePane);
 
-        barangayDataList = ctr.getBarangayData();
-        showInitialReports(barangayDataList);
+        showInitialReports();
 
 
         // Components
@@ -69,9 +68,10 @@ public class AdminWindow extends Stage{
         centerOnScreen();
 
     }
-    private void showInitialReports(ArrayList barangayDataList){
+    public void showInitialReports(){
         int x = 0;
-        System.out.println("Initial size:" + barangayDataList.size());
+
+        barangayDataList = ctr.getBarangayData();
 
         ObservableList<PieChart.Data>  pieData = FXCollections.observableArrayList();
                 while (x <= barangayDataList.size() - 1){
@@ -83,6 +83,7 @@ public class AdminWindow extends Stage{
         PieChart pc = new PieChart(pieData);
         pc.setTitle("General Reports");
 
+        root.setCenter(null);
         root.setCenter(pc);
 
     }
@@ -101,7 +102,8 @@ public class AdminWindow extends Stage{
 
     public  void AdminLogout(){
          getInstance().close();
-        LoginWindow.getInstantance().showLoginWindow(true);
+         Controller.getInstance().Logout();
+         LoginWindow.getInstantance().showLoginWindow(true);
 
         System.out.println("Admin logut called");
     }

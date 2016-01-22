@@ -181,6 +181,7 @@ public class MainReportPane extends VBox {
 
         }
 
+        // add date to report
         setDataReport(data);
     }
 

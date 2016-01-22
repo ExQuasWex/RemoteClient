@@ -42,7 +42,7 @@ public class ViewReportColumn extends VBox implements ReportMethods {
         }
 
         PieChart pc = new PieChart(pieData);
-        pc.setTitle("Year Reports");
+        pc.setTitle("2016 year poverty");
         getChildren().addAll(pc);
 
     }

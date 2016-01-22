@@ -118,6 +118,7 @@ public class AdminSlidePane extends HBox{
             home.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
+                    AdminWindow.getInstance().showInitialReports();
                     System.out.println("account is clicked");
 
                 }
