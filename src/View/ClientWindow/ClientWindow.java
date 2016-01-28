@@ -2,6 +2,8 @@ package View.ClientWindow;
 
 import Controller.Controller;
 import Remote.Method.FamilyModel.Family;
+import View.ClientWindow.Listeners.SearchTableListener;
+import View.ClientWindow.Listeners.SlidePaneListener;
 import View.Login.CustomStage;
 import View.Login.LoginWindow;
 import clientModel.StaffInfo;
@@ -23,31 +25,34 @@ import utility.Utility;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by Didoy on 9/30/2015.
  */
-public class ClientWindow extends CustomStage implements Runnable{
+public class ClientWindow extends CustomStage{
 
     private static ClientWindow mainframe = new ClientWindow();
-    private BorderPane root;
-    private FamilyForm fm;
-    private Button updateButton;
-    private StaffInfo staffInfo;
+    private static BorderPane root;
+    private  FamilyForm fm;
+    private  Button updateButton;
 
-    private boolean isNotified = false;
-    private ClientWindow(){
+    private  StaffInfo staffInfo;
+    private static SearchTable searchtable ;
+    private  SlidePane sp;
+
+    private static boolean  isNotified = false;
+    public ClientWindow(){
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 
-        System.out.println(screen.getWidth());
-        System.out.println(screen.getWidth());
-
-        SlidePane sp = new SlidePane(screen.getWidth()/4);
+        sp = new SlidePane(screen.getWidth()/4);
+        fm = new FamilyForm();
 
         root = new BorderPane();
         root.setCenter(new Label("Center"));
         root.setLeft(sp);
 
+        searchtable = new SearchTable(root);
 
         updateButton = new Button();
         updateButton.setText("Update");
@@ -58,8 +63,30 @@ public class ClientWindow extends CustomStage implements Runnable{
         setWidth(screen.getWidth());
         setHeight(screen.getHeight());
 
-        // Listener for familyForm
-        fm = new FamilyForm();
+
+        // Slidepane Listener
+
+            sp.addSlidePaneListener(new SlidePaneListener() {
+                @Override
+                public void showAccount() {
+                    addAccountForm();
+                }
+
+                @Override
+                public void showFamilyForm() {
+                    addFamilyForm();
+                }
+
+                @Override
+                public void Logout() {
+                    LogoutWindow();
+                }
+            });
+
+
+
+        //  adding form listener
+
 
                 fm.addFamilyFormListener(new FamilyFormListener() {
                     @Override
@@ -77,6 +104,13 @@ public class ClientWindow extends CustomStage implements Runnable{
                 });
 
 
+                searchtable.addSearchTableListener(new SearchTableListener() {
+                    @Override
+                    public void rollUp() {
+                        removeSearchTable();
+                    }
+                });
+
         setScene(scene);
         centerOnScreen();
 
@@ -88,9 +122,9 @@ public class ClientWindow extends CustomStage implements Runnable{
                 ArrayList list = Controller.getInstance().searchedList(Searchedname);
 
                 if (Searchedname.equals("")){
-                    Controller.showMessageBox("Search Box is empty", Alert.AlertType.ERROR);
+                    Utility.showMessageBox("Search Box is empty", Alert.AlertType.ERROR);
                 }else if (list.isEmpty()){
-                    Controller.showMessageBox("No records found", Alert.AlertType.ERROR);
+                    Utility.showMessageBox("No records found", Alert.AlertType.ERROR);
                 }else {
                     System.out.println("show records");
                    // Controller.getInstance().showSearchedList(list);
@@ -136,39 +170,45 @@ public class ClientWindow extends CustomStage implements Runnable{
 
     }
 
-    public boolean addFamily(Family family){
+    public void addFamily(Family family){
 
-    boolean success = false;
+    boolean isSucceed = false;
 
       if (Controller.getInstance().isServerConnected()){
 
-          success = Controller.getInstance().addFamilyInfo(family);
+                  if (isNotified){
+                        boolean isConfirm = Utility.showConfirmationMessage("Are you sure you want to add this data?", Alert.AlertType.CONFIRMATION);
 
-                if (success){
-                    Controller.showMessageBox("Successfully Save Family Information", Alert.AlertType.INFORMATION);
+                            if (isConfirm){
+                                    isSucceed = Controller.getInstance().addFamilyInfo(true,family);
+                                        if (isSucceed){
+                                            isNotified = false;
+                                        }
+                            }else {
+                                            isNotified = false;
+                            }
+                  }else {
+                      isSucceed = Controller.getInstance().addFamilyInfo(false,family);
+                  }
+                        if (isSucceed){
+                             Utility.showMessageBox("Successfully Save Family Information", Alert.AlertType.INFORMATION);
 
-                }else {
+                        }else {
 
-                    if (Controller.getInstance().getMethodIdenifier().equals("NOTIFY")){
-
-                    }else {
-                        Controller.showMessageBox("There was problem occur, please try again after few seconds", Alert.AlertType.ERROR);
-                    }
-
-                }
+                            if (!Controller.getInstance().getMethodIdenifier().equals("NOTIFY")){
+                                Utility.showMessageBox("There was problem occur, please try again after few seconds", Alert.AlertType.ERROR);
+                            }
+                        }
       }else {
                  ShowConnectingWindow(root);
                  // Add connection functionality here
       }
-       return success;
     }
 
-    public static ClientWindow getInstance(){
-        return mainframe;
-    }
 
-    public void showAccount(){
-         staffInfo = Controller.getInstance().getStaffInfo();
+    public void addAccountForm(){
+        staffInfo = Controller.getInstance().getStaffInfo();
+
         GridPane gp = new GridPane();
 
         // Labels
@@ -244,9 +284,10 @@ public class ClientWindow extends CustomStage implements Runnable{
                     String oldPassword = oldPasswordField.getText();
                     String Contact = contactField.getText();
 
-
-
-                    if (!newPassword.equals(passwordConfirmField.getText())){
+                    if (newPassword.equals("") || newPassword.equals(null)){
+                        Utility.showMessageBox("Your new password is empty", Alert.AlertType.ERROR);
+                    }
+                    else if (!newPassword.equals(passwordConfirmField.getText())){
                         Utility.showMessageBox("Password Don't match", Alert.AlertType.ERROR);
                     }else if (!oldPassword.equals(staffInfo.getPassword())){
                         Utility.showMessageBox("Old password don't match", Alert.AlertType.ERROR);
@@ -272,55 +313,24 @@ public class ClientWindow extends CustomStage implements Runnable{
     }
 
 
-    public  boolean showConfirmationMessage(String message,Alert.AlertType alertType, ArrayList list){
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                Alert alert = new Alert(alertType);
-                alert.setTitle("Information Message");
-                alert.setHeaderText(message);
-                alert.setContentText(null);
-
-
-                System.out.println("shoowww");
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.OK){
-                    showSearchedTable(list);
-                } else {
-                    isNotified = false;
-                }
-            }
-        });
-
-        return  isNotified;
-    }
-
-    public void showFamilyForm(){
+    public  void addFamilyForm(){
         root.setCenter(null);
         root.setCenter(fm);
     }
 
-    public void Logout(){
-        Alert alertBox = new Alert(Alert.AlertType.CONFIRMATION);
-        alertBox.setContentText("Are you sure you want to Logout?");
-        alertBox.setHeaderText(null);
+    public  void LogoutWindow(){
 
-        Optional<ButtonType> result = alertBox.showAndWait();
-        if (result.get() == ButtonType.OK){
-            closeClientWindow();
-
-        }else if (result.get() == ButtonType.CANCEL){
-            alertBox.close();
-        }
-
+        boolean isLogout = Utility.showConfirmationMessage("Are you sure you want to Logout?", Alert.AlertType.CONFIRMATION);
+               if (isLogout){
+                   closeClientWindow();
+               }
     }
 
     public void closeClientWindow(){
         // logout from database
         Controller.getInstance().Logout();
         // logout UI
-        root.setRight(null);
-        Utility.ClearComponents(fm);
+        removeSearchTable();
         SearchTabWindow.getInstance().close();
         LoginWindow.getInstantance().showLoginWindow(true);
         System.out.println("log out fnish from clientWindow");
@@ -328,24 +338,56 @@ public class ClientWindow extends CustomStage implements Runnable{
 
     }
 
-    public  void showSearchedTable(ArrayList<Family> data){
-        SearchTable table = new SearchTable(root);
-        table.setData(data);
+    private static void showSearchedTable   (ArrayList<Family> data){
 
-        root.setRight(table);
-
+        // get back to FX application if ever we are in RMI TCP Connection(2) thread
+                    searchtable.setData(data);
+                    root.setRight(searchtable);
     }
+
 
     public  void  removeSearchTable(){
         root.setRight(null);
     }
-    public void showClientWindow(){
-        show();
+
+/*
+     controller call this method whenever it
+     found similar family information in the database
+ */
+   public static void notifyClient( ArrayList familyList){
+
+       if (!Platform.isFxApplicationThread()) {
+
+               Platform.runLater(new Runnable() {
+                   @Override
+                   public void run() {
+                        showPromptNotification(familyList);
+                   }
+               });
+
+       } else {
+               showPromptNotification(familyList);
+       }
+
+    }
+    private static  void showPromptNotification(ArrayList familyList){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+        alert.setTitle("Information Message");
+        alert.setHeaderText("We found Similar record of the person, Would You like to see it before proceeding?");
+        alert.setContentText(null);
+
+        Optional result = alert.showAndWait();
+
+        if (result.get() == ButtonType.OK) {
+            isNotified = true;
+            showSearchedTable(familyList);
+        } else {
+            isNotified = false;
+        }
+
     }
 
 
-    @Override
-    public void run() {
 
-    }
 }

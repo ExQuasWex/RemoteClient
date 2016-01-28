@@ -22,6 +22,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
+import utility.Utility;
 
 import java.util.ArrayList;
 
@@ -60,10 +61,10 @@ public class ManagementPane extends  BorderPane {
                 RequestAccounts ra = (RequestAccounts) table.getSelectionModel().getSelectedItem();
                 boolean isActivated = tableListener.Approve(ra);
                         if (isActivated){
-                            Controller.showMessageBox("Account Activated as Encoder", Alert.AlertType.INFORMATION);
+                            Utility.showMessageBox("Account Activated as Encoder", Alert.AlertType.INFORMATION);
                             refreshTable();
                         }else{
-                            Controller.showMessageBox("Cannot grant your request right now please try again later", Alert.AlertType.ERROR);
+                            Utility.showMessageBox("Cannot grant your request right now please try again later", Alert.AlertType.ERROR);
                             refreshTable();
                         }
 
@@ -78,10 +79,10 @@ public class ManagementPane extends  BorderPane {
                  boolean isActivated =  tableListener.ApproveAdmin(ra);
 
                         if (isActivated){
-                            Controller.showMessageBox("Account Activated as Admin", Alert.AlertType.INFORMATION);
+                            Utility.showMessageBox("Account Activated as Admin", Alert.AlertType.INFORMATION);
                             refreshTable();
                         }else{
-                            Controller.showMessageBox("Cannot grant your request right now please try again later", Alert.AlertType.ERROR);
+                            Utility.showMessageBox("Cannot grant your request right now please try again later", Alert.AlertType.ERROR);
                             refreshTable();
                         }
             }
@@ -95,10 +96,10 @@ public class ManagementPane extends  BorderPane {
                 boolean isRejected =  tableListener.Reject(ra);
 
                         if (isRejected){
-                            Controller.showMessageBox("Account is Now Rejected", Alert.AlertType.INFORMATION);
+                            Utility.showMessageBox("Account is Now Rejected", Alert.AlertType.INFORMATION);
                             refreshTable();
                         }else{
-                            Controller.showMessageBox("Cannot grant your request right now please try again later", Alert.AlertType.ERROR);
+                            Utility.showMessageBox("Cannot grant your request right now please try again later", Alert.AlertType.ERROR);
                             refreshTable();
                         }
             }

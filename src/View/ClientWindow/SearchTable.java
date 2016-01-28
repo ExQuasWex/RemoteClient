@@ -1,6 +1,7 @@
 package View.ClientWindow;
 
 import Remote.Method.FamilyModel.Family;
+import View.ClientWindow.Listeners.SearchTableListener;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -38,9 +39,9 @@ public class SearchTable extends VBox {
     private MenuItem viewItem;
 
     private BorderPane root;
-
     private VBox innerVBox;
 
+    private SearchTableListener searchTableListener;
 
     public SearchTable(BorderPane root){
 
@@ -150,6 +151,9 @@ public class SearchTable extends VBox {
 
 
     }
+    private void resetRollUp(){
+        innerVBox.setPrefHeight(330);
+    }
 
     private void rollUp(){
 
@@ -162,13 +166,16 @@ public class SearchTable extends VBox {
                 t.setOnFinished(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        ClientWindow.getInstance().removeSearchTable();
+                        searchTableListener.rollUp();
+                        resetRollUp();
                     }
                 });
 
         t.play();
+    }
 
-
+    public void addSearchTableListener(SearchTableListener searchTableListener){
+        this.searchTableListener = searchTableListener;
     }
 
 }

@@ -1,7 +1,8 @@
 package View.AdminGUI.Report.Report.Layouts;
 
-import AdminModel.OverViewReportObject;
 import AdminModel.Params;
+import AdminModel.Report.Children.Model.ResponseCompareOverview;
+import AdminModel.Report.Parent.Model.ResponseOverviewReport;
 import Controller.Controller;
 import View.AdminGUI.Report.Enums.ReportCategoryMethod;
 import View.AdminGUI.Report.SubHeader.*;
@@ -16,7 +17,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+
+import java.util.ArrayList;
 
 /**
  * Created by Didoy on 1/12/2016.
@@ -38,6 +44,7 @@ public class MainReportPane extends VBox {
     private ReportSpecificOverviewPane reportSpecificOverviewPane;
     private ReportSpecificPane reportSpecificPane;
 
+    private VBox InitialPane;
 
     private Controller controller = Controller.getInstance();
 
@@ -47,15 +54,15 @@ public class MainReportPane extends VBox {
         reportCompareSpecificPane = new ReportCompareSpecificPane();
         reportSpecificOverviewPane = new ReportSpecificOverviewPane();
         reportSpecificPane = new ReportSpecificPane();
+        InitialPane = getInitialPane();
 
-        createHeader();
 
                 overViewPane.addReportButtonListener(new ReportButtonListener() {
                     @Override
                     public void generateReport(Params params) {
                         ReportCategoryMethod method = (ReportCategoryMethod) category.getSelectionModel().getSelectedItem();
                         String type = (String) Type.getSelectionModel().getSelectedItem();
-                        generateReports(method, type, params);
+                        initializeReport(method, type, params);
 
                     }
                 });
@@ -64,7 +71,7 @@ public class MainReportPane extends VBox {
                     public void generateReport(Params params) {
                         ReportCategoryMethod method = (ReportCategoryMethod) category.getSelectionModel().getSelectedItem();
                         String type = (String) Type.getSelectionModel().getSelectedItem();
-                        generateReports(method, type, params);
+                        initializeReport(method, type, params);
 
                     }
                 });
@@ -74,7 +81,7 @@ public class MainReportPane extends VBox {
                     public void generateReport(Params params) {
                         ReportCategoryMethod method = (ReportCategoryMethod) category.getSelectionModel().getSelectedItem();
                         String type = (String) Type.getSelectionModel().getSelectedItem();
-                        generateReports(method, type, params);
+                        initializeReport(method, type, params);
 
                     }
                 });
@@ -83,7 +90,7 @@ public class MainReportPane extends VBox {
                     public void generateReport(Params params) {
                         ReportCategoryMethod method = (ReportCategoryMethod) category.getSelectionModel().getSelectedItem();
                         String type = (String) Type.getSelectionModel().getSelectedItem();
-                        generateReports(method, type, params);
+                        initializeReport(method, type, params);
 
                     }
                 });
@@ -92,17 +99,31 @@ public class MainReportPane extends VBox {
                     public void generateReport(Params params) {
                         ReportCategoryMethod method = (ReportCategoryMethod) category.getSelectionModel().getSelectedItem();
                         String type = (String) Type.getSelectionModel().getSelectedItem();
-                        generateReports(method, type, params);
+                        initializeReport(method, type, params);
 
                     }
                 });
 
-
-
-        getChildren().addAll(createHeader(), overViewPane);
+        getStylesheets().add("/CSS/AdminReportCSS.css");
+        setVgrow(InitialPane, Priority.ALWAYS);
+        getChildren().addAll(createHeader(), overViewPane, InitialPane);
 
     }
 
+
+    private VBox getInitialPane(){
+        VBox vBox = new VBox();
+        vBox.setSpacing(10);
+        vBox.setAlignment(Pos.CENTER);
+
+        Text contentText = new Text("Hi You can Start Generating Report now :)");
+        contentText.setFont(Font.font(30));
+        contentText.setSmooth(true);
+
+        vBox.getChildren().add(contentText);
+
+        return vBox;
+    }
 
     private HBox createHeader(){
         header = new HBox();
@@ -160,15 +181,24 @@ public class MainReportPane extends VBox {
         return typelist;
     }
 
-    private void generateReports(ReportCategoryMethod method,  String type,  Params param){
-        OverViewReportObject data = null;
+    private void initializeReport(ReportCategoryMethod method, String type, Params param){
+        ViewReportColumn columnview = new ViewReportColumn();
+        ResponseOverviewReport  overviewReport = null;
 
         if (method == ReportCategoryMethod.OVERVIEW){
-            data = controller.getOverViewData(param, type);
-            System.out.println("OVERVIEW");
+
+            overviewReport = controller.getOverViewData(param, type);
+            columnview.showOverViewReport(overviewReport);
+            getChildren().remove(2);
+            getChildren().add(columnview);
+
         }else if (method == ReportCategoryMethod.COMPARE_OVERVIEW){
-           // data = controller.getCompareOverViewData(param, type);
-            System.out.println("COMPARE_OVERVIEW");
+            ResponseCompareOverview compareOverview  = controller.getCompareOverViewData(param, type);
+
+            columnview.showCompareOverviewReport(compareOverview, param);
+            getChildren().remove(2);
+            getChildren().add(columnview);
+
         }else if (method == ReportCategoryMethod.COMPARE_SPECIFIC){
           //  data = controller.getCompareSpecificData(param, type);
             System.out.println("COMPARE_SPECIFIC");
@@ -181,38 +211,30 @@ public class MainReportPane extends VBox {
 
         }
 
-        // add date to report
-        setDataReport(data);
     }
 
-    private void setDataReport(Object data){
-        OverViewReportObject reportObject = (OverViewReportObject) data;
-        if (columnView.isSelected()){
-            ViewReportColumn columnview = new ViewReportColumn();
-            columnview.setData(reportObject);
-            getChildren().add(columnview);
-        }else {
-            ViewReportGrid columnview = new ViewReportGrid();
-            //columnview.setData(data);
-        }
+    private void generateReport(Params params, String type){
+
     }
+
+
 
     private void generateSubheader(ReportCategoryMethod cat){
         if (cat.equals(ReportCategoryMethod.OVERVIEW)){
                       getChildren().remove(1);
-                      getChildren().add( overViewPane);
+                      getChildren().add(1, overViewPane);
         }else if (cat.equals(ReportCategoryMethod.COMPARE_OVERVIEW)){
                       getChildren().remove(1);
-                      getChildren().add(reportComparePane);
+                      getChildren().add(1, reportComparePane);
         }else if (cat.equals(ReportCategoryMethod.COMPARE_SPECIFIC)){
                       getChildren().remove(1);
-                      getChildren().add(reportCompareSpecificPane);
+                      getChildren().add(1, reportCompareSpecificPane);
         }else if (cat.equals(ReportCategoryMethod.SPECIFIC_OVERVIEW)){
                       getChildren().remove(1);
-                      getChildren().add(reportSpecificOverviewPane);
+                      getChildren().add(1, reportSpecificOverviewPane);
         }else if (cat.equals(ReportCategoryMethod.SPECIFIC)){
                       getChildren().remove(1);
-                      getChildren().add(reportSpecificPane);
+                      getChildren().add(1, reportSpecificPane);
         }else {
 
         }

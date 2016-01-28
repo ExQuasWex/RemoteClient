@@ -164,7 +164,6 @@ public class CustomStage extends Stage {
         });
     }
 
-
     public void showWithAnimation(){
 
         show();

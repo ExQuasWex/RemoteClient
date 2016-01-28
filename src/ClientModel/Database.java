@@ -152,8 +152,14 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
     @Override
     public void Logout(int accountID, String username)  {
         try {
-            server.Logout(accountID, username);
-            DemolishCallBack();
+
+            if (connectToServer()){
+                server.Logout(accountID, username);
+                DemolishCallBack();
+            }else{
+                DemolishCallBack();
+            }
+
 
         } catch (RemoteException e) {
             e.printStackTrace();

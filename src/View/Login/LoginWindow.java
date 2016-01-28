@@ -227,64 +227,58 @@ public class LoginWindow  {
             String username = userText.getText();
             String password = userPass.getText();
 
-
-            if (isServerConnected()){
-                // check whether the account is existing
-                if (ctr.Login(username, password,"")){
-                    userText.setText("");
-                    userPass.setText("");
-
-                    StaffInfo staffInfo = ctr.getStaffInfo();
-
-                    // check if the account is already online on other terminal
-                    if (staffInfo.getStatus().equals("Online")){
-                            alertBox = new Alert(Alert.AlertType.ERROR);
-                            alertBox.setHeaderText(null);
-                            alertBox.setTitle("Error information");
-                            alertBox.setContentText("The account is being used in other terminal");
-                            alertBox.show();
-
-                    }else {
-                        // decide whether admin or client window to be shown here
-                            if (staffInfo.getRole().equals("Admin")){
-                                showAdminWindow();
-                            }else {
-                                showClientWindow();
-                            }
-                        loginStage.close();
-
-                    }
-
-                    // Invalid account
-                }else {
-                    alertBox = new Alert(Alert.AlertType.ERROR);
-                    alertBox.setHeaderText(null);
-                    alertBox.setTitle("Error information");
-                    alertBox.setContentText("Invalid username or password");
-                    alertBox.show();
-            }
-            }
-            else{
-                userText.setText("");
-                userPass.setText("");
-               setLoginStageToDisconnected();
-            }
-
-
+            Login(username, password);
 
         });
 
-        // Handle Cancel Button
+        // handle cancel button
         cancelButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (utility.confirmExit()){
+                if (utility.showConfirmationMessage("Are you sure you want to close the application? ", Alert.AlertType.CONFIRMATION)){
                     loginStage.clseWithAnimation();
                 }
             }
         });
 
         return gridPane;
+    }
+
+    private void Login(String username, String password ){
+
+        if (isServerConnected()){
+            // check whether the account is existing
+            if (ctr.Login(username, password,"")){
+                userText.setText("");
+                userPass.setText("");
+
+                StaffInfo staffInfo = ctr.getStaffInfo();
+
+                // check if the account is already online on other terminal
+                if (staffInfo.getStatus().equals("Online")){
+                    Utility.showMessageBox("The account is being used in other terminal", Alert.AlertType.ERROR);
+
+                }else {
+                    // decide whether admin or client window to be shown here
+                    if (staffInfo.getRole().equals("Admin")){
+                        showAdminWindow();
+                    }else {
+                        showClientWindow();
+                    }
+                    loginStage.close();
+                }
+
+                // Invalid account
+            }else {
+                Utility.showMessageBox("Invalid username or password", Alert.AlertType.ERROR);
+            }
+        }
+        else{
+            userText.setText("");
+            userPass.setText("");
+            setLoginStageToDisconnected();
+        }
+
     }
 
     private GridPane setUpDisconnectedLogin(){
@@ -348,10 +342,8 @@ public class LoginWindow  {
         cancelButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (utility.confirmExit()){
+                if (utility.showConfirmationMessage("Are you sure you want to close the application? ", Alert.AlertType.CONFIRMATION)){
                     loginStage.clseWithAnimation();
-
-
                 }
             }
         });
@@ -551,8 +543,6 @@ public class LoginWindow  {
         });
         thread.start();
 
-
-
     }
     private  boolean isServerConnected(){
         return ctr.isServerConnected();
@@ -563,6 +553,8 @@ public class LoginWindow  {
                 root.setCenter(pane);
     }
 
+
+    // Validate Register
     public  boolean validate(StaffRegister staffReg, double x, double y, double width, MessageWindow messageBox){
 
         boolean isValidated = false;
@@ -575,8 +567,6 @@ public class LoginWindow  {
         String cpass = staffReg.getComfirmpass();
         SecretQuestion securityQ = staffReg.getSq();
         String secretAnswer = staffReg.getSecretAnswer();
-
-
 
                                          //// NAME VALIDATION
                 if (name.equals(null) || name.equals("")) {
@@ -697,12 +687,10 @@ public class LoginWindow  {
     public void showClientWindow(){
 
         // show Client Window
-        ClientWindow cw = ClientWindow.getInstance();
+        ClientWindow cw = new ClientWindow();
         cw.show();
-
 
         // list to ClientWindow when to close
-        cw.show();
         cw.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {

@@ -1,6 +1,8 @@
 package AdminModel;
 
 
+import AdminModel.Report.Children.Model.ResponseCompareOverview;
+import AdminModel.Report.Parent.Model.ResponseOverviewReport;
 import RMI.AdminInterface;
 import RMI.Constant;
 
@@ -77,8 +79,8 @@ public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInter
 
     // ==================== ADMIN REPORTS ===================//
     @Override
-    public OverViewReportObject getOverViewData(Params params, String type){
-        OverViewReportObject overViewReportObject = null;
+    public ResponseOverviewReport getOverViewData(Params params, String type){
+        ResponseOverviewReport overViewReportObject = null;
         try {
             overViewReportObject =  server.getOverViewData(params, type);
         } catch (RemoteException e) {
@@ -87,15 +89,15 @@ public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInter
         return  overViewReportObject;
     }
     @Override
-    public ArrayList getCompareOverViewData(Params params, String type){
-        ArrayList list = new ArrayList();
+    public ResponseCompareOverview getCompareOverViewData(Params params, String type){
+        ResponseCompareOverview compareOverview = null;
 
         try {
-            list =  server.getCompareOverViewData(params, type);
+            compareOverview =  server.getCompareOverViewData(params, type);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        return  list;
+        return  compareOverview;
     }
     @Override
     public ArrayList getCompareSpecificData(Params params, String type){
@@ -129,6 +131,17 @@ public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInter
             e.printStackTrace();
         }
         return  list;
+    }
+
+    @Override
+    public ArrayList getYears()  {
+        ArrayList yearlist = new ArrayList();
+        try {
+            yearlist = server.getYears();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return  yearlist;
     }
 
 }

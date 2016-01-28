@@ -1,6 +1,7 @@
 package View.AdminGUI.Report.SubHeader;
 
 import AdminModel.Params;
+import Controller.Controller;
 import View.AdminGUI.Report.interfaces.ReportButtonListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,6 +12,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
+
+import java.util.ArrayList;
 
 /**
  * Created by Didoy on 1/12/2016.
@@ -23,8 +26,11 @@ public class ReportComparePane extends HBox {
 
     private Button geneateReportBtn;
     private ReportButtonListener reportButtonListener;
+    private Controller controller;
 
     public ReportComparePane(){
+
+        controller = Controller.getInstance();
 
         setAlignment(Pos.CENTER);
         setSpacing(5);
@@ -34,11 +40,9 @@ public class ReportComparePane extends HBox {
         initialYear = new ComboBox();
         maxYear = new ComboBox();
 
+        setYears();
         initialYear.setPromptText("Initial Year");
         maxYear.setPromptText("Max Year");
-
-        initialYear.setItems(getInitialYears());
-        maxYear.setItems(getmaxYears());
 
         setMargin(geneateReportBtn, new Insets(0, 0, 0, 10));
 
@@ -49,27 +53,33 @@ public class ReportComparePane extends HBox {
         geneateReportBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                int initialyear = (Integer) initialYear.getSelectionModel().getSelectedItem();
-                int maxyear = (Integer) maxYear.getSelectionModel().getSelectedItem();
+                int initialyear = Integer.parseInt( (String)initialYear.getSelectionModel().getSelectedItem());
+                int maxyear     = Integer.parseInt( (String)maxYear.getSelectionModel().getSelectedItem());
 
-                System.out.println(initialyear +" :) "+ maxyear);
                 Params params = new Params(initialyear, maxyear, 1, null, null);
+
                 reportButtonListener.generateReport(params);
             }
         });
 
+    }
+
+    private boolean validateReportParameters(){
+
+
+        return false;
+    }
+
+    private void  setYears(){
+        ArrayList year = controller.getYears();
+
+        ObservableList yearObservableList = FXCollections.observableArrayList(year);
+        initialYear.setItems(yearObservableList);
+        maxYear.setItems(yearObservableList);
 
     }
 
-    private ObservableList getInitialYears(){
 
-        // fetch years here
-        ObservableList<Integer> initialYearLis = FXCollections.observableArrayList();
-        initialYearLis.add(2011);
-        initialYearLis.add(2013);
-
-        return initialYearLis;
-    }
 
     private ObservableList getmaxYears(){
         // fetch years here

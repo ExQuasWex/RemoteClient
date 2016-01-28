@@ -1,8 +1,9 @@
 package Controller;
 
 import AdminModel.AdminInterfaceImp;
-import AdminModel.OverViewReportObject;
 import AdminModel.Params;
+import AdminModel.Report.Children.Model.ResponseCompareOverview;
+import AdminModel.Report.Parent.Model.ResponseOverviewReport;
 import AdminModel.RequestAccounts;
 import ClientModel.Database;
 import Remote.Method.FamilyModel.Family;
@@ -16,6 +17,7 @@ import utility.Utility;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * Created by Didoy on 8/25/2015.
@@ -77,8 +79,12 @@ public class Controller implements TableItemListener {
 
 
     // ====================== Encoder methods =================//
-    public  boolean addFamilyInfo(Family family){
-        return clientDB.addFamilyInfo(false ,family);
+    /*
+        if instant save is true the server automatically save the
+        family information and would not check it
+     */
+    public  boolean addFamilyInfo(boolean instantSave, Family family){
+        return clientDB.addFamilyInfo(instantSave ,family);
     }
 
     public  StaffInfo getStaffInfo(){
@@ -135,31 +141,17 @@ public class Controller implements TableItemListener {
         return  clientDB.updateStaffInfo(staffInfo,finalUsername);
     }
 
-    public static void showMessageBox(String message, Alert.AlertType alertType){
-                  Utility.showMessageBox(message, alertType);
-
-    }
-
-    public boolean showConfirmationMessage(String message, Alert.AlertType alertType, ArrayList list){
-        return ClientWindow.getInstance().showConfirmationMessage(message,
-                alertType, list);
-
-    }
-
-    public  void showSearchedList(ArrayList data){
-        ClientWindow.getInstance().showSearchedTable(data);
-    }
 
     public String getMethodIdenifier(){
         return clientDB.getMethodIdentifiers();
     }
 
+    /*
+        Critical method put the thread
+        into TCP java thread
+     */
     public void notifyClient(ArrayList familyList){
-        isNotified = true;
-
-        showConfirmationMessage("We found Similar record of the person, Would You like to see it before proceeding?",
-                Alert.AlertType.CONFIRMATION, familyList);
-
+       ClientWindow.notifyClient(familyList);
     }
 
     @Override
@@ -181,12 +173,11 @@ public class Controller implements TableItemListener {
 
     // ==================== ADMIN REPORTS ===================//
 
-    public OverViewReportObject getOverViewData(Params params, String type){
+    public ResponseOverviewReport getOverViewData(Params params, String type){
 
         return adminDB.getOverViewData( params,  type);
     }
-    public ArrayList getCompareOverViewData(Params params, String type){
-
+    public ResponseCompareOverview getCompareOverViewData(Params params, String type){
         return adminDB.getCompareOverViewData( params,  type);
     }
 
@@ -203,6 +194,9 @@ public class Controller implements TableItemListener {
     public ArrayList getSpecific(Params params, String type){
 
         return adminDB.getSpecific(params, type);
+    }
+    public ArrayList getYears(){
+        return adminDB.getYears();
     }
 
 

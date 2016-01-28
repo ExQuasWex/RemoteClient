@@ -4,7 +4,6 @@ import Controller.Controller;
 import Remote.Method.FamilyModel.Family;
 import Remote.Method.FamilyModel.FamilyInfo;
 import Remote.Method.FamilyModel.FamilyPoverty;
-import View.AdminGUI.Report.DateUtil.DateUtil;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -322,6 +321,7 @@ public class FamilyForm extends GridPane{
         searchBox.setPrefWidth(20);
 
         // topPane nodes declaration
+        System.out.println("Utility date called");
          dateField  = new TextField(Utility.getCurrentDate());
 
         datePicker = new DatePicker();
@@ -337,8 +337,8 @@ public class FamilyForm extends GridPane{
         dateField.setDisable(true);
         numofChildrenF.setText("0");
 
-        Name.setPromptText("First Name");
-        SpouseName.setPromptText("First Name");
+        Name.setPromptText("Full Name");
+        SpouseName.setPromptText("Spouse Full Name");
         agefield.setPromptText("35");
         addressF.setPromptText("e.g 12345 Manga st. Mabalacat");
         yrResidency.setPromptText("e.g 2012");
@@ -485,6 +485,13 @@ public class FamilyForm extends GridPane{
                     SpouseName.setText("");
                     SpouseName.setDisable(true);
                 }
+            }
+        });
+
+        barangayCb.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("barangayCb called");
             }
         });
 
@@ -647,14 +654,12 @@ public class FamilyForm extends GridPane{
                     numofchildren,name,spousename,age,maritalStatus,barangay,gender,address );
 
             FamilyPoverty familyPoverty  = new FamilyPoverty(hasOtherIncome,isBelow8k,ownership,
-                    occupancy,isunderEmployed,childrenScl, dateissued, DateUtil.getMonth());
+                    occupancy,isunderEmployed,childrenScl, dateissued, Utility.getCurrentMonth());
 
             family = new Family(familyInfo,familyPoverty);
             familyFormListener.handle(family);
 
            // Utility.ClearComponents(subGrid);
-            dateField.setText(Utility.getCurrentDate());
-
 
 
     }

@@ -1,6 +1,6 @@
 package View.AdminGUI;
 
-import AdminModel.BarangayData;
+import AdminModel.Report.Children.Model.ResponsePovertyRate;
 import AdminModel.RequestAccounts;
 import Controller.Controller;
 import View.AdminGUI.Report.Report.Layouts.MainReportPane;
@@ -28,8 +28,7 @@ public class AdminWindow extends Stage{
     private   Controller ctr;
 
     private AdminWindow(){
-
-       ctr = Controller.getInstance();
+           ctr = Controller.getInstance();
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 
         root = new BorderPane();
@@ -61,7 +60,9 @@ public class AdminWindow extends Stage{
             });
 
         // main settings
-        Scene scene = new Scene(root, 1000,600);
+        setWidth(screen.getWidth());
+        setHeight(screen.getHeight());
+        Scene scene = new Scene(root);
         scene.getStylesheets().add("/CSS/ClientWindowCSS.css");
         setScene(scene);
         initStyle(StageStyle.TRANSPARENT);
@@ -75,7 +76,7 @@ public class AdminWindow extends Stage{
 
         ObservableList<PieChart.Data>  pieData = FXCollections.observableArrayList();
                 while (x <= barangayDataList.size() - 1){
-                    BarangayData bd = (BarangayData) barangayDataList.get(x);
+                    ResponsePovertyRate bd = (ResponsePovertyRate) barangayDataList.get(x);
                     pieData.add(new PieChart.Data(bd.getBarangayName(),bd.getUnresolvePopulation()));
                     x++;
                 }

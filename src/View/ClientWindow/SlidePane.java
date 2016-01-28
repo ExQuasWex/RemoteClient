@@ -1,5 +1,6 @@
 package View.ClientWindow;
 
+import View.ClientWindow.Listeners.SlidePaneListener;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -22,6 +23,9 @@ public class SlidePane extends HBox{
     private VBox leftVbox;
     private boolean isOFF;
     private final double prefWidth;
+
+    private SlidePaneListener slidePaneListener;
+
 
     public SlidePane(double prefW){
         getStylesheets().add("/CSS/Slidepane.css");
@@ -87,14 +91,14 @@ public class SlidePane extends HBox{
             accountinfo.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    ClientWindow.getInstance().showAccount();
+                    slidePaneListener.showAccount();
                 }
             });
 
             form.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    ClientWindow.getInstance().showFamilyForm();
+                    slidePaneListener.showFamilyForm();
                 }
             });
 
@@ -102,7 +106,7 @@ public class SlidePane extends HBox{
                 @Override
                 public void handle(MouseEvent event) {
 
-                    ClientWindow.getInstance().Logout();
+                    slidePaneListener.Logout();
                 }
             });
 
@@ -113,6 +117,9 @@ public class SlidePane extends HBox{
 
     }
 
+    public void addSlidePaneListener(SlidePaneListener slidePaneListener){
+        this.slidePaneListener = slidePaneListener;
+    }
 
     public  void showMenu(){
         getChildren().add(0,leftVbox);
