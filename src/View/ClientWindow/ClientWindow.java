@@ -332,7 +332,7 @@ public class ClientWindow extends CustomStage{
         // logout UI
         removeSearchTable();
         SearchTabWindow.getInstance().close();
-        LoginWindow.getInstantance().showLoginWindow(true);
+        new LoginWindow();
         System.out.println("log out fnish from clientWindow");
         close();
 

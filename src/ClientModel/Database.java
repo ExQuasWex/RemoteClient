@@ -209,7 +209,6 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
 
 
         } catch (RemoteException e) {
-            Controller.getInstance().setLoginToDisconnected();
             e.printStackTrace();
         } catch (UnknownHostException e) {
             e.printStackTrace();

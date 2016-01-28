@@ -1,6 +1,7 @@
 package View.Login;
 
 import Controller.Controller;
+import View.Login.Listeners.LoginPaneListener;
 import clientModel.StaffInfo;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -12,7 +13,6 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -31,13 +31,9 @@ public class LoginPane extends BorderPane {
     private  TextField userText, contactField;
     private  Label statusLabel;
     private PasswordField userPass;
-    private Scene scene;
     private  Button loginButton, cancelButton;
 
-    private  ToggleButton loginToggle,registerToggle, forgotToggle;
-    private  ToggleGroup toggleGroup;
 
-    private Utility utility;
     private LoginPaneListener loginPaneListener;
 
     private boolean isConnected;
@@ -45,8 +41,25 @@ public class LoginPane extends BorderPane {
     private  Controller ctr = Controller.getInstance();
 
     LoginPane(){
-
         isConnected = isServerConnected();
+
+        contactField = new TextField();
+        userText = new TextField();
+        userPass = new PasswordField();
+        contactField = new TextField();
+
+        userText.setAlignment(Pos.CENTER);
+        userPass.setAlignment(Pos.CENTER);
+
+        userText.setPromptText("Username");
+        userPass.setPromptText("Username");
+
+        loginButton = new Button("Login");
+        cancelButton = new Button("Cancel");
+
+        statusLabel = new Label();
+
+
     }
 
     public void addLoginPaneListener(LoginPaneListener loginPaneListener){
@@ -101,10 +114,6 @@ public class LoginPane extends BorderPane {
 
         gridPane.getChildren().addAll(logoLabel,pb,connectingL,userText,userPass,loginButton,cancelButton);
 
-        loginToggle.setDisable(true);
-        registerToggle.setDisable(true);
-        forgotToggle.setDisable(true);
-
         userPass.setDisable(true);
         userText.setDisable(true);
         loginButton.setDisable(true);
@@ -114,9 +123,9 @@ public class LoginPane extends BorderPane {
         cancelButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (utility.showConfirmationMessage("Are you sure you want to close the application? ", Alert.AlertType.CONFIRMATION)){
-                   // loginStage.clseWithAnimation();
-                   // add interface listener here
+                if (Utility.showConfirmationMessage("Are you sure you want to close the application? ", Alert.AlertType.CONFIRMATION)){
+                    loginPaneListener.exitApplication();
+
                 }
             }
         });
@@ -126,7 +135,7 @@ public class LoginPane extends BorderPane {
         return gridPane;
     }
 
-    private void connectToServer(){
+    public void connectToServer(){
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -155,12 +164,13 @@ public class LoginPane extends BorderPane {
         thread.start();
 
     }
+
     private void changeLogIncCenter(Pane pane){
         setCenter(null);
         setCenter(pane);
     }
 
-    private GridPane loginSetUp(){
+    public GridPane loginSetUp(){
         gridPane = new GridPane();
 
         gridPane.setPrefHeight(240);
@@ -187,9 +197,6 @@ public class LoginPane extends BorderPane {
 
         gridPane.getChildren().addAll(logoLabel, userText, userPass, loginButton, cancelButton);
 
-        loginToggle.setDisable(false);
-        registerToggle.setDisable(false);
-        forgotToggle.setDisable(false);
 
         userPass.setDisable(false);
         userText.setDisable(false);
@@ -210,8 +217,8 @@ public class LoginPane extends BorderPane {
         cancelButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (utility.showConfirmationMessage("Are you sure you want to close the application? ", Alert.AlertType.CONFIRMATION)){
-                    loginPaneListener.closeLoginStage();
+                if (Utility.showConfirmationMessage("Are you sure you want to close the application? ", Alert.AlertType.CONFIRMATION)){
+                    loginPaneListener.exitApplication();
                 }
             }
         });
@@ -261,7 +268,6 @@ public class LoginPane extends BorderPane {
 
         setCenter(null);
         setCenter(setUpDisconnectedLogin());
-        toggleGroup.selectToggle(loginToggle);
         setHeight(290);
     }
 

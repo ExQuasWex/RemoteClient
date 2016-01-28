@@ -9,6 +9,7 @@ import ClientModel.Database;
 import Remote.Method.FamilyModel.Family;
 import View.AdminGUI.TableItemListener;
 import View.ClientWindow.ClientWindow;
+import View.Login.LoginPane;
 import View.Login.LoginWindow;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
@@ -117,9 +118,6 @@ public class Controller implements TableItemListener {
 
     public ArrayList searchedList (String name){
         return clientDB.searchedList(name);
-    }
-    public void setLoginToDisconnected(){
-        LoginWindow.getInstantance().setLoginStageToDisconnected();
     }
 
 

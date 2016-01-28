@@ -104,7 +104,6 @@ public class AdminWindow extends Stage{
     public  void AdminLogout(){
          getInstance().close();
          Controller.getInstance().Logout();
-         LoginWindow.getInstantance().showLoginWindow(true);
 
         System.out.println("Admin logut called");
     }
