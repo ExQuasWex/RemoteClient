@@ -34,18 +34,33 @@ public class RegisterPane extends VBox {
 
     private RegisterPaneListeners registerPaneListeners;
 
+    private SecretQuestion secretQuestion;
     public RegisterPane(){
 
         messageBox = MessageWindow.getInstance();
         contactField = new TextField();
 
+        secretQ = new ComboBox();
+
+        setUpRegister();
+
+        // handle Save Button
+        save.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                Register();
+
+            }
+        });
 
     }
-    public VBox setUpRegister(){
+    public void  setUpRegister(){
 
         // this is for register layout
         setAlignment(Pos.CENTER);
         setFillWidth(false);
+        setSpacing(5);
 
          HBox hBox = new HBox();
          tg = new ToggleGroup();
@@ -112,21 +127,15 @@ public class RegisterPane extends VBox {
        getChildren().addAll(nameField,userName, contactField, homeAdress,secretQ, secretAns,
                 password,confirmPass,hBox, save);
 
-        // setting this height will also set the height of the window
-       setPrefHeight(380);
 
-
-        // handle Save Button
-        save.setOnAction(new EventHandler<ActionEvent>() {
+        secretQ.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
-                Register();
-
+                secretQuestion = (SecretQuestion) secretQ.getSelectionModel().getSelectedItem();
+                System.out.println(secretQuestion );
             }
         });
 
-        return this;
     }
 
     private void Register(){
@@ -157,21 +166,22 @@ public class RegisterPane extends VBox {
             contactField.setText(contact);
 
             int secretID = 0;
-            SecretQuestion sq = null;
-            if (SecretQuestion.PET == secretQ.getSelectionModel().getSelectedItem()){
+
+
+            if (secretQuestion.equals(SecretQuestion.PET)){
                 secretID = 1;
-                sq = SecretQuestion.PET;
-            }else if (SecretQuestion.TVSHOW == secretQ.getSelectionModel().getSelectedItem()){
+                secretQuestion = SecretQuestion.PET;
+                System.out.println("Pet");
+            }else if (secretQuestion.equals(SecretQuestion.TVSHOW)){
                 secretID = 2;
-                sq = SecretQuestion.TVSHOW;
-            }else if (SecretQuestion.BOOK == secretQ.getSelectionModel().getSelectedItem()){
+                secretQuestion = SecretQuestion.TVSHOW;
+            }else if (secretQuestion.equals(SecretQuestion.BOOK)){
                 secretID = 3;
-                sq = SecretQuestion.BOOK;
-            }else {
-                sq = null;
+                secretQuestion = SecretQuestion.BOOK;
             }
 
-            StaffRegister staffRegister = new StaffRegister(name,username,contact,address,secretID,sq,secretAnswer,gender,pass,cpass);
+            StaffRegister staffRegister = new StaffRegister(name,username,contact,address,secretID,secretQuestion,
+                    secretAnswer,gender,pass,cpass);
 
             if (validate(staffRegister)){
                 boolean isRegistered;
@@ -218,10 +228,10 @@ public class RegisterPane extends VBox {
 
         //// NAME VALIDATION
         if (name.equals(null) || name.equals("")) {
-            Utility.showMessageBox("The name you entered is empty from login", Alert.AlertType.INFORMATION);
+            Utility.showMessageBox("The name you entered is empty", Alert.AlertType.INFORMATION);
             isValidated = false;
         }else if (name.length()<4 || name.length()>70){
-            Utility.showMessageBox("The name must only contain 4 to 30 characters", Alert.AlertType.INFORMATION);
+            Utility.showMessageBox("The name must must contain atleast 4 to 30 characters", Alert.AlertType.INFORMATION);
 
         }
         else if (!Pattern.matches("^[a-zA-Z\\s]+[a-zA-Z\\s]", name)){
@@ -235,11 +245,11 @@ public class RegisterPane extends VBox {
         }
 
         else  if (username.length() <6 || username.length()> 10){
-            Utility.showMessageBox("Username must contain of 6 to 10 characters ", Alert.AlertType.INFORMATION);
+            Utility.showMessageBox("Username must contain atleast 6 to 10 characters ", Alert.AlertType.INFORMATION);
             isValidated = false;
         }
 
-        else  if (!Pattern.matches("^[a-zA-Z0-9_-]{6,12}$+",username)){
+        else  if (!Pattern.matches("^[a-zA-Z0-9_-]{6,12}$+", username)){
             Utility.showMessageBox("Username must not contain any special character", Alert.AlertType.INFORMATION);
             isValidated = false;
         }
@@ -254,13 +264,17 @@ public class RegisterPane extends VBox {
             isValidated = false;
         }
         else if (!Pattern.matches("^[\\d\\-]{13}$+",contact)) {
-            Utility.showMessageBox("Your contact number must be 11 digits", Alert.AlertType.INFORMATION);
+            Utility.showMessageBox("Invalid Contact Number", Alert.AlertType.INFORMATION);
             isValidated = false;
         }
 
         // ADDRESS VALIDATION
+        else if(address.equals("") || address.equals(null)){
+            Utility.showMessageBox("You have empty Address", Alert.AlertType.INFORMATION);
+            isValidated = false;
+        }
         else if (!Pattern.matches("^[a-zA-Z0-9\\.\\-\\s]+", address)) {
-            Utility.showMessageBox("Your Address must consist of 5 digits and not contain any special character", Alert.AlertType.INFORMATION);
+            Utility.showMessageBox("Please don't add any special symbols except(. or -)", Alert.AlertType.INFORMATION);
             isValidated = false;
 
             // SECURITY QUESTION VALIDATION

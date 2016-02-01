@@ -21,19 +21,45 @@ import java.util.ArrayList;
  */
 public class AdminWindow extends Stage{
 
-    private static AdminWindow adminWindow = new AdminWindow();
     private BorderPane root;
     private ArrayList barangayDataList;
     private   ManagementPane mp ;
-    private   Controller ctr;
+    private  Controller ctr;
 
-    private AdminWindow(){
-           ctr = Controller.getInstance();
+    public AdminWindow(){
+        ctr = Controller.getInstance();
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 
         root = new BorderPane();
+
+
         AdminSlidePane adminSlidePane = new AdminSlidePane(screen.getWidth()/4);
         root.setLeft(adminSlidePane);
+
+
+        adminSlidePane.addAdminSlidePaneListener(new AdminSlidePaneListner() {
+            @Override
+            public void showManageMent() {
+                showManagement();
+            }
+
+            @Override
+            public void showInitialReport() {
+                showInitialReports();
+
+            }
+
+            @Override
+            public void Logout() {
+                AdminLogout();
+            }
+
+            @Override
+            public void showReport() {
+                ShowReport();
+            }
+        });
+
 
         showInitialReports();
 
@@ -68,6 +94,8 @@ public class AdminWindow extends Stage{
         initStyle(StageStyle.TRANSPARENT);
         centerOnScreen();
 
+        show();
+
     }
     public void showInitialReports(){
         int x = 0;
@@ -89,10 +117,8 @@ public class AdminWindow extends Stage{
 
     }
 
-    public static AdminWindow getInstance(){
-        return adminWindow;}
 
-    public  void ShowManagement(){
+    public  void showManagement(){
 
         root.setCenter(mp);
     }
@@ -102,8 +128,10 @@ public class AdminWindow extends Stage{
     }
 
     public  void AdminLogout(){
-         getInstance().close();
-         Controller.getInstance().Logout();
+
+         ctr.Logout();
+         close();
+         new LoginWindow();
 
         System.out.println("Admin logut called");
     }

@@ -33,6 +33,7 @@ public class AdminSlidePane extends HBox{
     private StackPane sp;
     private String totalRequest = "";
     private    boolean  isNotificationOut;
+    private AdminSlidePaneListner adminSlidePaneListner;
 
     public AdminSlidePane(double prefW){
 
@@ -96,7 +97,7 @@ public class AdminSlidePane extends HBox{
             reports.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    AdminWindow.getInstance().ShowReport();
+                    adminSlidePaneListner.showReport();
                 }
             });
 
@@ -106,11 +107,12 @@ public class AdminSlidePane extends HBox{
                 public void handle(MouseEvent event)
                 {
                     if (isNotificationOut){
-                        AdminWindow.getInstance().ShowManagement();
+                        adminSlidePaneListner.showManageMent();
+
                     }else{
                         isNotificationOut = true;
                         sp.getChildren().remove(1,3);
-                        AdminWindow.getInstance().ShowManagement();
+                        adminSlidePaneListner.showManageMent();
                     }
                 }
             });
@@ -118,7 +120,7 @@ public class AdminSlidePane extends HBox{
             home.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    AdminWindow.getInstance().showInitialReports();
+                    adminSlidePaneListner.showInitialReport();
                     System.out.println("account is clicked");
 
                 }
@@ -128,7 +130,7 @@ public class AdminSlidePane extends HBox{
         logout.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-               AdminWindow.getInstance().AdminLogout();
+                adminSlidePaneListner.Logout();
             }
         });
 
@@ -138,6 +140,10 @@ public class AdminSlidePane extends HBox{
         setPrefWidth(prefWidth * 1.2);
         getChildren().addAll(leftVbox, rightVbox);
 
+    }
+
+    public void addAdminSlidePaneListener(AdminSlidePaneListner adminSlidePaneListner){
+        this.adminSlidePaneListner = adminSlidePaneListner;
     }
 
     private void addMouseListenerToSlideButton(Label slideArrow){

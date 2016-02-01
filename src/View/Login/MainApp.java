@@ -27,13 +27,15 @@ public class MainApp extends Application {
     }
 
     public void startLogwinWindow(){
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                   LoginWindow loginWindow = new LoginWindow();
+
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+
+                                    LoginWindow loginWindow = new LoginWindow();
+                        }
+                    });
             }
-        });
-    }
 
 
 

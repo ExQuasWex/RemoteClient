@@ -9,7 +9,9 @@ import View.AdminGUI.TableItemListener;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
 import global.Credentials;
+import global.SecretDetails;
 import javafx.scene.control.Alert;
+import utility.TimedRMIclientSocketFactory;
 import utility.Utility;
 
 import java.net.InetAddress;
@@ -34,6 +36,7 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
    private String ipAddress = "localhost"; //Local IP address
    private  Registry reg;
    private Credentials credentials;
+    private TimedRMIclientSocketFactory csf;
 
     // call back objects
    private  Registry myRegistry;
@@ -41,6 +44,7 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
 
     public Database() throws RemoteException {
 
+        csf = new TimedRMIclientSocketFactory(2000);
         RegisterServer();
     }
 
@@ -100,25 +104,22 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
     }
 
     public boolean connectToServer(){
-        Thread t1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-
                   bol = RegisterServer();
 
-            }
-        });
-
-        t1.start();
-
-        try {
-            t1.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         return bol;
     }
 
+    public SecretDetails getSecurityQuestion(String hint1){
+        SecretDetails secretDetails = null;
+
+        String question = null;
+        try {
+            secretDetails =  server.getSecurityQuestion(hint1);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return  secretDetails;
+    }
 
     // CLIENT BASIC METHODS
 
@@ -217,23 +218,34 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
     }
 
     private boolean RegisterServer(){
-        try {
-            reg = LocateRegistry.getRegistry(System.setProperty("java.rmi.server.hostname",ipAddress), Constant.Remote_port);
-            //Registry reg = LocateRegistry.getRegistry("localhost",Constant.Remote_port);
-            server = (RemoteMethods) reg.lookup(Constant.Remote_ID);
 
-            bol = server.checkDatabase();
 
-        } catch (RemoteException e) {
-            System.out.println("Client:Database:connectToServer:RemoteException");
-            bol = false;
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    reg = LocateRegistry.getRegistry(System.setProperty("java.rmi.server.hostname",ipAddress), Constant.Remote_port, csf);
+                    //Registry reg = LocateRegistry.getRegistry("localhost",Constant.Remote_port);
+                    server = (RemoteMethods) reg.lookup(Constant.Remote_ID);
 
-        } catch (SQLException s){
-            System.out.println("Client:Database:connectToServer:SQLException");
-            bol = false;
-        } catch (NotBoundException e) {
-            e.printStackTrace();
-        }
+                    bol = server.checkDatabase();
+
+                } catch (RemoteException e) {
+                    System.out.println("Client:Database:connectToServer:RemoteException");
+                    bol = false;
+
+                } catch (SQLException s){
+                    System.out.println("Client:Database:connectToServer:SQLException");
+                    bol = false;
+                } catch (NotBoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        thread.start();
+
+
 
         return bol;
     }

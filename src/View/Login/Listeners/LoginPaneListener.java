@@ -9,5 +9,8 @@ public interface LoginPaneListener {
     public void showClientWindow();
     public void closeLoginStage();
     public void exitApplication();
+    public void  setLoginDisconnected();
+    public void  setLoginConnected();
+
 
 }

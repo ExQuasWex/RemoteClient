@@ -13,12 +13,15 @@ import View.Login.LoginPane;
 import View.Login.LoginWindow;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
+import global.SecretDetails;
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import utility.Utility;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by Didoy on 8/25/2015.
@@ -58,15 +61,18 @@ public class Controller implements TableItemListener {
 
     // ==================== GLOBAL METHODS ==================//
 
-    public boolean isServerConnected(){
-        isServerConnected  = clientDB.connectToServer();
-        boolean isAdminServerConnected = adminDB.connectToServer();
+    public boolean isServerConnected()   {
 
-            if (isAdminServerConnected && isServerConnected){
-                return true;
-            }else {
-                return false;
-            }
+                isServerConnected  = clientDB.connectToServer();
+                boolean isAdminServerConnected = adminDB.connectToServer();
+
+                if (isAdminServerConnected && isServerConnected){
+                    isServerConnected =  true;
+                }else {
+                    isServerConnected =  false;
+                }
+
+        return  isServerConnected;
     }
 
     public boolean  Login(String user, String Pass, String ipAddress) {
@@ -76,6 +82,10 @@ public class Controller implements TableItemListener {
         finalUsername = staffInfo.getUsername();
         return staffInfo.isAccountExist();
 
+    }
+
+    public SecretDetails getSecurityQuestion(String hint1){
+        return  clientDB.getSecurityQuestion(hint1);
     }
 
 
@@ -131,7 +141,7 @@ public class Controller implements TableItemListener {
     }
 
 
-    // ======================bACK TO FRONT END=================//
+    // ======================BACK TO FRONT END=================//
 
 
     public boolean updateStaffInfo(StaffInfo staffInfo) {

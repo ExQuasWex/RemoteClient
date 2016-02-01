@@ -327,14 +327,16 @@ public class ClientWindow extends CustomStage{
     }
 
     public void closeClientWindow(){
+
         // logout from database
         Controller.getInstance().Logout();
         // logout UI
         removeSearchTable();
+        close();
+
         SearchTabWindow.getInstance().close();
         new LoginWindow();
         System.out.println("log out fnish from clientWindow");
-        close();
 
     }
 

@@ -25,6 +25,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import utility.Utility;
@@ -55,31 +56,23 @@ public class LoginWindow extends CustomStage {
     private LoginPane loginPane;
     private LoginHeaderMenu topPane;
     private RegisterPane registerPane;
+    private ForgotPasswordPane forgotPasswordPane;
 
     public   LoginWindow(){
-        super(30,30,350,280);
+        super(30,30,600,400);
 
         ctr = Controller.getInstance();
-        isConnected = ctr.isServerConnected();
-
         root = new BorderPane();
+
 
         loginPane = new LoginPane();
         topPane = new LoginHeaderMenu();
         registerPane = new RegisterPane();
 
+
         root.setTop(topPane);
 
-
         AddComponentListeners();
-
-        if (isConnected){
-            System.out.println("setLoginStageConnected");
-                setLoginStageConnected();
-        }else if (!isConnected){
-                  System.out.println("setLoginStageDisconnected");
-                setLoginStageDisconnected();
-        }
 
         scene = new Scene(root);
         scene.getStylesheets().add("/CSS/Login.css");
@@ -110,6 +103,23 @@ public class LoginWindow extends CustomStage {
             }
         });
 
+        initStyle(StageStyle.DECORATED);
+
+        loginWindowInitialize();
+
+    }
+
+    public void loginWindowInitialize(){
+        isConnected = ctr.isServerConnected();
+
+        if (isConnected){
+            System.out.println("setLoginStageConnected");
+            setLoginWindoweConnected();
+        }else if (!isConnected){
+            System.out.println("setLoginStageDisconnected");
+            setLoginWindowDisconnected();
+        }
+
         showWithAnimation();
 
     }
@@ -135,11 +145,21 @@ public class LoginWindow extends CustomStage {
             public void exitApplication() {
                 System.exit(1);
             }
+
+            @Override
+            public void setLoginDisconnected() {
+                setLoginWindowDisconnected();
+            }
+
+            @Override
+            public void setLoginConnected() {
+                setLoginWindoweConnected();
+            }
         });
         registerPane.addRegisterPaneListener(new RegisterPaneListeners() {
             @Override
             public void setUpLoginWindowDisconnected() {
-                setLoginStageConnected();
+                setLoginWindowDisconnected();
             }
 
             @Override
@@ -151,25 +171,25 @@ public class LoginWindow extends CustomStage {
         topPane.addTopPaneListener(new TopPaneListener() {
             @Override
             public void setLogin() {
-                setCenter(loginPane.loginSetUp());
+                setCenter(loginPane);
             }
 
             @Override
             public void setRegister() {
-                setCenter(registerPane.setUpRegister());
+                setCenter(registerPane);
             }
 
             @Override
             public void setForgot() {
-
+                forgotPasswordPane = new ForgotPasswordPane();
+                setCenter(forgotPasswordPane);
             }
         });
 
     }
 
     private boolean RegisterClient(StaffRegister staffRegister){
-       boolean isRegistered =  ctr.register(staffRegister);
-        return isRegistered;
+        return  ctr.register(staffRegister);
     }
 
 
@@ -181,18 +201,26 @@ public class LoginWindow extends CustomStage {
     // this is being called from another class example by the time the
     // it process information and suddenly we lose connection to server
 
-    private void setLoginStageDisconnected(){
+    private void setLoginWindowDisconnected(){
         root.setCenter(null);
-        loginPane.setLoginStageToDisconnected();
+        loginPane.setUpDisconnectedLogin();
+        loginPane.setDisable(true);
         root.setCenter(loginPane);
 
+        topPane.Disable(true);
+
         loginPane.connectToServer();
-    }
-    private void setLoginStageConnected(){
-        root.setCenter(null);
-        root.setCenter(loginPane.loginSetUp());
+
+        Utility.showMessageBox("We cant connect to server as of the moment", Alert.AlertType.ERROR);
 
     }
+    private void setLoginWindoweConnected(){
+        loginPane.setLoginPaneConnected();
+        topPane.Disable(false);
+        root.setCenter(loginPane);
+
+    }
+
 
     public void ShowClientWindow(){
         // show Client Window
@@ -213,7 +241,7 @@ public class LoginWindow extends CustomStage {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                AdminWindow.getInstance().show();
+                new AdminWindow();
             }
         });
     }

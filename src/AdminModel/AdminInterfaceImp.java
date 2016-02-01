@@ -5,6 +5,7 @@ import AdminModel.Report.Children.Model.ResponseCompareOverview;
 import AdminModel.Report.Parent.Model.ResponseOverviewReport;
 import RMI.AdminInterface;
 import RMI.Constant;
+import utility.TimedRMIclientSocketFactory;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -22,19 +23,22 @@ public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInter
     private static AdminInterface server = null;
     private boolean isConnected = false;
 
-    public AdminInterfaceImp() throws RemoteException {
+    private TimedRMIclientSocketFactory csf;
 
+    public AdminInterfaceImp() throws RemoteException {
+        csf = new TimedRMIclientSocketFactory(2000);
         connectToServer();
 
     }
 
     public boolean connectToServer(){
-        Thread t1 = new Thread(new Runnable() {
+
+        Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
 
-                    Registry reg = LocateRegistry.getRegistry(System.setProperty("java.rmi.server.hostname", ipAddress), Constant.Adminport);
+                    Registry reg = LocateRegistry.getRegistry(System.setProperty("java.rmi.server.hostname", ipAddress), Constant.Adminport, csf);
                     server = (AdminInterface) reg.lookup(Constant.RMIAdminID);
                     isConnected = server.checkConnectDB();
 
@@ -49,13 +53,10 @@ public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInter
             }
         });
 
-        t1.start();
+        thread.start();
 
-        try {
-            t1.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
+
         return isConnected;
     }
 
@@ -74,7 +75,7 @@ public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInter
 
     @Override
     public boolean checkConnectDB() throws RemoteException {
-        return false;
+        return server.checkConnectDB();
     }
 
     // ==================== ADMIN REPORTS ===================//
