@@ -208,5 +208,9 @@ public class Controller implements TableItemListener {
     }
 
 
+    public ArrayList getFamilyBarangay(Params params){
+        return adminDB.getFamilyBarangay(params);
+    }
+
 }
 

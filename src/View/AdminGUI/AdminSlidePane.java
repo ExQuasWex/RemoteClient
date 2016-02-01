@@ -127,12 +127,20 @@ public class AdminSlidePane extends HBox{
             });
 
 
-        logout.setOnMouseClicked(new EventHandler<MouseEvent>() {
+             logout.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 adminSlidePaneListner.Logout();
             }
-        });
+            });
+
+            work.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    adminSlidePaneListner.ShowWorkPane();
+
+                }
+            });
 
 
 

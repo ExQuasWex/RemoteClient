@@ -9,6 +9,8 @@ public interface AdminSlidePaneListner {
     public void showInitialReport();
     public void Logout();
     public void showReport();
+    public void ShowWorkPane();
+
 
 
 }

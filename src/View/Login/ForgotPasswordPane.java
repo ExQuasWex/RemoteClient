@@ -65,9 +65,7 @@ public class ForgotPasswordPane extends BorderPane{
             }
         });
 
-
     }
-
 
     private void validateHint(){
         String hint1 = hint.getText();

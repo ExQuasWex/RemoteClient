@@ -26,6 +26,8 @@ public class AdminWindow extends Stage{
     private   ManagementPane mp ;
     private  Controller ctr;
 
+    private WorkPane workPane = new WorkPane();
+
     public AdminWindow(){
         ctr = Controller.getInstance();
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
@@ -57,6 +59,11 @@ public class AdminWindow extends Stage{
             @Override
             public void showReport() {
                 ShowReport();
+            }
+
+            @Override
+            public void ShowWorkPane() {
+                showWorkPane();
             }
         });
 
@@ -95,6 +102,13 @@ public class AdminWindow extends Stage{
         centerOnScreen();
 
         show();
+
+    }
+
+    private void showWorkPane(){
+
+        root.setCenter(null);
+        root.setCenter(workPane);
 
     }
     public void showInitialReports(){

@@ -145,4 +145,17 @@ public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInter
         return  yearlist;
     }
 
+    @Override
+    public ArrayList getFamilyBarangay(Params params)   {
+        ArrayList list = new ArrayList();
+
+        try {
+            list = server.getFamilyBarangay(params);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
 }
