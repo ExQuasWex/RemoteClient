@@ -1,7 +1,8 @@
-package View.Login;
+package View.Login.Register;
 
 import Controller.Controller;
 import View.Login.Listeners.RegisterPaneListeners;
+import View.Login.MessageWindow;
 import clientModel.SecretQuestion;
 import clientModel.StaffRegister;
 import javafx.event.ActionEvent;
@@ -168,16 +169,18 @@ public class RegisterPane extends VBox {
             int secretID = 0;
 
 
-            if (secretQuestion.equals(SecretQuestion.PET)){
+            if (secretQuestion == SecretQuestion.PET){
                 secretID = 1;
                 secretQuestion = SecretQuestion.PET;
                 System.out.println("Pet");
-            }else if (secretQuestion.equals(SecretQuestion.TVSHOW)){
+            }else if (secretQuestion == SecretQuestion.TVSHOW){
                 secretID = 2;
                 secretQuestion = SecretQuestion.TVSHOW;
-            }else if (secretQuestion.equals(SecretQuestion.BOOK)){
+            }else if (secretQuestion == SecretQuestion.BOOK){
                 secretID = 3;
                 secretQuestion = SecretQuestion.BOOK;
+            }else{
+                secretQuestion = null;
             }
 
             StaffRegister staffRegister = new StaffRegister(name,username,contact,address,secretID,secretQuestion,
@@ -234,7 +237,7 @@ public class RegisterPane extends VBox {
             Utility.showMessageBox("The name must must contain atleast 4 to 30 characters", Alert.AlertType.INFORMATION);
 
         }
-        else if (!Pattern.matches("^[a-zA-Z\\s]+[a-zA-Z\\s]", name)){
+        else if (!Pattern.matches("^[a-zA-Z.\\s]+[a-zA-Z\\s]", name)){
             Utility.showMessageBox("The name should not contain any digits or Special characters.", Alert.AlertType.INFORMATION);
             isValidated = false;
         }

@@ -1,4 +1,4 @@
-package View.Login;
+package View.Login.ForgotPassword;
 
 import Controller.Controller;
 import clientModel.SecretQuestion;

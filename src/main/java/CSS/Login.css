@@ -1,0 +1,70 @@
+.progress-bar .bar{
+    -fx-background-insets: 0;
+    -fx-padding: 5px;
+    -fx-background-color: #3CB371;
+}
+
+.hboxToggleGroup{
+    -fx-background-color: linear-gradient(to right , #19abd7, #eef9fb 50% , #19abd7);
+}
+
+.root{
+    -fx-background-color: linear-gradient(to bottom right, #faebd7, #137492);
+
+}
+
+.button{
+    -fx-font-family: "Monospaced";
+    -fx-font-size: 150%;
+    -fx-pref-width: 100px;
+    -fx-pref-height: 30;
+    -fx-text-fill: #FFffff;
+
+    -fx-background-color:
+    #137492,
+    #19abd7;
+    -fx-background-insets:  0, 0 0 4 0;
+    -fx-background-radius: 2;
+
+
+
+}
+.button:hover{
+    -fx-background-color:
+    #137492,
+    #19c3f3;
+    -fx-background-insets:  0, 0 0 2 0;
+    -fx-background-radius: 2;
+}
+
+.toggle-button{
+    -fx-font-family: "Monospaced";
+    -fx-text-fill: #FFffff;
+
+    -fx-background-color:
+    #137492,
+    #19abd7;
+    -fx-background-insets:  0, 0 0 4 0;
+    -fx-background-radius: 2;
+
+}
+
+.toggle-button:hover{
+    -fx-background-color:
+    #137492,
+    #19c3f3;
+    -fx-background-insets:  0, 0 0 2 0;
+    -fx-background-radius: 2;
+}
+
+
+
+.text-field{
+     -fx-font-size: 110%;
+     -fx-pref-height: 30;
+ }
+
+
+.forgotButton{
+    -fx-font-size: 100%;
+}

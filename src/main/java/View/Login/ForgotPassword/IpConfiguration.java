@@ -1,4 +1,4 @@
-package View.Login;
+package View.Login.ForgotPassword;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
@@ -14,37 +14,40 @@ import java.util.prefs.Preferences;
  */
 public class IpConfiguration  {
 
-    private Preferences pref;
     private      String ip;
-    private final String KEY = "serverIP";
-
     private TextInputDialog dialog;
 
     public IpConfiguration() {
 
-         pref =  Preferences.userRoot().node(this.getClass().getName());
-
-         ip = pref.get(KEY, ip);
-
-        dialog = new TextInputDialog(ip);
-
-        dialog.setHeaderText(null);
-        dialog.setTitle("Server Ip addres Configuration");
-        dialog.setContentText("Please add Server Ip address: ");
+        createNewInstanceWithIP();
 
     }
 
     public void showWindow(){
+
+        createNewInstanceWithIP();
+
         Optional<String> result =  dialog.showAndWait();
 
         if (result.isPresent()) {
             ip = result.get();
-            pref.put(KEY, ip);
+             Utility.SavePreference(ip);
         }else {
                 if (ip.equals("") || ip.equals(null) ){
                        showWindow();
                 }
         }
+    }
+
+    public void createNewInstanceWithIP(){
+        ip = Utility.getPreference();
+
+        dialog = new TextInputDialog(ip);
+        dialog.setHeaderText(null);
+        dialog.setTitle("Server Ip addres Configuration");
+        dialog.setContentText("Please add Server Ip address: ");
+
+
     }
 
 

@@ -1,7 +1,7 @@
-package View.Login;
+package View.Login.Menu;
 
+import View.Login.ForgotPassword.IpConfiguration;
 import View.Login.Listeners.TopPaneListener;
-import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -23,7 +23,7 @@ public class LoginHeaderMenu extends GridPane {
 
     private ToggleButton loginToggle,registerToggle, forgotToggle;
     private ToggleGroup toggleGroup;
-    private   Label settingLabel;
+    private   Label ipSettingLabel;
 
     private IpConfiguration ipConfiguration;
 
@@ -43,9 +43,9 @@ public class LoginHeaderMenu extends GridPane {
 
         ipConfiguration = new IpConfiguration();
 
-        settingLabel = new Label();
+        ipSettingLabel = new Label();
         Image image = new Image(getClass().getResourceAsStream("/images/settingIcon2.png"), 32, 32, true, true );
-        settingLabel.setGraphic(new ImageView(image));
+        ipSettingLabel.setGraphic(new ImageView(image));
 
 
         // top borderPane
@@ -57,24 +57,24 @@ public class LoginHeaderMenu extends GridPane {
         setHgrow(loginToggle, Priority.ALWAYS);
         setHgrow(registerToggle, Priority.ALWAYS);
 
-        loginToggle.setPrefWidth(getPrefWidth()/5 );
-        registerToggle.setPrefWidth(getPrefWidth()/5 );
-        forgotToggle.setPrefWidth(getPrefWidth()/5 );
-
+        loginToggle.setPrefWidth(100);
+        registerToggle.setPrefWidth(100 );
+        forgotToggle.setPrefWidth(100 );
 
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER);
-        hBox.setPadding(new Insets(0, 165, 0, 165));
+        hBox.setSpacing(5);
+        hBox.setPadding(new Insets(0, 170, 0, 170));
 
         hBox.getChildren().addAll(loginToggle, registerToggle, forgotToggle);
 
         setConstraints(hBox,           1, 0, 1, 1, HPos.CENTER, VPos.CENTER);
-        setConstraints(settingLabel,   2, 0, 1, 1, HPos.RIGHT, VPos.CENTER);
+        setConstraints(ipSettingLabel, 2, 0, 1, 1, HPos.RIGHT, VPos.CENTER);
 
         setMargin(hBox, new Insets(0, -335, 0, 0));
-        setMargin(settingLabel, new Insets(0, 0, 0, 300));
+        setMargin(ipSettingLabel, new Insets(0, 0, 0, 300));
 
-        getChildren().addAll(hBox, settingLabel);
+        getChildren().addAll(hBox, ipSettingLabel);
 
 
         loginToggle.setOnAction(new EventHandler<ActionEvent>() {
@@ -98,10 +98,10 @@ public class LoginHeaderMenu extends GridPane {
             }
         });
 
-        settingLabel.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        ipSettingLabel.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                 ipConfiguration.showWindow();
+                ipConfiguration.showWindow();
             }
         });
 
@@ -116,9 +116,7 @@ public class LoginHeaderMenu extends GridPane {
             loginToggle.setDisable(isDisable);
             registerToggle.setDisable(isDisable);
             forgotToggle.setDisable(isDisable);
-            settingLabel.setDisable(false);
-            System.out.println("dsdsadasd");
-
+            ipSettingLabel.setDisable(false);
     }
 
 }

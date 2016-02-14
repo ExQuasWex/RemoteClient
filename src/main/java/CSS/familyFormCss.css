@@ -1,0 +1,36 @@
+.root{
+}
+
+.text-field-error{
+    -fx-text-box-border: brown;
+}
+
+.combo-box{
+    -fx-border-color: transparent;
+}
+
+.combo-box-error{
+    -fx-border-color: brown;
+}
+
+.TopPaneBorder{
+
+    -fx-border-color: #0082b2;
+    -fx-border-width: 2.5;
+    -fx-border-radius: 15;
+    -fx-border-style: dashed;
+    -fx-padding: 30,30,30,30;
+}
+
+.topPaneTitle{
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
+    -fx-font-scale: 20%;
+    -fx-text-fill: #00a2d3;
+
+}
+.scroll-pane{
+    -fx-background-color:transparent;
+}
+
+
