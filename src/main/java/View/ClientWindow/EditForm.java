@@ -4,6 +4,7 @@ import Controller.Controller;
 import Remote.Method.FamilyModel.Family;
 import Remote.Method.FamilyModel.FamilyInfo;
 import Remote.Method.FamilyModel.FamilyPoverty;
+import View.ClientWindow.Listeners.EditableListener;
 import View.ClientWindow.Listeners.FamilyFormListener;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -17,16 +18,12 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.*;
+import javafx.scene.text.FontSmoothingType;
+import javafx.scene.text.Text;
 import utility.Utility;
 
-import java.awt.*;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.regex.Pattern;
@@ -35,11 +32,11 @@ import java.util.regex.Pattern;
 /**
  * Created by Didoy on 10/15/2015.
  */
-public class FamilyForm extends GridPane{
+public class EditForm extends GridPane{
 
     private GridPane topPane;
     private GridPane bottomPane;
-    private Button save;
+    private Button saveChanges;
     private  Button cancel;
 
     private ScrollPane scrollPane;
@@ -70,21 +67,19 @@ public class FamilyForm extends GridPane{
     private ComboBox childrenSchlCBox;
     private int clientID;
 
-    private FamilyFormListener familyFormListener;
+    private EditableListener editableListener;
     private Family family;
 
     private ObservableList<Node> errorNodeList;
 
-    private Text Title = new Text("Survey Form");
-    private Button saveChangeBtn = new Button("Save Changes");
+    private Text Title = new Text("Edit Form");
 
 
-
-    public FamilyForm(){
+    public EditForm(){
 
          getStylesheets().add("/CSS/familyFormCss.css");
 
-         save = new Button("Save");
+         saveChanges = new Button("Save");
          cancel = new Button("Cancel");
 
          Title.setFontSmoothingType(FontSmoothingType.LCD);
@@ -94,7 +89,7 @@ public class FamilyForm extends GridPane{
          scrollPane = new ScrollPane(getSubGrid());
          scrollPane.setFitToWidth(true);
 
-         save.setPrefWidth(80);
+         saveChanges.setPrefWidth(80);
          cancel.setPrefWidth(80);
 
          clientID = Controller.getInstance().getStaffInfo().getAccountID();
@@ -108,15 +103,10 @@ public class FamilyForm extends GridPane{
 
         getChildren().addAll(Title, scrollPane);
 
-        save.setOnAction(new EventHandler<ActionEvent>() {
+        saveChanges.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (isValidated()){
-                    System.out.println("All Family information are validated");
-                    Save();
-                }else {
-                    // undecided
-                }
+                System.out.println("Save Changes");
             }
         });
 
@@ -241,10 +231,10 @@ public class FamilyForm extends GridPane{
         bottomPane.setConstraints(childrenSchlCBox,1,indexY,1,1,HPos.LEFT,VPos.CENTER);
 
         indexY++;
-        bottomPane.setConstraints(save,0,indexY,2,1,HPos.CENTER,VPos.CENTER);
+        bottomPane.setConstraints(saveChanges,0,indexY,2,1,HPos.CENTER,VPos.CENTER);
         bottomPane.setConstraints(cancel,1,indexY,2,1,HPos.CENTER,VPos.CENTER);
 
-        bottomPane.setMargin(save, new Insets(5,65,5,0));
+        bottomPane.setMargin(saveChanges, new Insets(5,65,5,0));
         bottomPane.setMargin(cancel, new Insets(5,50,5,0));
 
 
@@ -267,7 +257,7 @@ public class FamilyForm extends GridPane{
         bottomPane.getChildren().addAll(
                 underEmployedL,underEmployedCBox,otherIncomeL,otherIncomeCbox,
                 typeofOwnershipL,ownershipCbox,below8kL,below8kCbox,
-                occupancyL,occupancyCBox,schoolage,childrenSchlCBox,save,cancel);
+                occupancyL,occupancyCBox,schoolage,childrenSchlCBox, saveChanges,cancel);
 
 
 
@@ -583,7 +573,7 @@ public class FamilyForm extends GridPane{
         return  owenerShipList;
     }
 
-    private void Save(){
+    private void UpdateChanges(){
 
             // Family Information
             String inputedDate = dateField.getText();
@@ -626,10 +616,10 @@ public class FamilyForm extends GridPane{
             FamilyPoverty familyPoverty  = new FamilyPoverty(hasOtherIncome,isBelow8k,ownership,
                     occupancy,isunderEmployed,childrenScl, dateissued, Utility.getCurrentMonth());
 
-            family = new Family(familyInfo,familyPoverty);
-            familyFormListener.handle(family);
 
-           // Utility.ClearComponents(subGrid);
+            family = new Family(familyInfo,familyPoverty);
+
+            editableListener.Edit(family);
 
 
     }
@@ -825,8 +815,8 @@ public class FamilyForm extends GridPane{
 
 
 
-    public void addFamilyFormListener (FamilyFormListener familyFormListener){
-        this.familyFormListener = familyFormListener;
+    public void addEditableListener (EditableListener editableListener){
+        this.editableListener = editableListener;
 
     }
 

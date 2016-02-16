@@ -2,6 +2,7 @@ package View.ClientWindow;
 
 import Remote.Method.FamilyModel.Family;
 import Remote.Method.FamilyModel.FamilyInfo;
+import View.ClientWindow.Listeners.EditableListener;
 import View.Login.CustomStage;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
@@ -36,6 +37,9 @@ public class SearchTabWindow extends CustomStage {
     private TabPane tabPane;
     private BorderPane root;
     private VBox vBox = new VBox();
+    private Button editButton = new Button("Edit");
+
+    private EditableListener editableListener;
 
     private static SearchTabWindow searchTabWindow = null;
 
@@ -47,6 +51,10 @@ public class SearchTabWindow extends CustomStage {
 
         vBox.setPadding(new Insets(50));
         vBox.setAlignment(Pos.TOP_CENTER);
+
+        editButton.setPrefHeight(15);
+        editButton.setPrefWidth(70);
+        vBox.getChildren().add(editButton);
 
         root.setCenter(tabPane);
         root.setAlignment(vBox, Pos.CENTER);
@@ -105,9 +113,6 @@ public class SearchTabWindow extends CustomStage {
         tableView.setItems(data);
 
 
-        Value.setCellFactory(TextFieldTableCell.forTableColumn());
-
-
         Category.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<String, String>, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) {
@@ -129,20 +134,12 @@ public class SearchTabWindow extends CustomStage {
 
         tableView.getColumns().addAll(Category, Value);
 
-        Button editButton = new Button("Edit");
-        editButton.setPrefHeight(15);
-        editButton.setPrefWidth(70);
-        vBox.getChildren().add(editButton);
 
 
         editButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
-
-//             EditWindow editWindow =   EditWindow.getInstance();
-//                editWindow.LoadFXML();
-
+                editableListener.Edit(fam);
             }
         });
 
@@ -154,5 +151,8 @@ public class SearchTabWindow extends CustomStage {
 
     }
 
+    public void addEditableListener(EditableListener editableListener){
+            this.editableListener = editableListener;
+    }
 
 }

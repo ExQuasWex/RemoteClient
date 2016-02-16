@@ -15,22 +15,24 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
+import java.awt.*;
+
 /**
  * Created by Didoy on 10/1/2015.
  */
 public class SlidePane extends HBox{
 
     private VBox leftVbox;
-    private boolean isOFF;
+    private boolean isOFF = false;
     private final double prefWidth;
 
     private SlidePaneListener slidePaneListener;
+    private Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 
-
-    public SlidePane(double prefW){
+    public SlidePane( ){
         getStylesheets().add("/CSS/Slidepane.css");
 
-        prefWidth = prefW;
+        prefWidth = screen.getWidth()/4.7;
         setPrefWidth(prefWidth );
 
 //        prefWidth = prefW/2;
@@ -84,11 +86,11 @@ public class SlidePane extends HBox{
                 public void handle(MouseEvent event) {
                     if (isOFF) {
                         showMenu();
-                        slidePaneListener.offMenu();
+                        slidePaneListener.onMenu();
                         isOFF = false;
                     } else {
                         closeMenu();
-                        slidePaneListener.onMenu();
+                        slidePaneListener.offMenu();
                         isOFF = true;
                     }
                 }

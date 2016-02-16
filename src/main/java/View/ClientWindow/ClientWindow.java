@@ -1,11 +1,9 @@
 package View.ClientWindow;
 
 import Controller.Controller;
+import Controller.ControllerListener;
 import Remote.Method.FamilyModel.Family;
-import View.ClientWindow.Listeners.FamilyFormListener;
-import View.ClientWindow.Listeners.SearchListener;
-import View.ClientWindow.Listeners.SearchTableListener;
-import View.ClientWindow.Listeners.SlidePaneListener;
+import View.ClientWindow.Listeners.*;
 import View.Login.CustomStage;
 import View.Login.LoginWindow;
 import clientModel.StaffInfo;
@@ -34,42 +32,37 @@ import java.util.Optional;
  */
 public class ClientWindow extends CustomStage{
 
-    private static BorderPane root;
-    private  FamilyForm fm;
+    private  BorderPane root = new BorderPane();
+    private  FamilyForm fm = new FamilyForm();
+    private  HBox bottomPane = new HBox();
     private  SearchPane searchPane = new SearchPane();
-    private HBox bottomPane = new HBox();
-
-    private  Button updateButton;
-
-    private  StaffInfo staffInfo;
     private static SearchTable searchtable ;
     private  SlidePane sp;
+    private  Controller controller = Controller.getInstance();
+    private  Button updateButton;
+    private  EditForm editForm  = new EditForm();
+
+
+    private  StaffInfo staffInfo;
 
     private Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 
     private static boolean  isNotified = false;
+    private  double padding = 0.0 ;
+
 
     public ClientWindow(){
 
-        searchPane.LoadFXML();
-        bottomPane.setPrefHeight(50);
-        bottomPane.setStyle("-fx-background-color: #0082b2");
+        setMainComponents();
 
-        sp = new SlidePane(screen.getWidth()/4);
-        fm = new FamilyForm();
-        fm.setGridLinesVisible(true);
-
-        root = new BorderPane();
-        root.setAlignment(searchPane, Pos.TOP_CENTER);
-        root.setCenter(new Label("Center"));
         root.setLeft(sp);
+        root.setRight(null);
         root.setTop(searchPane);
         root.setBottom(bottomPane);
 
         searchtable = new SearchTable(root);
 
-        updateButton = new Button();
-        updateButton.setText("Update");
+        addComponentListeners();
 
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/CSS/ClientWindowCSS.css");
@@ -77,50 +70,26 @@ public class ClientWindow extends CustomStage{
         setWidth(screen.getWidth());
         setHeight(screen.getHeight());
 
-        root.setRight(null);
-
-
-        implementSlidePaneListener();
-
-                //  adding form listener
-
-                fm.addFamilyFormListener(new FamilyFormListener() {
-                    @Override
-                    public void handle(Family family) {
-                        addFamily(family);
-                        System.out.println("SAve family");
-                    }
-                });
-
-                fm.addSearchListener(new SearchListener() {
-                    @Override
-                    public void SearchEvent(String searchName) {
-                        search(searchName);
-                    }
-                });
-
-
-                searchtable.addSearchTableListener(new SearchTableListener() {
-                    @Override
-                    public void rollUp() {
-                        removeSearchTable();
-                    }
-                });
-
         setScene(scene);
         centerOnScreen();
 
+            controller.addControllerListener(new ControllerListener() {
+            @Override
+            public void notifyClient(ArrayList familyList) {
+                    notifyClient(familyList);
+            }
+        });
+
     }
 
-
     // Implement SlidePane Listener Interface to slidepane class
-    private void implementSlidePaneListener(){
 
-        double smallW = screen.getWidth()/4 ;
-        smallW = smallW/2;
-        double bigW = screen.getWidth()/4 ;
+    private void addComponentListeners(){
 
-        final double finalSmallW = smallW;
+         padding = screen.getWidth()/10 ;
+
+
+        // ---------------- SlidePane Implementation ------------//
         sp.addSlidePaneListener(new SlidePaneListener() {
             @Override
             public void showAccount() {
@@ -145,39 +114,99 @@ public class ClientWindow extends CustomStage{
             @Override
             public void offMenu() {
                 Node node = root.getCenter();
-                root.setMargin(node, new Insets(0));
-                root.setMargin(node, new Insets(0, bigW, 0, bigW));
-                root.setCenter(null);
-                root.setCenter(node);
-                System.out.println("Resize");
+
+                if (root.getRight() == null){
+                    padding = screen.getWidth()/6;
+                    root.setMargin(node, new Insets(0, 0, 0, padding));
+
+                }else {
+                    root.setMargin(node, new Insets(0, 0, 0, padding));
+
+                }
+
             }
 
+                @Override
+                public void onMenu() {
+                    Node node = root.getCenter();
+                    root.setMargin(node, new Insets(0, 0, 0, 0));
+                    System.out.println("onMenu");
+
+
+                }
+            });
+
+        // ---------------- FamilyForm Implementation ------------//
+
+        fm.addFamilyFormListener(new FamilyFormListener() {
             @Override
-            public void onMenu() {
-                Node node = root.getCenter();
-                root.setCenter(null);
-                root.setMargin(node, new Insets(20, finalSmallW, 20, finalSmallW));
-                root.setCenter(node);
-                System.out.println("Resize");
+            public void handle(Family family) {
+                addFamily(family);
+            }
+        });
+
+        // ---------------- EditForm Implementation ------------//
+
+        editForm.addEditableListener(new EditableListener() {
+            @Override
+            public void Edit(Family family) {
+                controller.updateFamily(family);
+            }
+        });
+
+        // ---------------- Searchtable Implementation ------------//
+        searchtable.addSearchTableListener(new SearchTableListener() {
+            @Override
+            public void rollUp() {
+                removeSearchTable();
+            }
+        });
+
+        // ---------------- SearchPane Implementation ------------//
+
+
+
+        searchPane.addSearchPaneListener(new SearchPaneListener() {
+            @Override
+            public void searchFamily(String text) {
+                search(text);
             }
         });
 
 
     }
+    private void setMainComponents(){
+
+
+        //---------------- TOP Pane ------------//
+
+        //---------------- Right Pane -----------//
+
+
+        //---------------- Bottom Pane -----------//
+
+        bottomPane.setPrefHeight(50);
+        bottomPane.setStyle("-fx-background-color: #0082b2");
+
+        //---------------- Left Pane -----------//
+        sp = new SlidePane();
+
+        updateButton = new Button();
+        updateButton.setText("Update");
+    }
+
 
 
     private void ShowEditForm(){
         root.setCenter(null);
-        FamilyForm familyForm  = new FamilyForm();
-        root.setCenter(familyForm);
-
+        root.setCenter(editForm);
 
     }
 
     private void search(String Searchedname){
-        if (Controller.getInstance().isServerConnected( )){
+        if (controller.isServerConnected()){
 
-                ArrayList list = Controller.getInstance().searchedList(Searchedname);
+                ArrayList list = controller.searchedList(Searchedname);
 
                 if (Searchedname.equals("")){
                     Utility.showMessageBox("Search Box is empty", Alert.AlertType.ERROR);
@@ -208,9 +237,9 @@ public class ClientWindow extends CustomStage{
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                            while(!Controller.getInstance().isServerConnected( )){
+                            while(!controller.isServerConnected( )){
                                 }
-                                if (Controller.getInstance().isServerConnected( )){
+                                if (controller.isServerConnected( )){
 
                                     Platform.runLater(new Runnable() {
                                         @Override
@@ -234,13 +263,13 @@ public class ClientWindow extends CustomStage{
 
     boolean isSucceed = false;
 
-      if (Controller.getInstance().isServerConnected( )){
+      if (controller.isServerConnected()){
 
                   if (isNotified){
                         boolean isConfirm = Utility.showConfirmationMessage("Are you sure you want to add this data?", Alert.AlertType.CONFIRMATION);
 
                             if (isConfirm){
-                                    isSucceed = Controller.getInstance().addFamilyInfo(true,family);
+                                    isSucceed = controller.addFamilyInfo(true, family);
                                         if (isSucceed){
                                             isNotified = false;
                                         }
@@ -248,14 +277,14 @@ public class ClientWindow extends CustomStage{
                                             isNotified = false;
                             }
                   }else {
-                      isSucceed = Controller.getInstance().addFamilyInfo(false,family);
+                      isSucceed = controller.addFamilyInfo(false, family);
                   }
                         if (isSucceed){
                              Utility.showMessageBox("Successfully Save Family Information", Alert.AlertType.INFORMATION);
 
                         }else {
 
-                            if (!Controller.getInstance().getMethodIdenifier().equals("NOTIFY")){
+                            if (!controller.getMethodIdenifier().equals("NOTIFY")){
                                 Utility.showMessageBox("There was problem occur, please try again after few seconds", Alert.AlertType.ERROR);
                             }
                         }
@@ -266,7 +295,7 @@ public class ClientWindow extends CustomStage{
     }
 
     public void addAccountForm(){
-        staffInfo = Controller.getInstance().getStaffInfo();
+        staffInfo = controller.getStaffInfo();
 
         GridPane gp = new GridPane();
 
@@ -357,7 +386,7 @@ public class ClientWindow extends CustomStage{
                             staffInfo.setPassword(newPassword);
                             staffInfo.setContact(Contact);
 
-                            if (Controller.getInstance().updateStaffInfo(staffInfo))  {
+                            if (controller.updateStaffInfo(staffInfo))  {
                                 Utility.showMessageBox("You successfully updated your personal information", Alert.AlertType.INFORMATION);
                             }else {
                                 Utility.showMessageBox("failed to Update your personal information, please try again lateer", Alert.AlertType.ERROR);
@@ -387,7 +416,7 @@ public class ClientWindow extends CustomStage{
     public void closeClientWindow(){
 
         // logout from database
-        Controller.getInstance().Logout();
+        controller.Logout();
         // logout UI
         removeSearchTable();
         close();
@@ -398,7 +427,7 @@ public class ClientWindow extends CustomStage{
 
     }
 
-    private static void showSearchedTable   (ArrayList<Family> data){
+    private  void showSearchedTable   (ArrayList<Family> data){
 
         // get back to FX application if ever we are in RMI TCP Connection(2) thread
                     searchtable.setData(data);
@@ -414,7 +443,7 @@ public class ClientWindow extends CustomStage{
      controller call this method whenever it
      found similar family information in the database
  */
-   public static void notifyClient( ArrayList familyList){
+   public  void notifyClient( ArrayList familyList){
 
        if (!Platform.isFxApplicationThread()) {
 
@@ -430,7 +459,7 @@ public class ClientWindow extends CustomStage{
        }
 
     }
-    private static  void showPromptNotification(ArrayList familyList){
+    private void showPromptNotification(ArrayList familyList){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
 
         alert.setTitle("Information Message");

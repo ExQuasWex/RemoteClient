@@ -20,7 +20,6 @@ import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import utility.Utility;
 
-import java.awt.*;
 
 /**
  * Created by Didoy on 8/24/2015.

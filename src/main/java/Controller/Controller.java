@@ -27,17 +27,8 @@ public class Controller implements TableItemListener {
     private AdminInterfaceImp adminDB;
     private  String finalUsername = "";
 
-
+    private ControllerListener controllerListener;
     private boolean isNotified;
-
-    public boolean isNotified() {
-        return isNotified;
-    }
-
-    public void setNotified(boolean isNotified) {
-        this.isNotified = isNotified;
-    }
-
     private static Controller controller = new Controller();
 
     private Controller()  {
@@ -49,6 +40,19 @@ public class Controller implements TableItemListener {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+    }
+
+
+    public boolean isNotified() {
+        return isNotified;
+    }
+
+    public void setNotified(boolean isNotified) {
+        this.isNotified = isNotified;
+    }
+
+    public  static  Controller getInstance(){
+        return controller;
     }
 
 
@@ -80,8 +84,29 @@ public class Controller implements TableItemListener {
         return  clientDB.getSecurityQuestion(hint1);
     }
 
+    public  StaffInfo getStaffInfo(){
+        return staffInfo;
+    }
 
-    // ====================== Encoder methods =================//
+    public  boolean register(StaffRegister staffRegister){
+        return clientDB.register(staffRegister);
+    }
+
+    public boolean getUsername(String username){
+        return clientDB.getUsername(username);
+    }
+
+    public  void Logout(){
+        clientDB.Logout(staffInfo.getAccountID(), staffInfo.getUsername()   );
+    }
+
+    public ArrayList searchedList (String name){
+        return clientDB.searchedList(name);
+    }
+
+
+
+    // ====================== CLIENT  METHODS =================//
     /*
         if instant save is true the server automatically save the
         family information and would not check it
@@ -90,26 +115,26 @@ public class Controller implements TableItemListener {
         return clientDB.addFamilyInfo(instantSave ,family);
     }
 
-    public  StaffInfo getStaffInfo(){
-    return staffInfo;
+
+    public void updateFamily(Family family){
+        // implement to database
+    }
+
+    /*
+       Critical method put the thread
+       into TCP java thread
+    */
+    public void notifyClient(ArrayList familyList){
+        controllerListener.notifyClient(familyList);
     }
 
 
 
-    public  boolean register(StaffRegister staffRegister){
-           return clientDB.register(staffRegister);
-    }
 
-    public boolean getUsername(String username){
-        return clientDB.getUsername(username);
-    }
-    public  static  Controller getInstance(){
-        return controller;
-    }
 
-    public  void Logout(){
-            clientDB.Logout(staffInfo.getAccountID(), staffInfo.getUsername()   );
-    }
+
+    // ------------------------ ADMIN METHODS ----------------------//
+
     public ArrayList getBarangayData(){
         ArrayList list = adminDB.getBarangayData();
             if (list.isEmpty()){
@@ -117,11 +142,6 @@ public class Controller implements TableItemListener {
             }
         return adminDB.getBarangayData();
     }
-
-    public ArrayList searchedList (String name){
-        return clientDB.searchedList(name);
-    }
-
 
     public int getPendingAccounts(){
 
@@ -146,13 +166,7 @@ public class Controller implements TableItemListener {
         return clientDB.getMethodIdentifiers();
     }
 
-    /*
-        Critical method put the thread
-        into TCP java thread
-     */
-    public void notifyClient(ArrayList familyList){
-       ClientWindow.notifyClient(familyList);
-    }
+
 
     @Override
     public boolean Approve(RequestAccounts ra) {
@@ -213,5 +227,9 @@ public class Controller implements TableItemListener {
         return adminDB.getActiveAccounts();
     }
 
+
+    public void addControllerListener(ControllerListener controllerListener){
+        this.controllerListener = controllerListener;
+    }
 }
 

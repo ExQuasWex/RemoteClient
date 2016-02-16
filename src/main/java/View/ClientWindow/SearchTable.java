@@ -13,6 +13,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -22,6 +24,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import javafx.util.Duration;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -42,8 +45,12 @@ public class SearchTable extends VBox {
     private VBox innerVBox;
 
     private SearchTableListener searchTableListener;
+    private Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+    private Double HEIGHT = 0.0;
 
     public SearchTable(BorderPane root){
+
+        HEIGHT = screen.getHeight()-100;
 
         this.root = root;
 
@@ -79,7 +86,6 @@ public class SearchTable extends VBox {
         });
 
 
-
         table.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -107,7 +113,7 @@ public class SearchTable extends VBox {
         });
 
 
-        innerVBox.setPrefHeight(330);
+        table.setPrefHeight(HEIGHT);
         innerVBox.setPrefWidth(300);
         innerVBox.setAlignment(Pos.TOP_CENTER);
 
@@ -152,12 +158,12 @@ public class SearchTable extends VBox {
 
     }
     private void resetRollUp(){
-        innerVBox.setPrefHeight(330);
+        table.setPrefHeight(HEIGHT);
     }
 
     private void rollUp(){
 
-        KeyValue kv = new KeyValue(innerVBox.prefHeightProperty() , 0);
+        KeyValue kv = new KeyValue(table.prefHeightProperty() , 0);
         KeyFrame kf = new KeyFrame(Duration.millis(500),kv);
 
         Timeline t = new Timeline();
