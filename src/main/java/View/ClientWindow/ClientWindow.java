@@ -76,7 +76,7 @@ public class ClientWindow extends CustomStage{
             controller.addControllerListener(new ControllerListener() {
             @Override
             public void notifyClient(ArrayList familyList) {
-                    notifyClient(familyList);
+                    NotifyClient(familyList);
             }
         });
 
@@ -443,7 +443,7 @@ public class ClientWindow extends CustomStage{
      controller call this method whenever it
      found similar family information in the database
  */
-   public  void notifyClient( ArrayList familyList){
+   public  void NotifyClient( ArrayList familyList){
 
        if (!Platform.isFxApplicationThread()) {
 

@@ -23,6 +23,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 import java.io.IOException;
@@ -65,6 +66,14 @@ public class SearchTabWindow extends CustomStage {
         setScene(scene);
         show();
 
+
+     setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                System.out.println("setOnCloseRequest");
+                tabPane.getTabs().clear();
+            }
+        });
 
 
     }
@@ -148,6 +157,10 @@ public class SearchTabWindow extends CustomStage {
         scrollPane.setFitToWidth(true);
         tab.setContent(scrollPane);
         tabPane.getTabs().add(tab);
+
+        tabPane.getSelectionModel().select(tab);
+
+        requestFocus();
 
     }
 
