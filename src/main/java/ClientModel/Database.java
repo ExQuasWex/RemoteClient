@@ -174,10 +174,10 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
         boolean bool;
 
         try {
-            if (ctr.isNotified()){
+            if (Controller.isNotified){
                 bool =  server.addFamilyInfo(true, family);
                     if (bool){
-                        ctr.setNotified(false);
+                        Controller.isNotified = false;
                     }
             }else{
                 bool =  server.addFamilyInfo(instantSave, family);

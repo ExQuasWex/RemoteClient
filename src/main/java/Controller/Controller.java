@@ -28,7 +28,7 @@ public class Controller implements TableItemListener {
     private  String finalUsername = "";
 
     private ControllerListener controllerListener;
-    private boolean isNotified;
+    public static  boolean isNotified = false;
     private static Controller controller = new Controller();
 
     private Controller()  {
@@ -40,15 +40,6 @@ public class Controller implements TableItemListener {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-    }
-
-
-    public boolean isNotified() {
-        return isNotified;
-    }
-
-    public void setNotified(boolean isNotified) {
-        this.isNotified = isNotified;
     }
 
     public  static  Controller getInstance(){
@@ -125,6 +116,7 @@ public class Controller implements TableItemListener {
        into TCP java thread
     */
     public void notifyClient(ArrayList familyList){
+        isNotified = true;
         controllerListener.notifyClient(familyList);
     }
 

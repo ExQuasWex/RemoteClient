@@ -651,7 +651,7 @@ public class EditForm extends GridPane{
         Utility.ClearComponents(topPane);
         Utility.ClearComponents(bottomPane);
 
-        dateField  = new TextField(Utility.getCurrentDate());
+        dateField.setText(Utility.getCurrentDate());
         numofChildrenF.setText("0");
 
     }

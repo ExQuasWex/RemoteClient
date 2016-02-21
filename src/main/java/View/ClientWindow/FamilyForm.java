@@ -24,6 +24,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.*;
+import utility.FamilyNodes;
 import utility.Utility;
 
 import java.awt.*;
@@ -73,12 +74,21 @@ public class FamilyForm extends GridPane{
     private FamilyFormListener familyFormListener;
     private Family family;
 
-    private ObservableList<Node> errorNodeList;
 
     private Text Title = new Text("Survey Form");
-    private Button saveChangeBtn = new Button("Save Changes");
+
+    private Label bottomTitle = new Label("Poverty Assesment");
+    private Label topTitleL = new Label("Family Data Entry");
 
 
+    private boolean Validate(){
+
+        FamilyNodes familyNodes = new FamilyNodes(dateField, datePicker, Name, SpouseName, agefield,
+                addressF, yrResidency, numofChildrenF, surveyedyr, maritalCBox, barangayCb, genderCB, underEmployedCBox,
+                otherIncomeCbox, ownershipCbox, below8kCbox, occupancyCBox,childrenSchlCBox);
+
+        return Utility.Validate(familyNodes);
+    }
 
     public FamilyForm(){
 
@@ -99,8 +109,6 @@ public class FamilyForm extends GridPane{
 
          clientID = Controller.getInstance().getStaffInfo().getAccountID();
 
-         errorNodeList = FXCollections.observableArrayList();
-
         /////////////////////////////////// MAIN PANE ///////////////////////////////////
 
         setConstraints(Title, 0, 0, 1, 1, HPos.CENTER, VPos.CENTER);
@@ -111,11 +119,8 @@ public class FamilyForm extends GridPane{
         save.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (isValidated()){
-                    System.out.println("All Family information are validated");
+                if (Validate()){
                     Save();
-                }else {
-                    // undecided
                 }
             }
         });
@@ -123,9 +128,7 @@ public class FamilyForm extends GridPane{
         cancel.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Utility.ClearComponents(topPane);
-                Utility.ClearComponents(bottomPane);
-
+                clear();
             }
         });
 
@@ -155,9 +158,6 @@ public class FamilyForm extends GridPane{
         topPane.getStyleClass().add("TopPaneBorder");
         bottomPane.getStyleClass().add("TopPaneBorder");
 
-        Label bottomTitle = new Label("Poverty Assesment");
-        Label topTitleL = new Label("Family Data Entry");
-
         topTitleL.getStyleClass().add("topPaneTitle");
         bottomTitle.getStyleClass().add("topPaneTitle");
 
@@ -174,12 +174,10 @@ public class FamilyForm extends GridPane{
         subGrid.setMargin(bottomPane, new Insets(10));
 
 
-        subGrid.setConstraints(topTitleL, 0, 1, 1, 1, HPos.CENTER, VPos.CENTER);
-        subGrid.setConstraints(topPane, 0, 2, 1, 1, HPos.CENTER, VPos.CENTER);
-        subGrid.setConstraints(bottomTitle, 0, 3, 1, 1, HPos.CENTER, VPos.CENTER);
-        subGrid.setConstraints(bottomPane, 0, 4, 1, 1, HPos.LEFT, VPos.CENTER);
+        subGrid.setConstraints(topPane, 0, 1, 1, 1, HPos.CENTER, VPos.CENTER);
+        subGrid.setConstraints(bottomPane, 0, 2, 1, 1, HPos.LEFT, VPos.CENTER);
 
-        subGrid.getChildren().addAll(topTitleL,topPane,bottomTitle,bottomPane);
+        subGrid.getChildren().addAll(topPane,bottomPane);
 
         return subGrid;
     }
@@ -216,6 +214,8 @@ public class FamilyForm extends GridPane{
 
         int indexY = 0;
 
+        bottomPane.setConstraints(bottomTitle,0,indexY,1,1,HPos.LEFT,VPos.CENTER);
+
         indexY++;
         bottomPane.setConstraints(otherIncomeL,0,indexY,1,1,HPos.LEFT,VPos.CENTER);
         bottomPane.setConstraints(otherIncomeCbox,1,indexY,1,1,HPos.LEFT,VPos.CENTER);
@@ -248,60 +248,13 @@ public class FamilyForm extends GridPane{
         bottomPane.setMargin(cancel, new Insets(5,50,5,0));
 
 
+        addBottomComponentListeners();
 
-        occupancyCBox.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-
-                String item = (String)occupancyCBox.getSelectionModel().getSelectedItem();
-                if (item.equals("Employed") || item.equals("Self-Employed")){
-                    underEmployedCBox.setDisable(false);
-                }else {
-                    underEmployedCBox.getSelectionModel().clearSelection();
-                    underEmployedCBox.setDisable(true);
-                }
-            }
-        });
-
-
-        bottomPane.getChildren().addAll(
+        bottomPane.getChildren().addAll(bottomTitle,
                 underEmployedL,underEmployedCBox,otherIncomeL,otherIncomeCbox,
                 typeofOwnershipL,ownershipCbox,below8kL,below8kCbox,
                 occupancyL,occupancyCBox,schoolage,childrenSchlCBox,save,cancel);
 
-
-
-        ///////// return to normal node if this nodes are disable , , underEmployedCBox
-
-        SpouseName.disabledProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean notDisable, Boolean isDisable) {
-                if (isDisable){
-                    System.out.println("Disable");
-                    SpouseName.getStyleClass().remove("text-field-error");
-                    errorNodeList.remove(SpouseName);
-                }else{
-                    System.out.println("not disable");
-                }
-
-
-            }
-        });
-
-
-
-        underEmployedCBox.disabledProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean notDisable, Boolean isDisable) {
-                if (isDisable){
-                    System.out.println("Disable");
-                    underEmployedCBox.getStyleClass().remove("combo-box-error");
-                    errorNodeList.remove(underEmployedCBox);
-
-                }
-
-            }
-        });
         return bottomPane;
     }
 
@@ -349,7 +302,6 @@ public class FamilyForm extends GridPane{
         barangayCb = new ComboBox(getBarangayCb());
         genderCB    = new ComboBox(getGender());
 
-
         maritalCBox.setPrefWidth(140);
         maritalCBox.setPromptText("Marital Status");
         maritalCBox.setEditable(false);
@@ -360,13 +312,16 @@ public class FamilyForm extends GridPane{
         barangayCb.setPromptText("Barangay");
         barangayCb.setEditable(false);
 
-        /////////////// LAYOUTING //////////////
-        int indexYTop =0;
+        // --------------------- Layouting ----------------------------///
+
+        int indexYTop = 0;
+
+        topPane.setConstraints(topTitleL, 0, indexYTop, 1, 1, HPos.LEFT, VPos.TOP);
 
         indexYTop++;
-        topPane.setConstraints(DateL,    0,indexYTop,1,1, HPos.LEFT, VPos.CENTER);
-        topPane.setConstraints(dateField,1,indexYTop,1,1, HPos.CENTER, VPos.CENTER);
-        topPane.setConstraints(barangayCb, 5,indexYTop,1,1, HPos.CENTER, VPos.CENTER);
+        topPane.setConstraints(DateL,      0,  indexYTop,1,1, HPos.LEFT, VPos.CENTER);
+        topPane.setConstraints(dateField,  1,  indexYTop,1,1, HPos.CENTER, VPos.CENTER);
+        topPane.setConstraints(barangayCb, 5,  indexYTop,1,1, HPos.CENTER, VPos.CENTER);
 
         indexYTop++;
 
@@ -400,6 +355,18 @@ public class FamilyForm extends GridPane{
         dateField.setPrefColumnCount(6);
         agefield.setPrefColumnCount(6);
 
+        // adding nodes to the top gridpane
+        topPane.getChildren().addAll(topTitleL, DateL,dateField,surveyDateL, datePicker,
+                barangayCb,yearofResidencyL,yrResidency, maritalCBox,numofChildrenL,numofChildrenF,genderCB,
+                NameL, Name, ageL,agefield,spouseNameL, SpouseName,addressL,addressF);
+
+        addTopComponentListeners();
+
+        return  topPane;
+    }
+
+
+    private void addTopComponentListeners(){
 
         //  validate number of children field
         numofChildrenF.focusedProperty().addListener(new ChangeListener<Boolean>() {
@@ -413,22 +380,22 @@ public class FamilyForm extends GridPane{
                     if (numofChildrenF.getText().matches("\\d+")){
                         int children = Integer.parseInt(numofChildrenF.getText());
                         if (children > 1 ){
-                                numofChildrenF.setText(String.valueOf(children));
-                                if (childrenSchlCBox.getItems().contains("Some")){
+                            numofChildrenF.setText(String.valueOf(children));
+                            if (childrenSchlCBox.getItems().contains("Some")){
 
-                                }else {
-                                    childrenSchlCBox.getItems().add("Some");
-                                }
-                                childrenSchlCBox.setDisable(false);
+                            }else {
+                                childrenSchlCBox.getItems().add("Some");
+                            }
+                            childrenSchlCBox.setDisable(false);
                         }else if (children == 1){
-                                numofChildrenF.setText(String.valueOf(children));
-                                childrenSchlCBox.setDisable(false);
-                                childrenSchlCBox.getItems().remove("Some");
+                            numofChildrenF.setText(String.valueOf(children));
+                            childrenSchlCBox.setDisable(false);
+                            childrenSchlCBox.getItems().remove("Some");
                         }
                         else {
-                                numofChildrenF.setText("0");
-                                childrenSchlCBox.setDisable(true);
-                                childrenSchlCBox.getSelectionModel().clearSelection();
+                            numofChildrenF.setText("0");
+                            childrenSchlCBox.setDisable(true);
+                            childrenSchlCBox.getSelectionModel().clearSelection();
                         }
                     }else {
                         numofChildrenF.setText("0");
@@ -457,7 +424,6 @@ public class FamilyForm extends GridPane{
             }
         });
 
-
         maritalCBox.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -466,8 +432,10 @@ public class FamilyForm extends GridPane{
                 if (item.equals("Married") || item.equals("Live-in")){
                     SpouseName.setDisable(false);
                 }else {
+                    SpouseName.getStyleClass().remove("text-field-error");
                     SpouseName.setText("");
                     SpouseName.setDisable(true);
+                    System.out.println("remove spouse name red border");
                 }
             }
         });
@@ -479,18 +447,39 @@ public class FamilyForm extends GridPane{
             }
         });
 
-
-
-
-        // adding nodes to the top gridpane
-        topPane.getChildren().addAll(DateL,dateField,surveyDateL, datePicker,
-                barangayCb,yearofResidencyL,yrResidency, maritalCBox,numofChildrenL,numofChildrenF,genderCB,
-                NameL, Name, ageL,agefield,spouseNameL, SpouseName,addressL,addressF);
-
-
-        return  topPane;
     }
 
+    private void addBottomComponentListeners(){
+
+        occupancyCBox.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                String item = (String)occupancyCBox.getSelectionModel().getSelectedItem();
+                if (item.equals("Employed") || item.equals("Self-Employed")){
+                    underEmployedCBox.setDisable(false);
+                }else {
+                    underEmployedCBox.getSelectionModel().clearSelection();
+                    underEmployedCBox.setDisable(true);
+                }
+            }
+        });
+
+
+
+        ///////// return to normal node if this nodes are disable underEmployedCBox
+
+        underEmployedCBox.disabledProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean notDisable, Boolean isDisable) {
+                if (isDisable){
+                    System.out.println(" underEmployedCBox Disable");
+                    underEmployedCBox.getStyleClass().remove("combo-box-error");
+                }
+
+            }
+        });
+    }
 
 
     private ObservableList getBarangayCb(){
@@ -627,202 +616,16 @@ public class FamilyForm extends GridPane{
                     occupancy,isunderEmployed,childrenScl, dateissued, Utility.getCurrentMonth());
 
             family = new Family(familyInfo,familyPoverty);
+
+             // send data to clientWindow
             familyFormListener.handle(family);
 
-           // Utility.ClearComponents(subGrid);
-
+            // Doesn't clear data unless notification is falls
+            if (!Controller.isNotified){
+                clear();
+            }
 
     }
-
-    private boolean isValidated(){
-        boolean isvalidate = false;
-        int  yrNow = Calendar.getInstance().get(Calendar.YEAR);
-        String residencyYr = yrResidency.getText();
-        String name = Name.getText() + " ";
-        String spousename = SpouseName.getText();
-        String age = agefield.getText();
-        String address =  addressF.getText();
-        String maritalStatus = null;
-
-
-         if (datePicker.getValue() != null){
-            surveyedyr = datePicker.getValue().toString();
-        }
-
-                                ////////---- Year of residency ----////////
-
-            if(datePicker.getValue() == null ) {
-                isvalidate = false;
-                showErrorMessage("Please add surveyed year in year field", "Error Information", datePicker);
-            }else  if (!Pattern.matches("^\\d{4}-\\d{2}-\\d{2}$",surveyedyr)){
-                showErrorMessage("Invalid Surveyed Year", "Error Information", datePicker);
-                System.out.println(yrNow);
-                isvalidate = false;
-
-            } else if (datePicker.getValue().isAfter(LocalDate.parse(Utility.getCurrentDate()))) {
-                System.out.println(yrNow);
-                showErrorMessage("Invalid surveyed datee, the date you insert is later than the current date", "Error Information", datePicker);
-                isvalidate = false;
-
-            }
-                                ////////---- Year of residency ----////////
-            else if (residencyYr.equals("")) {
-                showErrorMessage("Please add year of residency in residency field", "Error Information", yrResidency);
-                isvalidate = false;
-            }
-            else if (!Pattern.matches("^[\\d]{4}+",residencyYr)){
-                showErrorMessage("Invalid year of residency", "Error Information", yrResidency);
-                isvalidate = false;
-            }
-            else if (Integer.parseInt(residencyYr) > yrNow){
-                isvalidate = false;
-                showErrorMessage("Invalid year of residency, year of residency is later than the current year", "Error Information",yrResidency);
-            }
-                                ////////---- Marital Status ----////////
-            else if (maritalCBox.getSelectionModel().isEmpty()){
-                isvalidate = false;
-                showErrorMessage("Please select marital status", "Error Information",maritalCBox);
-            }
-                                ////////---- Barangay ----////////
-            else if (barangayCb.getSelectionModel().isEmpty()){
-                isvalidate = false;
-                showErrorMessage("Please select barangay", "Error Information",barangayCb);
-            }
-                                 ////////---- Gender ----////////
-            else if (genderCB.getSelectionModel().isEmpty()){
-                isvalidate = false;
-                showErrorMessage("Please select Gender", "Error Information",genderCB);
-            }                    ////////---- Age ----////////
-            else if (age.equals("")){
-                isvalidate = false;
-                showErrorMessage("Please add Age in age field", "Error Information", agefield);
-            }
-            ////////---- Name ----////////
-            else if (Name.getText().equals("") ){
-                isvalidate = false;
-
-                showErrorMessage("Please add name in name fields", "Error Information", Name);
-            }
-            else if (!Pattern.matches("^[A-Za-z\\s]+",name)){
-                isvalidate = false;
-
-                showErrorMessage("Please remove any digit or any special character in name fields", "Error Information", Name);
-            }
-                                              ////////---- Spouse Name ----////////
-            else if (SpouseName.getText().equals("") && (maritalCBox.getSelectionModel().getSelectedItem().toString().equals("Married")||
-                    maritalCBox.getSelectionModel().getSelectedItem().toString().equals("Live-in"))){
-
-                        isvalidate = false;
-                errorNodeList.add(SpouseName);
-                        showErrorMessage("Please add spouse name in spouse name fields", "Error Information", SpouseName);
-
-            }
-                                              ////////---- Address ----////////
-            else if (address.equals("")) {
-                isvalidate = false;
-                showErrorMessage("Please add address in address field", "Error Information", addressF);
-            }
-            else if (!Pattern.matches("^[a-zA-Z0-9\\.\\-\\s]+",address)){
-                isvalidate = false;
-                showErrorMessage("Invalid Address in address field","Error Information",addressF);
-            }else if (otherIncomeCbox.getSelectionModel().isEmpty()){
-                isvalidate = false;
-                showErrorMessage("Other income resource option is empty", "Error Information", otherIncomeCbox);
-            }else if (below8kCbox.getSelectionModel().isEmpty()){
-                isvalidate = false;
-                showErrorMessage("Below eight thousand option is empty","Error Information",below8kCbox);
-
-            }else if (ownershipCbox.getSelectionModel().isEmpty()){
-                isvalidate = false;
-                showErrorMessage("Ownership option is empty","Error Information",ownershipCbox);
-
-            }
-            else if (occupancyCBox.getSelectionModel().isEmpty()){
-                isvalidate = false;
-                showErrorMessage("Occupancy option is empty","Error Information",occupancyCBox);
-
-            }
-            else if (underEmployedCBox.getSelectionModel().isEmpty() && occupancyCBox.getSelectionModel().getSelectedItem().equals("Employed")){
-                isvalidate = false;
-                showErrorMessage("UnderEmployed option is empty","Error Information",underEmployedCBox);
-
-            }
-            else if (childrenSchlCBox.getSelectionModel().isEmpty()){
-                    int children = Integer.parseInt(numofChildrenF.getText());
-                          if (children == 0){
-                                isvalidate = true;
-                          }else if (children >= 1){
-                              isvalidate = false;
-                              showErrorMessage("Children in school option is empty","Error Information",childrenSchlCBox);
-                          }
-
-                 }
-            else {
-                isvalidate = true;
-            }
-
-        return isvalidate;
-    }
-
-    private void showErrorMessage(String msg,String title,Node node) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setHeaderText(null);
-        alert.setTitle(title);
-        alert.setContentText(msg);
-
-        errorNodeList.add(node);
-
-        for (Node nodes : errorNodeList) {
-            if (nodes.getClass().equals(ComboBox.class) ){
-                nodes.getStyleClass().add("combo-box-error");
-
-            }else{
-                nodes.getStyleClass().add("text-field-error");
-            }
-        }
-
-        for (Node nodee : errorNodeList){
-            nodee.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    if (nodee.equals(maritalCBox) || nodee.equals(genderCB) || nodee.equals(barangayCb)
-                            || nodee.equals(otherIncomeCbox)  || nodee.equals(below8kCbox)
-                            || nodee.equals(ownershipCbox)  || nodee.equals(occupancyCBox)
-                            || nodee.equals(underEmployedCBox) || nodee.equals(childrenSchlCBox)  ){
-
-                        nodee.getStyleClass().remove("combo-box-error");
-                        errorNodeList.remove(nodee);
-
-                    }else {
-                        nodee.getStyleClass().remove("text-field-error");
-                        errorNodeList.remove(nodee);
-
-                    }
-                }
-            });
-
-                        // return to normal color after being focused
-            nodee.focusedProperty().addListener(new ChangeListener<Boolean>() {
-                @Override
-                public void changed(ObservableValue<? extends Boolean> observable, Boolean outFocused, Boolean Focused) {
-                    if (Focused){
-                        if (nodee.getClass().equals(ComboBox.class) ){
-                            nodee.getStyleClass().remove("combo-box-error");
-                            errorNodeList.remove(nodee);
-
-                        }else {
-                            nodee.getStyleClass().remove("text-field-error");
-                            errorNodeList.remove(nodee);
-
-                        }
-                    }
-                }
-            });
-        }
-
-        alert.show();
-    }
-
 
 
     public void addFamilyFormListener (FamilyFormListener familyFormListener){
@@ -830,5 +633,13 @@ public class FamilyForm extends GridPane{
 
     }
 
+    private void clear(){
+        Utility.ClearComponents(topPane);
+        Utility.ClearComponents(bottomPane);
+
+        dateField.setText(Utility.getCurrentDate());
+        numofChildrenF.setText("0");
+
+    }
 
 }
