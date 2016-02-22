@@ -70,6 +70,7 @@ public class EditForm extends GridPane{
 
     private EditableListener editableListener;
     private Family family;
+    private int familyID = 0;
 
     private ObservableList<Node> errorNodeList;
 
@@ -602,13 +603,11 @@ public class EditForm extends GridPane{
             FamilyPoverty familyPoverty  = new FamilyPoverty(hasOtherIncome,isBelow8k,ownership,
                     occupancy,isunderEmployed,childrenScl, dateissued, Utility.getCurrentMonth());
 
-
+            familyInfo.setfamilyId( familyID);
             family = new Family(familyInfo,familyPoverty);
 
             // send data to clientWindow
             editableListener.Edit(family);
-
-            System.out.println("Marital status " + maritalStatus );
 
              clear();
     }
@@ -647,6 +646,7 @@ public class EditForm extends GridPane{
         below8kCbox.getSelectionModel().select(familyPoverty.getIsbelow8k());
         occupancyCBox.getSelectionModel().select(familyPoverty.getOccupancy());
         childrenSchlCBox.getSelectionModel().select(familyPoverty.getChildreninSchool());
+        familyID = familyInfo.familyId();
 
         setDisable(false);
 

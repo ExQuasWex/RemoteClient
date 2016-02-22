@@ -3,6 +3,7 @@ package View.ClientWindow;
 import Remote.Method.FamilyModel.Family;
 import View.ClientWindow.Listeners.EditableListener;
 import View.ClientWindow.Listeners.SearchTableListener;
+import View.ClientWindow.Listeners.ShowEditFormListener;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -86,7 +87,6 @@ public class SearchTable extends VBox {
             @Override
             public void handle(ActionEvent event) {
                 rollUp();
-                System.out.println("uo button is pressed");
             }
         });
 
@@ -133,7 +133,6 @@ public class SearchTable extends VBox {
 
         innerVBox.getChildren().addAll(table, upButton);
         getChildren().addAll(innerVBox);
-
 
     }
 
@@ -198,8 +197,9 @@ public class SearchTable extends VBox {
         this.searchTableListener = searchTableListener;
     }
 
-    public void addEditableListener(EditableListener editableListener){
+    public void addEditableListener(EditableListener editableListener ){
         this.editableListener = editableListener;
     }
+
 
 }

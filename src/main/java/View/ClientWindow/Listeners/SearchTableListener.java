@@ -7,5 +7,4 @@ public interface SearchTableListener {
 
         public void rollUp();
 
-
 }
