@@ -43,7 +43,6 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
    private Controller ctr = Controller.getInstance();
 
 
-
     public Database() throws RemoteException {
         ipAddress = Utility.getPreference();
         csf = new TimedRMIclientSocketFactory(2000);
@@ -121,6 +120,17 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
             e.printStackTrace();
         }
         return  secretDetails;
+    }
+
+    @Override
+    public boolean UpdateFamilyInformation(Family family)   {
+        boolean isUpdated = false;
+        try {
+            isUpdated =  server.UpdateFamilyInformation(family);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return isUpdated;
     }
 
     // CLIENT BASIC METHODS

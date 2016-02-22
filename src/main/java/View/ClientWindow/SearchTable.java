@@ -1,6 +1,7 @@
 package View.ClientWindow;
 
 import Remote.Method.FamilyModel.Family;
+import View.ClientWindow.Listeners.EditableListener;
 import View.ClientWindow.Listeners.SearchTableListener;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -40,6 +41,7 @@ public class SearchTable extends VBox {
 
     private ContextMenu contextMenu;
     private MenuItem viewItem;
+    private MenuItem editItem;
 
     private BorderPane root;
     private VBox innerVBox;
@@ -48,6 +50,7 @@ public class SearchTable extends VBox {
     private Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
     private Double HEIGHT = 0.0;
 
+    private EditableListener editableListener;
     public SearchTable(BorderPane root){
 
         HEIGHT = screen.getHeight()-100;
@@ -56,7 +59,9 @@ public class SearchTable extends VBox {
 
         contextMenu = new ContextMenu();
         viewItem = new MenuItem("View");
-        contextMenu.getItems().add(viewItem);
+        editItem = new MenuItem("Edit");
+
+        contextMenu.getItems().addAll(viewItem, editItem);
 
         innerVBox = new VBox();
 
@@ -107,14 +112,23 @@ public class SearchTable extends VBox {
             @Override
             public void handle(ActionEvent event) {
                 Family family = table.getSelectionModel().getSelectedItem();
-                SearchTabWindow.getInstance().addTab(family.getFamilyinfo().getName(), family);
+                SearchTabWindow searchTabWindow = SearchTabWindow.getInstance();
+                searchTabWindow.addTab(family.getFamilyinfo().getName(), family);
+                searchTabWindow.show();
+            }
+        });
 
+        editItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+               Family family =  table.getSelectionModel().getSelectedItem();
+                editableListener.Edit(family);
             }
         });
 
 
         table.setPrefHeight(HEIGHT);
-        innerVBox.setPrefWidth(300);
+        innerVBox.setPrefWidth(screen.getWidth()/5);
         innerVBox.setAlignment(Pos.TOP_CENTER);
 
         innerVBox.getChildren().addAll(table, upButton);
@@ -182,6 +196,10 @@ public class SearchTable extends VBox {
 
     public void addSearchTableListener(SearchTableListener searchTableListener){
         this.searchTableListener = searchTableListener;
+    }
+
+    public void addEditableListener(EditableListener editableListener){
+        this.editableListener = editableListener;
     }
 
 }

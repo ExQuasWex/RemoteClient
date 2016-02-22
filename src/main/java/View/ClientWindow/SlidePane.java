@@ -32,7 +32,7 @@ public class SlidePane extends HBox{
     public SlidePane( ){
         getStylesheets().add("/CSS/Slidepane.css");
 
-        prefWidth = screen.getWidth()/4.7;
+        prefWidth = screen.getWidth()/5;
         setPrefWidth(prefWidth );
 
 //        prefWidth = prefW/2;
