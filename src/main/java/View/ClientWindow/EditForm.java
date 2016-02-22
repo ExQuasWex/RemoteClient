@@ -86,7 +86,7 @@ public class EditForm extends GridPane{
     }
 
     public EditForm(){
-
+         setDisable(true);
          getStylesheets().add("/CSS/familyFormCss.css");
 
          saveChanges = new Button("Save");
@@ -94,7 +94,6 @@ public class EditForm extends GridPane{
 
          Title.setFontSmoothingType(FontSmoothingType.LCD);
          Title.setFont(javafx.scene.text.Font.font(20));
-
 
          scrollPane = new ScrollPane(getSubGrid());
          scrollPane.setFitToWidth(true);
@@ -130,15 +129,6 @@ public class EditForm extends GridPane{
             }
         });
 
-        datePicker.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                String x = datePicker.getValue().toString();
-                LocalDate date = LocalDate.parse(x);
-                System.out.println(date.getMonth());
-
-            }
-        });
 
     }
 
@@ -424,36 +414,36 @@ public class EditForm extends GridPane{
         });
 
 
-        maritalCBox.setOnAction(new EventHandler<ActionEvent>() {
+        maritalCBox.valueProperty().addListener(new ChangeListener() {
             @Override
-            public void handle(ActionEvent event) {
-                String item = (String) maritalCBox.getSelectionModel().getSelectedItem();
+            public void changed(ObservableValue observable, Object oldItem, Object newItem) {
 
-                if (item.equals("Married") || item.equals("Live-in")){
+                if (newItem == null){
+
+                }
+                else if (newItem.equals("Married") || newItem.equals("Live-in")) {
                     SpouseName.setDisable(false);
-                }else {
+                }
+                else {
+                    SpouseName.getStyleClass().remove("text-field-error");
                     SpouseName.setText("");
                     SpouseName.setDisable(true);
                 }
             }
         });
-
-        barangayCb.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println("barangayCb called");
-            }
-        });
+        System.out.println(" maritakcbox value property called ");
 
     }
 
     private void addBottomComponentListeners(){
-        occupancyCBox.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
 
-                String item = (String)occupancyCBox.getSelectionModel().getSelectedItem();
-                if (item.equals("Employed") || item.equals("Self-Employed")){
+        occupancyCBox.valueProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+
+                if (newValue == null){
+                }
+                else if (newValue.equals("Employed") || newValue.equals("Self-Employed")){
                     underEmployedCBox.setDisable(false);
                 }else {
                     underEmployedCBox.getSelectionModel().clearSelection();
@@ -462,25 +452,7 @@ public class EditForm extends GridPane{
             }
         });
 
-
-
-        ///////// return to normal node if this nodes are disable , , underEmployedCBox
-
-        SpouseName.disabledProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean notDisable, Boolean isDisable) {
-                if (isDisable){
-                    System.out.println("Disable");
-                    SpouseName.getStyleClass().remove("text-field-error");
-                    errorNodeList.remove(SpouseName);
-                }else{
-                    System.out.println("not disable");
-                }
-
-
-            }
-        });
-
+        ///////// return to normal node if this nodes are disable  underEmployedCBox
 
         underEmployedCBox.disabledProperty().addListener(new ChangeListener<Boolean>() {
             @Override
@@ -563,7 +535,6 @@ public class EditForm extends GridPane{
         owenerShipList.add("Sharer");
         owenerShipList.add("Informal Settler");
 
-
         return  owenerShipList;
     }
 
@@ -598,6 +569,7 @@ public class EditForm extends GridPane{
             String spousename = SpouseName.getText() + " " ;
             String age = agefield.getText();
             String maritalStatus =  maritalCBox.getSelectionModel().getSelectedItem().toString();
+
             String barangay = barangayCb.getSelectionModel().getSelectedItem().toString();
             String gender =  genderCB.getSelectionModel().getSelectedItem().toString();
             String address =  addressF.getText();
@@ -636,15 +608,9 @@ public class EditForm extends GridPane{
             // send data to clientWindow
             editableListener.Edit(family);
 
-            clear();
-    }
+            System.out.println("Marital status " + maritalStatus );
 
-
-
-
-    public void addEditableListener (EditableListener editableListener){
-        this.editableListener = editableListener;
-
+             clear();
     }
 
     private void clear(){
@@ -656,5 +622,38 @@ public class EditForm extends GridPane{
 
     }
 
+    public void setEditFamily(Family family){
+        FamilyInfo familyInfo = family.getFamilyinfo();
+        FamilyPoverty familyPoverty = family.getFamilypoverty();
+
+        // setting data for top pane
+        dateField.setText(familyInfo.getInputDate());
+        LocalDate localDate = Utility.StringToLocalDate(familyInfo.getSurveyedYr().toString());
+        datePicker.setValue(localDate);
+        Name.setText(familyInfo.getName());
+        SpouseName.setText(familyInfo.getSpouseName());
+        agefield.setText(familyInfo.getAge());
+        addressF.setText(familyInfo.getAddress());
+        yrResidency.setText(String.valueOf(familyInfo.getResidencyYr()));
+        numofChildrenF.setText(String.valueOf(familyInfo.getNumofChildren()));
+
+        maritalCBox.getSelectionModel().select(familyInfo.getMaritalStatus());
+        barangayCb.getSelectionModel().select(familyInfo.getBarangay());
+        genderCB.getSelectionModel().select(familyInfo.getGender());
+
+        underEmployedCBox.getSelectionModel().select(familyPoverty.getIsunderEmployed());
+        otherIncomeCbox.getSelectionModel().select(familyPoverty.getHasotherIncome());
+        ownershipCbox.getSelectionModel().select(familyPoverty.getOwnership());
+        below8kCbox.getSelectionModel().select(familyPoverty.getIsbelow8k());
+        occupancyCBox.getSelectionModel().select(familyPoverty.getOccupancy());
+        childrenSchlCBox.getSelectionModel().select(familyPoverty.getChildreninSchool());
+
+        setDisable(false);
+
+    }
+
+    public void addEditableListener(EditableListener editableListener){
+        this.editableListener = editableListener;
+    }
 
 }

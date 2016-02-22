@@ -64,17 +64,13 @@ public class SearchTabWindow extends CustomStage {
         Scene scene = new Scene(root, 400, 500);
 
         setScene(scene);
-        show();
 
-
-     setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                System.out.println("setOnCloseRequest");
-                tabPane.getTabs().clear();
-            }
-        });
-
+         setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    tabPane.getTabs().clear();
+                }
+            });
 
     }
 
@@ -82,8 +78,6 @@ public class SearchTabWindow extends CustomStage {
 
         if (searchTabWindow == null){
             searchTabWindow = new SearchTabWindow();
-        }else {
-            searchTabWindow.show();
         }
         return  searchTabWindow;
     }
@@ -144,10 +138,10 @@ public class SearchTabWindow extends CustomStage {
         tableView.getColumns().addAll(Category, Value);
 
 
-
         editButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                System.out.println("Family id:" +fam.getFamilyinfo().familyId());
                 editableListener.Edit(fam);
             }
         });

@@ -12,6 +12,8 @@ import View.ClientWindow.ClientWindow;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
 import global.SecretDetails;
+import javafx.scene.control.Alert;
+import utility.Utility;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -107,8 +109,15 @@ public class Controller implements TableItemListener {
     }
 
 
-    public void updateFamily(Family family){
-        // implement to database
+    public void UpdateFamilyInformation(Family family){
+
+            boolean isEdited =  clientDB.UpdateFamilyInformation(family);
+
+                if (isEdited){
+                    Utility.showMessageBox("Successfully Edit Information", Alert.AlertType.INFORMATION);
+                }else {
+                    Utility.showMessageBox("Unable to Edit Information, please try again later", Alert.AlertType.INFORMATION);
+                }
     }
 
     /*

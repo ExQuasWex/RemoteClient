@@ -132,15 +132,6 @@ public class FamilyForm extends GridPane{
             }
         });
 
-        datePicker.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                String x = datePicker.getValue().toString();
-                LocalDate date = LocalDate.parse(x);
-                System.out.println(date.getMonth());
-
-            }
-        });
 
     }
 
@@ -435,15 +426,7 @@ public class FamilyForm extends GridPane{
                     SpouseName.getStyleClass().remove("text-field-error");
                     SpouseName.setText("");
                     SpouseName.setDisable(true);
-                    System.out.println("remove spouse name red border");
                 }
-            }
-        });
-
-        barangayCb.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println("barangayCb called");
             }
         });
 
@@ -621,9 +604,9 @@ public class FamilyForm extends GridPane{
             familyFormListener.handle(family);
 
             // Doesn't clear data unless notification is falls
-            if (!Controller.isNotified){
-                clear();
-            }
+        if (!Controller.isNotified){
+            clear();
+        }
 
     }
 

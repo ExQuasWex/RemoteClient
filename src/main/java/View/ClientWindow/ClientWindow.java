@@ -47,7 +47,6 @@ public class ClientWindow extends CustomStage{
 
     private Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 
-    private static boolean  isNotified = false;
     private  double padding = 0.0 ;
 
 
@@ -114,22 +113,15 @@ public class ClientWindow extends CustomStage{
             @Override
             public void offMenu() {
                 Node node = root.getCenter();
-
-                if (root.getRight() == null){
                     padding = screen.getWidth()/6;
                     root.setMargin(node, new Insets(0, 0, 0, padding));
-
-                }else {
-                    root.setMargin(node, new Insets(0, 0, 0, padding));
-
-                }
 
             }
 
                 @Override
                 public void onMenu() {
                     Node node = root.getCenter();
-                    root.setMargin(node, new Insets(0, 0, 0, 0));
+                    root.setMargin(node, new Insets(0, 0 , 0, 0));
                     System.out.println("onMenu");
 
 
@@ -147,12 +139,22 @@ public class ClientWindow extends CustomStage{
 
         // ---------------- EditForm Implementation ------------//
 
-        editForm.addEditableListener(new EditableListener() {
-            @Override
-            public void Edit(Family family) {
-                controller.updateFamily(family);
-            }
-        });
+
+                // adding Editable listeners to search tab window component
+                SearchTabWindow.getInstance().addEditableListener(new EditableListener() {
+                    @Override
+                    public void Edit(Family family) {
+                        ShowEditForm(family);
+                    }
+                });
+
+                // adding Editable listeners to searchtable window component
+                searchtable.addEditableListener(new EditableListener() {
+                    @Override
+                    public void Edit(Family family) {
+                        ShowEditForm(family);
+                    }
+                });
 
         // ---------------- Searchtable Implementation ------------//
         searchtable.addSearchTableListener(new SearchTableListener() {
@@ -163,8 +165,6 @@ public class ClientWindow extends CustomStage{
         });
 
         // ---------------- SearchPane Implementation ------------//
-
-
 
         searchPane.addSearchPaneListener(new SearchPaneListener() {
             @Override
@@ -177,6 +177,12 @@ public class ClientWindow extends CustomStage{
     }
     private void setMainComponents(){
 
+        editForm.addEditableListener(new EditableListener() {
+            @Override
+            public void Edit(Family family) {
+                controller.UpdateFamilyInformation(family);
+            }
+        });
 
         //---------------- TOP Pane ------------//
 
@@ -185,7 +191,7 @@ public class ClientWindow extends CustomStage{
 
         //---------------- Bottom Pane -----------//
 
-        bottomPane.setPrefHeight(50);
+        bottomPane.setPrefHeight(30);
         bottomPane.setStyle("-fx-background-color: #0082b2");
 
         //---------------- Left Pane -----------//
@@ -196,11 +202,16 @@ public class ClientWindow extends CustomStage{
     }
 
 
-
     private void ShowEditForm(){
         root.setCenter(null);
         root.setCenter(editForm);
 
+    }
+
+    private void ShowEditForm(Family family){
+        root.setCenter(null);
+        editForm.setEditFamily(family);
+        root.setCenter(editForm);
     }
 
     private void search(String Searchedname){
@@ -226,7 +237,6 @@ public class ClientWindow extends CustomStage{
 
 
     private void connect(){
-
 
                 Thread thread = new Thread(new Runnable() {
                     @Override
@@ -265,33 +275,35 @@ public class ClientWindow extends CustomStage{
 
       if (controller.isServerConnected()){
 
-                  if (isNotified){
+                  if (Controller.isNotified){
                         boolean isConfirm = Utility.showConfirmationMessage("Are you sure you want to add this data?", Alert.AlertType.CONFIRMATION);
 
                             if (isConfirm){
                                     isSucceed = controller.addFamilyInfo(true, family);
                                         if (isSucceed){
-                                            isNotified = false;
+                                            Controller.isNotified = false;
                                         }
                             }else {
-                                            isNotified = false;
+                                         Controller.isNotified = false;
                             }
+
                   }else {
                       isSucceed = controller.addFamilyInfo(false, family);
                   }
-                        if (isSucceed){
-                             Utility.showMessageBox("Successfully Save Family Information", Alert.AlertType.INFORMATION);
+                                    if (isSucceed){
+                                         Utility.showMessageBox("Successfully Save Family Information", Alert.AlertType.INFORMATION);
 
-                        }else {
+                                    }else {
 
-                            if (!controller.getMethodIdenifier().equals("NOTIFY")){
-                                Utility.showMessageBox("There was problem occur, please try again after few seconds", Alert.AlertType.ERROR);
-                            }
-                        }
+                                        if (!controller.getMethodIdenifier().equals("NOTIFY")){
+                                            Utility.showMessageBox("There was problem occur, please try again after few seconds", Alert.AlertType.ERROR);
+                                        }
+                                    }
       }else {
                  ShowConnectingWindow(root);
                  // Add connection functionality here
       }
+
     }
 
     public void addAccountForm(){
@@ -469,10 +481,10 @@ public class ClientWindow extends CustomStage{
         Optional result = alert.showAndWait();
 
         if (result.get() == ButtonType.OK) {
-            isNotified = true;
+            Controller.isNotified = true;
             showSearchedTable(familyList);
         } else {
-            isNotified = false;
+            Controller.isNotified  = false;
         }
 
     }
