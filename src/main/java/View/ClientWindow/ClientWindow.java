@@ -42,7 +42,6 @@ public class ClientWindow extends CustomStage{
     private  Button updateButton;
     private  EditForm editForm  = new EditForm();
 
-
     private  StaffInfo staffInfo;
 
     private Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
@@ -138,9 +137,20 @@ public class ClientWindow extends CustomStage{
         });
 
         // ---------------- EditForm Implementation ------------//
+                editForm.addEditableListener(new EditableListener() {
+                    @Override
+                    public void Edit(Family family) {
+                        controller.UpdateFamilyInformation(family);
+                    }
+                });
 
+                searchtable.addEditableListener(new EditableListener() {
+                    @Override
+                    public void Edit(Family family) {
+                        ShowEditForm(family);
+                    }
+                });
 
-                // adding Editable listeners to search tab window component
                 SearchTabWindow.getInstance().addEditableListener(new EditableListener() {
                     @Override
                     public void Edit(Family family) {
@@ -148,13 +158,6 @@ public class ClientWindow extends CustomStage{
                     }
                 });
 
-                // adding Editable listeners to searchtable window component
-                searchtable.addEditableListener(new EditableListener() {
-                    @Override
-                    public void Edit(Family family) {
-                        ShowEditForm(family);
-                    }
-                });
 
         // ---------------- Searchtable Implementation ------------//
         searchtable.addSearchTableListener(new SearchTableListener() {
@@ -177,12 +180,7 @@ public class ClientWindow extends CustomStage{
     }
     private void setMainComponents(){
 
-        editForm.addEditableListener(new EditableListener() {
-            @Override
-            public void Edit(Family family) {
-                controller.UpdateFamilyInformation(family);
-            }
-        });
+
 
         //---------------- TOP Pane ------------//
 
@@ -209,6 +207,8 @@ public class ClientWindow extends CustomStage{
     }
 
     private void ShowEditForm(Family family){
+
+        System.out.println("Family id: " + family.getFamilyinfo().familyId());
         root.setCenter(null);
         editForm.setEditFamily(family);
         root.setCenter(editForm);

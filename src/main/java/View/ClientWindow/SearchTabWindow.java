@@ -115,7 +115,6 @@ public class SearchTabWindow extends CustomStage {
 
         tableView.setItems(data);
 
-
         Category.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<String, String>, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) {
@@ -131,7 +130,6 @@ public class SearchTabWindow extends CustomStage {
             }
         });
 
-
         Value.setSortType(TableColumn.SortType.DESCENDING);
         Category.setSortType(TableColumn.SortType.DESCENDING);
 
@@ -141,11 +139,9 @@ public class SearchTabWindow extends CustomStage {
         editButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("Family id:" +fam.getFamilyinfo().familyId());
                 editableListener.Edit(fam);
             }
         });
-
 
         ScrollPane scrollPane = new ScrollPane(tableView);
         scrollPane.setFitToWidth(true);
