@@ -419,20 +419,17 @@ public class EditForm extends GridPane{
             @Override
             public void changed(ObservableValue observable, Object oldItem, Object newItem) {
 
-                if (newItem == null){
+                if (newItem == null) {
 
-                }
-                else if (newItem.equals("Married") || newItem.equals("Live-in")) {
+                } else if (newItem.equals("Married") || newItem.equals("Live-in")) {
                     SpouseName.setDisable(false);
-                }
-                else {
+                } else {
                     SpouseName.getStyleClass().remove("text-field-error");
                     SpouseName.setText("");
                     SpouseName.setDisable(true);
                 }
             }
         });
-        System.out.println(" maritakcbox value property called ");
 
     }
 
@@ -625,6 +622,21 @@ public class EditForm extends GridPane{
         FamilyInfo familyInfo = family.getFamilyinfo();
         FamilyPoverty familyPoverty = family.getFamilypoverty();
 
+        if (familyPoverty.getOccupancy().equals("Employed") || familyPoverty.getOccupancy().equals("Self-Employed") ){
+            underEmployedCBox.setDisable(false);
+            underEmployedCBox.getSelectionModel().select(familyPoverty.getIsunderEmployed());
+        }else {
+            underEmployedCBox.setDisable(true);
+
+        }
+
+        if (familyInfo.getNumofChildren() > 0){
+            childrenSchlCBox.setDisable(false);
+            numofChildrenF.setText(String.valueOf(familyInfo.getNumofChildren()));
+        }else {
+            childrenSchlCBox.setDisable(true);
+        }
+
         // setting data for top pane
         dateField.setText(familyInfo.getInputDate());
         LocalDate localDate = Utility.StringToLocalDate(familyInfo.getSurveyedYr().toString());
@@ -634,19 +646,20 @@ public class EditForm extends GridPane{
         agefield.setText(familyInfo.getAge());
         addressF.setText(familyInfo.getAddress());
         yrResidency.setText(String.valueOf(familyInfo.getResidencyYr()));
-        numofChildrenF.setText(String.valueOf(familyInfo.getNumofChildren()));
 
         maritalCBox.getSelectionModel().select(familyInfo.getMaritalStatus());
         barangayCb.getSelectionModel().select(familyInfo.getBarangay());
         genderCB.getSelectionModel().select(familyInfo.getGender());
 
-        underEmployedCBox.getSelectionModel().select(familyPoverty.getIsunderEmployed());
         otherIncomeCbox.getSelectionModel().select(familyPoverty.getHasotherIncome());
         ownershipCbox.getSelectionModel().select(familyPoverty.getOwnership());
         below8kCbox.getSelectionModel().select(familyPoverty.getIsbelow8k());
         occupancyCBox.getSelectionModel().select(familyPoverty.getOccupancy());
         childrenSchlCBox.getSelectionModel().select(familyPoverty.getChildreninSchool());
         familyID = familyInfo.familyId();
+
+
+
 
         setDisable(false);
 
