@@ -9,13 +9,13 @@ import View.AdminGUI.Management.ManagementPane;
 import View.AdminGUI.Report.Report.Layouts.MainReportPane;
 import View.AdminGUI.Work.WorkPane;
 import View.Login.LoginWindow;
+import View.Screen;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -27,21 +27,19 @@ public class AdminWindow extends Stage{
 
     private BorderPane root;
     private ArrayList barangayDataList;
-    private ManagementPane mp ;
+    private ManagementPane managementPane;
     private  Controller ctr;
-
     private WorkPane workPane = new WorkPane();
+
+    private Dimension windowScreen = Screen.screen;
 
     public AdminWindow(){
         ctr = Controller.getInstance();
-        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 
         root = new BorderPane();
 
-
-        AdminSlidePane adminSlidePane = new AdminSlidePane(screen.getWidth()/4);
+        AdminSlidePane adminSlidePane = new AdminSlidePane();
         root.setLeft(adminSlidePane);
-
 
         adminSlidePane.addAdminSlidePaneListener(new AdminSlidePaneListner() {
             @Override
@@ -71,14 +69,12 @@ public class AdminWindow extends Stage{
             }
         });
 
-
         showInitialReports();
 
-
         // Components
-        mp =  new ManagementPane(root);
+        managementPane =  new ManagementPane(root);
 
-            mp.addTableListener(new TableItemListener() {
+            managementPane.addTableListener(new TableItemListener() {
                 @Override
                 public boolean Approve(RequestAccounts ra) {
 
@@ -97,8 +93,8 @@ public class AdminWindow extends Stage{
             });
 
         // main settings
-        setWidth(screen.getWidth());
-        setHeight(screen.getHeight());
+        setWidth(windowScreen.getWidth());
+        setHeight(windowScreen.getHeight());
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/CSS/ClientWindowCSS.css");
         setScene(scene);
@@ -137,7 +133,7 @@ public class AdminWindow extends Stage{
 
     public  void showManagement(){
 
-        root.setCenter(mp);
+        root.setCenter(managementPane);
     }
 
     public  void ShowReport(){

@@ -1,6 +1,7 @@
 package View.AdminGUI.Report.SubHeader;
 
 import AdminModel.Params;
+import Controller.Controller;
 import View.AdminGUI.Report.interfaces.ReportButtonListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,6 +13,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
 
+import java.util.ArrayList;
+
 /**
  * Created by Didoy on 1/13/2016.
  */
@@ -19,10 +22,12 @@ public class ReportCompareSpecificPane extends HBox {
 
     private ComboBox barangay1 ;
     private ComboBox barangay2 ;
-    private ComboBox Month ;
     private ComboBox Year ;
+    private ComboBox MaxYear ;
+
     private Button generateReportBtn;
     private ReportButtonListener reportButtonListener;
+    private Controller controller = Controller.getInstance();
 
     public ReportCompareSpecificPane() {
         setAlignment(Pos.CENTER);
@@ -31,23 +36,20 @@ public class ReportCompareSpecificPane extends HBox {
 
         barangay1 = new ComboBox();
         barangay2 = new ComboBox();
-        Month = new ComboBox();
         Year = new ComboBox();
+        MaxYear = new ComboBox();
 
         barangay1.setPromptText("Barangay 1");
         barangay2.setPromptText("Barangay 2");
-        Month.setPromptText("Month");
         Year.setPromptText("Year");
-
+        MaxYear.setPromptText("Year");
 
         barangay1.setItems(getBarangay());
         barangay2.setItems(getBarangay());
-        Month.setItems(getMonths());
-        Year.setItems(getYears());
 
         setMargin(generateReportBtn, new Insets(0,0,0,10));
 
-        getChildren().addAll(barangay1, barangay2, Month, Year, generateReportBtn);
+        getChildren().addAll(barangay1, Year,  barangay2, MaxYear, generateReportBtn);
 
         generateReportBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -57,26 +59,7 @@ public class ReportCompareSpecificPane extends HBox {
             }
         });
 
-    }
-    private ObservableList getMonths(){
-        // fetch years here
-        ObservableList<String> months = FXCollections.observableArrayList();
-        months.add("January");
-        months.add("February");
-        months.add("March");
-        months.add("April");
-        months.add("May");
-        months.add("June");
-        months.add("July");
-        months.add("August");
-        months.add("September");
-        months.add("October");
-        months.add("November");
-        months.add("December");
-        months.add("All Month");
-
-
-        return months;
+        setYears();
     }
 
     private ObservableList getBarangay(){
@@ -112,21 +95,19 @@ public class ReportCompareSpecificPane extends HBox {
 
         return  baranagayList;
     }
-    private ObservableList getYears(){
-        // fetch years here
-        ObservableList<String> initialYearLis = FXCollections.observableArrayList();
-        initialYearLis.add("2011");
-        initialYearLis.add("2013");
-        initialYearLis.add("All year");
-
-        return initialYearLis;
-    }
 
     public void addReportButtonListener(ReportButtonListener reportButtonListener){
         this.reportButtonListener = reportButtonListener;
     }
 
+    private void  setYears(){
+        ArrayList year = controller.getYears();
 
+        ObservableList yearObservableList = FXCollections.observableArrayList(year);
+        Year.setItems(yearObservableList);
+        MaxYear.setItems(yearObservableList);
+
+    }
 
 
 }

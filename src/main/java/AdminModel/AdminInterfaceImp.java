@@ -104,15 +104,17 @@ public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInter
         return  compareOverview;
     }
     @Override
-    public ArrayList getCompareSpecificData(Params params, String type){
+    public ResponseCompareOverview getCompareSpecificData(Params params, String type){
+        ResponseCompareOverview  responseCompareOverview = null;
+
         ArrayList list = new ArrayList();
 
         try {
-            list =  server.getCompareSpecificData(params, type);
+            responseCompareOverview =  server.getCompareSpecificData(params, type);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        return  list;
+        return  responseCompareOverview;
     }
     @Override
     public ArrayList getSpecificOverViewData(Params params, String type){

@@ -27,9 +27,7 @@ public class ReportOverViewPane extends HBox {
         generateReportBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                int year = Utility.getCurrentIntYear();
-                Params params = new Params(year,1,0,"Dau", null);
-                reportButtonListener.generateReport(params);
+                reportButtonListener.generateReport(null);
             }
         });
     }

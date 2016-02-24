@@ -7,10 +7,13 @@ import Controller.Controller;
 import View.AdminGUI.Report.Enums.ReportCategoryMethod;
 import View.AdminGUI.Report.SubHeader.*;
 import View.AdminGUI.Report.interfaces.ReportButtonListener;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -37,7 +40,7 @@ public class MainReportPane extends VBox {
     private  ToggleButton columnView;
     private  ToggleButton gridView;
 
-    // sub header
+    // sub headers which shows the paremeters for report
     private ReportOverViewPane overViewPane;
     private ReportComparePane reportComparePane;
     private ReportCompareSpecificPane reportCompareSpecificPane;
@@ -54,6 +57,7 @@ public class MainReportPane extends VBox {
         reportCompareSpecificPane = new ReportCompareSpecificPane();
         reportSpecificOverviewPane = new ReportSpecificOverviewPane();
         reportSpecificPane = new ReportSpecificPane();
+
         InitialPane = getInitialPane();
 
 
@@ -105,6 +109,7 @@ public class MainReportPane extends VBox {
                 });
 
         getStylesheets().add("/CSS/AdminReportCSS.css");
+        setSpacing(15);
         setVgrow(InitialPane, Priority.ALWAYS);
         getChildren().addAll(createHeader(), overViewPane, InitialPane);
 
@@ -130,6 +135,7 @@ public class MainReportPane extends VBox {
         header.setPrefHeight(80);
         header.setAlignment(Pos.CENTER);
         header.setSpacing(5);
+        header.setPadding(new Insets(10, 0, 10, 0));
 
         ToggleGroup toggleGroup = new ToggleGroup();
 
@@ -137,6 +143,7 @@ public class MainReportPane extends VBox {
 
          category = new ComboBox();
          Type = new ComboBox();
+         Type.setDisable(true);
 
         // Button viewReport = new Button("View Report");
 
@@ -145,8 +152,6 @@ public class MainReportPane extends VBox {
         columnView.setToggleGroup(toggleGroup);
         gridView.setToggleGroup(toggleGroup);
 
-        //category.setPrefWidth(50);
-        //viewReport.setPrefWidth(50);
         columnView.setPrefWidth(50);
         gridView.setPrefWidth(50);
 
@@ -161,16 +166,37 @@ public class MainReportPane extends VBox {
         category.getSelectionModel().select(0);
         Type.getSelectionModel().select(0);
 
-                category.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        generateSubheader((ReportCategoryMethod) category.getSelectionModel().getSelectedItem());
-                    }
-                });
+        addCategoryListener();
 
         header.getChildren().addAll(categoryLabel, category, Type, columnView, gridView);
 
         return header;
+    }
+
+    private void addCategoryListener(){
+
+        category.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                generateSubheader((ReportCategoryMethod) category.getSelectionModel().getSelectedItem());
+            }
+        });
+
+
+        category.valueProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+
+                if (newValue == ReportCategoryMethod.COMPARE_SPECIFIC || newValue == ReportCategoryMethod.SPECIFIC ){
+                    Type.setDisable(false);
+                }else {
+                    Type.setDisable(true);
+                }
+
+            }
+        });
+
+
     }
 
     private ObservableList getTypes(){
@@ -213,11 +239,6 @@ public class MainReportPane extends VBox {
 
     }
 
-    private void generateReport(Params params, String type){
-
-    }
-
-
 
     private void generateSubheader(ReportCategoryMethod cat){
         if (cat.equals(ReportCategoryMethod.OVERVIEW)){
@@ -242,12 +263,6 @@ public class MainReportPane extends VBox {
 
     private ObservableList getCategories(){
         ObservableList<ReportCategoryMethod> categoryList = FXCollections.observableArrayList(ReportCategoryMethod.values());
-//        categoryList.add("Overview");
-//        categoryList.add("Compare OverView");
-//        categoryList.add("Compare Specific");
-//        categoryList.add("Specific Overview");
-//        categoryList.add("Specific");
-
         return  categoryList;
     }
 

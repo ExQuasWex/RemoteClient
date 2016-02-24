@@ -419,10 +419,12 @@ public class FamilyForm extends GridPane{
             @Override
             public void handle(ActionEvent event) {
                 String item = (String) maritalCBox.getSelectionModel().getSelectedItem();
+                if (item == null) {
 
-                if (item.equals("Married") || item.equals("Live-in")){
+                }
+                else if (item.equals("Married") || item.equals("Live-in")) {
                     SpouseName.setDisable(false);
-                }else {
+                } else {
                     SpouseName.getStyleClass().remove("text-field-error");
                     SpouseName.setText("");
                     SpouseName.setDisable(true);
@@ -439,6 +441,10 @@ public class FamilyForm extends GridPane{
             public void handle(ActionEvent event) {
 
                 String item = (String)occupancyCBox.getSelectionModel().getSelectedItem();
+
+                if (item == null){
+
+                }
                 if (item.equals("Employed") || item.equals("Self-Employed")){
                     underEmployedCBox.setDisable(false);
                 }else {

@@ -630,6 +630,7 @@ public class EditForm extends GridPane{
 
         }
 
+
         if (familyInfo.getNumofChildren() > 0){
             childrenSchlCBox.setDisable(false);
             numofChildrenF.setText(String.valueOf(familyInfo.getNumofChildren()));

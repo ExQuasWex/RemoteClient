@@ -2,6 +2,7 @@ package View.AdminGUI;
 
 import Controller.Controller;
 import View.AdminGUI.Listeners.AdminSlidePaneListner;
+import View.Screen;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -21,6 +22,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+
+import java.awt.*;
 
 /**
  * Created by Didoy on 10/1/2015.
@@ -42,12 +45,14 @@ public class AdminSlidePane extends HBox{
     private    boolean  isNotificationOut;
     private AdminSlidePaneListner adminSlidePaneListner;
 
-    public AdminSlidePane(double prefW){
+    private Dimension windowScreen = Screen.screen;
 
+    public AdminSlidePane( ){
+
+        prefWidth = windowScreen.getWidth()/5;
         getStylesheets().add("/CSS/AdminSlidepane.css");
 
-        prefWidth = prefW;
-        setPrefWidth(prefWidth );
+        setPrefWidth(windowScreen.getWidth()/5 );
 
         // sizing width
         home.setPrefWidth(prefWidth-2);
@@ -180,7 +185,6 @@ public class AdminSlidePane extends HBox{
                 System.out.println("exit");
             }
         });
-
 
 
     }

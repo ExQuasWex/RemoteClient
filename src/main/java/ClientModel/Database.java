@@ -216,7 +216,7 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
                 if (credentials == null){
                     Utility.showMessageBox("Invalid username or password", Alert.AlertType.INFORMATION);
                 }else {
-                    staffInfo = server.Login(user,pass,ip, credentials.getRemotePort(), credentials.getRemoteID());
+                   staffInfo = server.Login(user,pass,ip, credentials.getRemotePort(), credentials.getRemoteID());
                     EstablishCallBack(credentials);
                 }
 

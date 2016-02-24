@@ -196,8 +196,7 @@ public class Controller implements TableItemListener {
         return adminDB.getCompareOverViewData( params,  type);
     }
 
-    public ArrayList getCompareSpecificData(Params params, String type){
-
+    public ResponseCompareOverview getCompareSpecificData(Params params, String type){
         return adminDB.getCompareSpecificData( params,  type);
     }
 
