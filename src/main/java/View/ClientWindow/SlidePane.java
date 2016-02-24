@@ -41,6 +41,8 @@ public class SlidePane extends HBox{
         Label accountinfo = new Label( "Your Account");
         Label form = new Label("Survey Form");
         Label edit = new Label("Edit Form");
+        Label entry = new Label("View Entries");
+
         Label help = new Label("Help");
         Label logout = new Label("Logout");
 
@@ -48,16 +50,18 @@ public class SlidePane extends HBox{
         accountinfo.setPrefWidth(prefWidth-4);
         form.setPrefWidth(prefWidth-4);
         edit.setPrefWidth(prefWidth-4);
+        entry.setPrefWidth(prefWidth-4);
         help.setPrefWidth(prefWidth-4);
         logout.setPrefWidth(prefWidth-4);
-
 
         // set the heights of texfields
         accountinfo.setPrefHeight(30);
         form.setPrefHeight(30);
         edit.setPrefHeight(30);
+        entry.setPrefHeight(30);
         help.setPrefHeight(30);
         logout.setPrefHeight(30);
+
 
         // set the images of textfields
         accountinfo.getStyleClass().add("AccountTextField");
@@ -68,7 +72,7 @@ public class SlidePane extends HBox{
         leftVbox.setFillWidth(true);
         leftVbox.setAlignment(Pos.TOP_CENTER);
         leftVbox.setPrefWidth(prefWidth);
-        leftVbox.getChildren().addAll(accountinfo,form,edit, help,logout);
+        leftVbox.getChildren().addAll(accountinfo,form,edit,entry, help,logout);
 
         Image arrow = new Image(getClass().getResourceAsStream("/images/leftArrow.png"),60,80,false,true);
         Label ArrowButton = new Label();
@@ -109,6 +113,13 @@ public class SlidePane extends HBox{
                     slidePaneListener.showFamilyForm();
                 }
             });
+
+           entry.setOnMouseClicked(new EventHandler<MouseEvent>() {
+               @Override
+               public void handle(MouseEvent event) {
+                    slidePaneListener.showFamilyEntry();
+               }
+           });
 
             logout.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override

@@ -133,6 +133,15 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
         return isUpdated;
     }
 
+    @Override
+    public void getClientEntries(int ClientID)   {
+        try {
+            server.getClientEntries(ClientID);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
     // CLIENT BASIC METHODS
 
 
