@@ -2,6 +2,7 @@ package ClientModel;
 
 import Controller.Controller;
 import RMI.ClientInterface;
+import clientModel.ClientEntries;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -24,7 +25,16 @@ public class ClientInterfaceImp extends UnicastRemoteObject implements ClientInt
 
     @Override
     public void notifyClient(ArrayList familyList) throws RemoteException {
+        Controller.getInstance().notifyClient(familyList);
+    }
 
-        Controller.getInstance().notifyClient(familyList);;
+    @Override
+    public void setClientEntriesMaxSize(int size) throws RemoteException {
+        Controller.getInstance().setEntrySize(size);
+    }
+
+    @Override
+    public void addClientEntry(ClientEntries clientEntries) throws RemoteException {
+        Controller.getInstance().addClientEntry(clientEntries);
     }
 }

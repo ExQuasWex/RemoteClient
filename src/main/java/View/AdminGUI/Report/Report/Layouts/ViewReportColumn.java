@@ -5,15 +5,20 @@ import AdminModel.Report.Children.Model.ResponseCompareOverview;
 import AdminModel.Report.Children.Model.ResponsePovertyFactor;
 import AdminModel.Report.Children.Model.ResponsePovertyRate;
 import AdminModel.Report.Parent.Model.ResponseOverviewReport;
-import View.AdminGUI.Report.Enums.ReportType;
+import View.AdminGUI.Report.Charts.ChartFactory;
+import View.AdminGUI.Report.Charts.ColorRandom;
+import View.AdminGUI.Report.Charts.HexColors;
+import View.AdminGUI.Report.Charts.SeriesFactory;
 import View.AdminGUI.Report.interfaces.Reports;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.chart.*;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.effect.Effect;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import utility.Utility;
 
 import java.util.ArrayList;
@@ -26,15 +31,17 @@ public class ViewReportColumn extends VBox implements Reports {
     private ScrollPane scrollPane = new ScrollPane();
     private VBox vBox = new VBox();
 
+    private ChartFactory chartFactory = new ChartFactory();
+    private SeriesFactory seriesFactory = new SeriesFactory();
     public ViewReportColumn() {
         setAlignment(Pos.CENTER);
-        setSpacing(10);
+        setPadding(new Insets(20, 30 ,10 , 0));
 
-
-        vBox.setSpacing(30);
         vBox.setAlignment(Pos.CENTER);
 
         scrollPane.setFitToWidth(true);
+        scrollPane.setPadding(new Insets(0, 30, 0, 30));
+        scrollPane.setStyle("-fx-border-color: brown");
         getChildren().addAll(scrollPane);
 
     }
@@ -45,68 +52,36 @@ public class ViewReportColumn extends VBox implements Reports {
         ArrayList factorList =  reportObject.getFactorList();
         ArrayList<ResponsePovertyRate> povertyList = reportObject.getPovertyList();
 
-        ScrollPane lineCharScrlPane = new ScrollPane();
-        lineCharScrlPane.setFitToWidth(true);
-        int x = 0;
+        ScrollPane lineScrollPane = new ScrollPane();
+        lineScrollPane.setFitToWidth(true);
+        String currentYear = Utility.getCurrentYear();
 
-        final CategoryAxis lineXAxis = new CategoryAxis();
-        final NumberAxis lineYAxis = new NumberAxis();
-
-        lineYAxis.setLabel("Poverty Population");
-
-        XYChart.Series lineseries = new XYChart.Series();
+        XYChart.Series lineseries = seriesFactory.createPovertyPopulationSeries("Poverty Population", povertyList);
         lineseries.setName("Poverty Population");
 
-
-        while (x <= povertyList.size() - 1){
-
-            ResponsePovertyRate povertyRate =  povertyList.get(x);
-            lineseries.getData().add(new XYChart.Data(povertyRate.getBarangayName(), povertyRate.getUnresolvePopulation()));
-            x++;
-        }
-
-        LineChart lineChart = new LineChart(lineXAxis, lineYAxis);
+        LineChart lineChart = chartFactory.createLineChart("Barangay", "Population", currentYear );
         lineChart.getData().add(lineseries);
         lineChart.setTitle(Utility.getCurrentYear() + " Poverty Rate");
 
-        lineCharScrlPane.setContent(lineChart);
+        lineScrollPane.setContent(lineChart);
 
         //-------------------- Barchart configuration -------------------//
-        final CategoryAxis xAxis = new CategoryAxis();
-        final NumberAxis yAxis = new NumberAxis();
+        final BarChart<String,Number> bc = chartFactory.createBarChart("Population", "Factors", "Poverty Factor of the year 2016" );
+        XYChart.Series series1 = seriesFactory.createPovertyFactorSeries("Poverty Factors", factorList);
 
-        final BarChart<String,Number> bc =
-                new BarChart<>(xAxis,yAxis);
+        bc.getData().addAll(series1);
 
-        bc.setTitle("Poverty Factor of the year 2016");
-        xAxis.setLabel("Factors");
-        yAxis.setLabel("Population");
-
-
-        x = 0;
-
-        while (x <= factorList.size() -1 ){
-            XYChart.Series series1 = new XYChart.Series<String, Integer>();
-            ResponsePovertyFactor factors = (ResponsePovertyFactor)  factorList.get(x);
-            XYChart.Series series2 = new XYChart.Series<String, Integer>();
-            XYChart.Series series3 = new XYChart.Series<String, Integer>();
-
-
-            // add reflectionj to get all data fields in factor object
-
-            series1.getData().add(new XYChart.Data<String, Integer>("Unemployed", factors.getUnemployed()));
-            series2.getData().add(new XYChart.Data<String, Integer>("Below City Threshold", factors.getBelowMinimun()));
-            series3.getData().add(new XYChart.Data<String, Integer>("No Extra Income", factors.getNoOtherIncome()));
-            series1.getData().add(new XYChart.Data<String, Integer>("Under Employed", factors.getUnderemployed()));
-            series2.getData().add(new XYChart.Data<String, Integer>("Illegal Settlers", factors.getNoShelter()));
-
-            bc.getData().addAll(series1, series2, series3);
-            x++;
+        for (int i = 0; i < bc.getData().size(); i++) {
+            for (Node node : bc.lookupAll(".series" + i)) {
+                String color = ColorRandom.RandomColor();
+                node.setStyle(String.valueOf(color));
+            }
         }
 
+        bc.setCategoryGap(100);
 
         vBox.getChildren().remove(0, vBox.getChildren().size());
-        vBox.getChildren().addAll(lineCharScrlPane, bc);
+        vBox.getChildren().addAll(lineScrollPane, bc);
         scrollPane.setContent(null);
         scrollPane.setContent(vBox);
 
@@ -116,84 +91,26 @@ public class ViewReportColumn extends VBox implements Reports {
     public void showCompareOverviewReport(ResponseCompareOverview responseCompareOverview, Params params) {
 
         // ==================== Poverty  ======================//
+        String yr1 = String.valueOf(params.getYear());
+        String yr2 = String.valueOf(params.getMaxYear());
 
+        BarChart barChart = chartFactory.createBarChart("Population", "Year", " Poverty Population of " + yr1 + " vs " + yr2  );
 
-        final CategoryAxis xAxis = new CategoryAxis();
-        final NumberAxis yAxis = new NumberAxis();
+        XYChart.Series series1 = seriesFactory.createSeries(yr1, yr1, responseCompareOverview.getUnresolvePopulationYearOne());
+        XYChart.Series series2 = seriesFactory.createSeries(yr2, yr2, responseCompareOverview.getUnresolvePopulationYeartwo());
 
-        yAxis.setLabel("Poverty Population");
-
-        final BarChart<String,Number> barChart =
-                new BarChart<String,Number>(xAxis,yAxis);
-
-        barChart.setTitle("Poverty Rate " + params.getYear() +" " + params.getMaxYear());
-
-        String initialyear = String.valueOf(params.getYear());
-        String maxYear = String.valueOf(params.getMaxYear());
-
-
-        XYChart.Series series1 = new XYChart.Series();
-        series1.setName(initialyear);
-
-        XYChart.Series series2 = new XYChart.Series();
-        series2.setName(maxYear);
-
-        series1.getData().add(new XYChart.Data(initialyear, responseCompareOverview.getUnresolvePopulationYearOne()));
-        series2.getData().add(new XYChart.Data(maxYear,  responseCompareOverview.getUnresolvePopulationYeartwo()));
 
         barChart.getData().addAll(series1, series2);
-        barChart.setBarGap(10);
-        barChart.setAnimated(true);
-
+        barChart.setCategoryGap(300);
 
         // ==================== Factors  ======================//
         ArrayList  povertyFactorOneList = responseCompareOverview.getPovertyFactorOneList();
         ArrayList  povertyFactorOneList2 = responseCompareOverview.getPovertyFactorTwoList();
 
-        final CategoryAxis lineXAxis = new CategoryAxis();
-        final NumberAxis lineYAxis = new NumberAxis();
+        XYChart.Series lineseries1 = seriesFactory.createPovertyFactorSeries(yr1, povertyFactorOneList);
+        XYChart.Series lineseries2 = seriesFactory.createPovertyFactorSeries(yr2, povertyFactorOneList2);
 
-        XYChart.Series lineseries1 = new XYChart.Series();
-        XYChart.Series lineseries2 = new XYChart.Series();
-
-        lineseries1.setName(String.valueOf(params.getYear()));
-        lineseries2.setName(String.valueOf(params.getMaxYear()));
-
-        lineYAxis.setLabel("Population");
-            ArrayList factorList =   povertyFactorOneList;
-
-        int x = 0;
-
-        while (x <= factorList.size() -1 ){
-            ResponsePovertyFactor factors = (ResponsePovertyFactor)  factorList.get(x);
-
-            lineseries1.getData().add(new XYChart.Data<String, Integer>("Unemployed", factors.getUnemployed()));
-            lineseries1.getData().add(new XYChart.Data<String, Integer>("Below City Threshold", factors.getBelowMinimun()));
-            lineseries1.getData().add(new XYChart.Data<String, Integer>("No Extra Income", factors.getNoOtherIncome()));
-            lineseries1.getData().add(new XYChart.Data<String, Integer>("Under Employed", factors.getUnderemployed()));
-            lineseries1.getData().add(new XYChart.Data<String, Integer>("Illegal Settlers", factors.getNoShelter()));
-
-            x++;
-        }
-
-        x = 0;
-
-            ArrayList factorList2 =  povertyFactorOneList2;
-
-        while (x <= factorList2.size() -1 ){
-            ResponsePovertyFactor factors = (ResponsePovertyFactor)  factorList2.get(x);
-
-            lineseries2.getData().add(new XYChart.Data<String, Integer>("Unemployed", factors.getUnemployed()));
-            lineseries2.getData().add(new XYChart.Data<String, Integer>("Below City Threshold", factors.getBelowMinimun()));
-            lineseries2.getData().add(new XYChart.Data<String, Integer>("No Extra Income", factors.getNoOtherIncome()));
-            lineseries2.getData().add(new XYChart.Data<String, Integer>("Under Employed", factors.getUnderemployed()));
-            lineseries2.getData().add(new XYChart.Data<String, Integer>("Illegal Settlers", factors.getNoShelter()));
-
-            x++;
-        }
-
-
-        LineChart lineChart = new LineChart(lineXAxis, lineYAxis);
+        LineChart lineChart = chartFactory.createLineChart("Population", "Poverty Factors"," Poverty Factors of " + yr1 + " vs " + yr2 );
         lineChart.getData().addAll(lineseries1, lineseries2);
 
         vBox.getChildren().remove(0, vBox.getChildren().size());
@@ -201,12 +118,42 @@ public class ViewReportColumn extends VBox implements Reports {
         scrollPane.setContent(null);
         scrollPane.setContent(vBox);
 
-
     }
 
-
     @Override
-    public void showCompareSpecificReport() {
+    public void showCompareSpecificReport(ResponseCompareOverview responseCompareOverview, Params params) {
+
+        // ==================== Poverty Barchart  ======================//
+        String yr1 = String.valueOf(params.getYear());
+        String yr2 = String.valueOf(params.getMaxYear());
+
+        String barangayOne = params.getBarangay1();
+        String barangayTwo = params.getBarangay2();
+
+
+        BarChart barChart = chartFactory.createBarChart("Population", "Year", " Poverty Population of " + yr1 + " vs " + yr2  );
+
+        XYChart.Series series1 = seriesFactory.createSeries(barangayOne, yr1, responseCompareOverview.getUnresolvePopulationYearOne());
+        XYChart.Series series2 = seriesFactory.createSeries(barangayTwo, yr2, responseCompareOverview.getUnresolvePopulationYeartwo());
+
+        barChart.getData().addAll(series1, series2);
+
+        barChart.setCategoryGap(300);
+
+        // ==================== Factors  ======================//
+        ArrayList  povertyFactorOneList = responseCompareOverview.getPovertyFactorOneList();
+        ArrayList  povertyFactorOneList2 = responseCompareOverview.getPovertyFactorTwoList();
+
+        XYChart.Series lineseries1 = seriesFactory.createPovertyFactorSeries(barangayOne, povertyFactorOneList);
+        XYChart.Series lineseries2 = seriesFactory.createPovertyFactorSeries(barangayTwo, povertyFactorOneList2);
+
+        LineChart lineChart = chartFactory.createLineChart("Population", "Poverty Factors"," Poverty Factors of " + yr1 + " vs " + yr2 );
+        lineChart.getData().addAll(lineseries1, lineseries2);
+
+        vBox.getChildren().remove(0, vBox.getChildren().size());
+        vBox.getChildren().addAll(barChart, lineChart);
+        scrollPane.setContent(null);
+        scrollPane.setContent(vBox);
 
     }
 

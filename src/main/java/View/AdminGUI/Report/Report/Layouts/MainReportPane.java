@@ -54,8 +54,8 @@ public class MainReportPane extends VBox {
     private MainReportPane(){
         overViewPane = new ReportOverViewPane();
         reportComparePane = new ReportComparePane();
-        reportCompareSpecificPane = new ReportCompareSpecificPane();
         reportSpecificOverviewPane = new ReportSpecificOverviewPane();
+        reportCompareSpecificPane = new ReportCompareSpecificPane();
         reportSpecificPane = new ReportSpecificPane();
 
         InitialPane = getInitialPane();
@@ -226,7 +226,13 @@ public class MainReportPane extends VBox {
             getChildren().add(columnview);
 
         }else if (method == ReportCategoryMethod.COMPARE_SPECIFIC){
-          //  data = controller.getCompareSpecificData(param, type);
+
+            ResponseCompareOverview compareOverview  = controller.getCompareSpecificData(param, type);
+
+            columnview.showCompareSpecificReport(compareOverview, param);
+            getChildren().remove(2);
+            getChildren().add(columnview);
+
             System.out.println("COMPARE_SPECIFIC");
         }else if (method == ReportCategoryMethod.SPECIFIC_OVERVIEW){
            // data = controller.getSpecificOverViewData(param, type);

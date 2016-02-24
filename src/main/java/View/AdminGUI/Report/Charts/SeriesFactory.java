@@ -47,8 +47,6 @@ public class SeriesFactory {
 
             x++;
         }
-
-
         return series;
 
     }

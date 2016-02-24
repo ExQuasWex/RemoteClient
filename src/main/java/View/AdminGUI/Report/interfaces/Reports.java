@@ -13,7 +13,7 @@ public interface Reports {
 
     public void showOverViewReport(ResponseOverviewReport reportObject);
     public void showCompareOverviewReport(ResponseCompareOverview responseCompareOverview, Params params);
-    public void showCompareSpecificReport();
+    public void showCompareSpecificReport(ResponseCompareOverview responseCompareOverview, Params params);
     public void showSpecificOverViewReport();
     public void showSpecificReport();
 

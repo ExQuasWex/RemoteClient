@@ -2,7 +2,7 @@ package View.AdminGUI;
 
 import Controller.Controller;
 import View.AdminGUI.Listeners.AdminSlidePaneListner;
-import View.Screen;
+import View.Components.Screen;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;

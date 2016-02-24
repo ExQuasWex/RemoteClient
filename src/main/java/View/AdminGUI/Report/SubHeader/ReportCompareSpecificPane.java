@@ -54,7 +54,13 @@ public class ReportCompareSpecificPane extends HBox {
         generateReportBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Params params = new Params(2012,1,0,"Dau", null);
+                int initialyear = Integer.parseInt( (String)Year.getSelectionModel().getSelectedItem());
+                int maxyear     = Integer.parseInt( (String)MaxYear.getSelectionModel().getSelectedItem());
+
+                String barangayOne  = (String) barangay1.getSelectionModel().getSelectedItem();
+                String barangayTwo  = (String) barangay2.getSelectionModel().getSelectedItem();
+
+                Params params = new Params(initialyear, maxyear, 0, barangayOne, barangayTwo);
                 reportButtonListener.generateReport(params);
             }
         });

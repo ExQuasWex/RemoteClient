@@ -8,4 +8,5 @@ import java.util.ArrayList;
 public interface ControllerListener {
 
     public void notifyClient(ArrayList familyList);
+
 }
