@@ -9,9 +9,15 @@ import ClientModel.Database;
 import Remote.Method.FamilyModel.Family;
 import View.AdminGUI.Listeners.TableItemListener;
 import View.ClientWindow.ClientWindow;
+import View.Components.LoadBar;
+import clientModel.ClientEntries;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
+import com.sun.deploy.util.SessionState;
 import global.SecretDetails;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import utility.Utility;
 
@@ -32,6 +38,8 @@ public class Controller implements TableItemListener {
     private ControllerListener controllerListener;
     public static  boolean isNotified = false;
     private static Controller controller = new Controller();
+
+    public static ArrayList clientEntryList = new ArrayList();
 
     private Controller()  {
 
@@ -129,18 +137,37 @@ public class Controller implements TableItemListener {
         controllerListener.notifyClient(familyList);
     }
 
+    public void getClientEntries(){
+        clientDB.getClientEntries(staffInfo.getAccountID());
+    }
+    public void setEntrySize(int size){
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                LoadBar.createProgressbar(size);
+            }
+        });
+    }
 
+    public void addClientEntry(ClientEntries clientEntries){
+        clientEntryList.add(clientEntries);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                LoadBar.updateValue();
+            }
+        });
+    }
 
-
+    public ArrayList getClientEntryList(){
+        return clientEntryList;
+    }
 
 
     // ------------------------ ADMIN METHODS ----------------------//
 
     public ArrayList getBarangayData(){
         ArrayList list = adminDB.getBarangayData();
-            if (list.isEmpty()){
-                System.out.println("Barangay list is empty detected fromm Contoller ");
-            }
         return adminDB.getBarangayData();
     }
 

@@ -445,7 +445,7 @@ public class FamilyForm extends GridPane{
                 if (item == null){
 
                 }
-                if (item.equals("Employed") || item.equals("Self-Employed")){
+                 else if (item.equals("Employed") || item.equals("Self-Employed")){
                     underEmployedCBox.setDisable(false);
                 }else {
                     underEmployedCBox.getSelectionModel().clearSelection();

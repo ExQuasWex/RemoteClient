@@ -8,6 +8,8 @@ import View.Login.CustomStage;
 import View.Login.LoginWindow;
 import clientModel.StaffInfo;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.*;
@@ -41,6 +43,7 @@ public class ClientWindow extends CustomStage{
     private  Controller controller = Controller.getInstance();
     private  Button updateButton;
     private  EditForm editForm  = new EditForm();
+    private  FamilyEntry familyEntry = new FamilyEntry();
 
     private  StaffInfo staffInfo;
 
@@ -72,11 +75,11 @@ public class ClientWindow extends CustomStage{
         centerOnScreen();
 
             controller.addControllerListener(new ControllerListener() {
-            @Override
-            public void notifyClient(ArrayList familyList) {
-                    NotifyClient(familyList);
-            }
-        });
+                @Override
+                public void notifyClient(ArrayList familyList) {
+                        NotifyClient(familyList);
+                }
+            });
 
     }
 
@@ -102,6 +105,11 @@ public class ClientWindow extends CustomStage{
             @Override
             public void showEditForm() {
                 ShowEditForm();
+            }
+
+            @Override
+            public void showFamilyEntry() {
+                ShowFamilyEntry();
             }
 
             @Override
@@ -135,6 +143,7 @@ public class ClientWindow extends CustomStage{
                 addFamily(family);
             }
         });
+
 
         // ---------------- EditForm Implementation ------------//
                 editForm.addEditableListener(new EditableListener() {
@@ -180,8 +189,6 @@ public class ClientWindow extends CustomStage{
     }
     private void setMainComponents(){
 
-
-
         //---------------- TOP Pane ------------//
 
         //---------------- Right Pane -----------//
@@ -212,6 +219,17 @@ public class ClientWindow extends CustomStage{
         root.setCenter(null);
         editForm.setEditFamily(family);
         root.setCenter(editForm);
+    }
+
+    private void ShowFamilyEntry(){
+        root.setCenter(null);
+        controller.getClientEntries();
+        ArrayList data = controller.getClientEntryList();
+
+        ObservableList observableList = FXCollections.observableArrayList(data);
+        familyEntry.setData(observableList);
+        root.setCenter(familyEntry);
+
     }
 
     private void search(String Searchedname){
