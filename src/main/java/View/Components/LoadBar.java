@@ -9,6 +9,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import utility.Logger;
 
 /**
  * Created by Didoy on 2/24/2016.
@@ -23,13 +24,15 @@ public class LoadBar {
     private static double SIZE = 0.0;
 
 
-    public static void createProgressbar(int size){
-         percent = (100)/size;
+    public static void createProgressbar(double size){
+         percent = 1/size;
          SIZE = size;
          valueProperty.set(0);
          pb.setPrefWidth(300);
+         pb.progressProperty().bind(valueProperty);
 
-         HBox hBox = new HBox(5);
+
+        HBox hBox = new HBox(5);
          hBox.setPadding(new Insets(10));
          hBox.setAlignment(Pos.CENTER);
          hBox.getChildren().addAll(pb, text);
@@ -43,10 +46,10 @@ public class LoadBar {
 
     public static void updateValue() {
         valueProperty.set(valueProperty.get() + percent);
-        pb.progressProperty().bind(valueProperty);
-        text.setText(String.valueOf(pb.getProgress()));
+        double x = pb.getProgress() * 100;
 
-        if (pb.getProgress() == SIZE){
+        text.setText(String.valueOf(x));
+        if (x == 100){
             stage.close();
             Controller.clientEntryList.clear();
         }
