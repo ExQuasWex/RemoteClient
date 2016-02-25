@@ -90,7 +90,7 @@ public class ViewReportColumn extends VBox implements Reports {
     @Override
     public void showCompareOverviewReport(ResponseCompareOverview responseCompareOverview, Params params) {
 
-        // ==================== Poverty  ======================//
+        // ==================== Poverty Poppulation ======================//
         String yr1 = String.valueOf(params.getYear());
         String yr2 = String.valueOf(params.getMaxYear());
 
@@ -99,8 +99,9 @@ public class ViewReportColumn extends VBox implements Reports {
         XYChart.Series series1 = seriesFactory.createSeries(yr1, yr1, responseCompareOverview.getUnresolvePopulationYearOne());
         XYChart.Series series2 = seriesFactory.createSeries(yr2, yr2, responseCompareOverview.getUnresolvePopulationYeartwo());
 
-
         barChart.getData().addAll(series1, series2);
+
+        barChart.setPrefHeight(600);
         barChart.setCategoryGap(300);
 
         // ==================== Factors  ======================//
@@ -110,7 +111,7 @@ public class ViewReportColumn extends VBox implements Reports {
         XYChart.Series lineseries1 = seriesFactory.createPovertyFactorSeries(yr1, povertyFactorOneList);
         XYChart.Series lineseries2 = seriesFactory.createPovertyFactorSeries(yr2, povertyFactorOneList2);
 
-        LineChart lineChart = chartFactory.createLineChart("Population", "Poverty Factors"," Poverty Factors of " + yr1 + " vs " + yr2 );
+        LineChart lineChart = chartFactory.createLineChart("Factors", " Population"," Poverty Factors of " + yr1 + " vs " + yr2 );
         lineChart.getData().addAll(lineseries1, lineseries2);
 
         vBox.getChildren().remove(0, vBox.getChildren().size());
@@ -137,6 +138,7 @@ public class ViewReportColumn extends VBox implements Reports {
         XYChart.Series series2 = seriesFactory.createSeries(barangayTwo, yr2, responseCompareOverview.getUnresolvePopulationYeartwo());
 
         barChart.getData().addAll(series1, series2);
+
 
         barChart.setCategoryGap(300);
 

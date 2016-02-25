@@ -5,8 +5,14 @@ import AdminModel.Report.Children.Model.ResponsePovertyRate;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
+import javafx.geometry.Bounds;
+import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.text.Text;
+import utility.Logger;
 
 import java.util.ArrayList;
 
@@ -15,13 +21,27 @@ import java.util.ArrayList;
  */
 public class SeriesFactory {
 
+    int x = 0;
 
     public XYChart.Series createSeries(String seriesName, String xValue, int yValue  ){
 
+
+
         XYChart.Series series = new XYChart.Series();
+
         series.setName(seriesName);
 
-        series.getData().add(new XYChart.Data<String, Number>(xValue, yValue));
+        XYChart.Data data =  new XYChart.Data<String, Number>(xValue, yValue);
+
+        data.nodeProperty().addListener(new ChangeListener<Node>() {
+            @Override public void changed(ObservableValue<? extends Node> ov, Node oldNode, final Node node) {
+                if (node != null) {
+                    displayLabelForData(data);
+                }
+            }
+        });
+
+        series.getData().add(data);
 
         return series;
 
@@ -34,19 +54,59 @@ public class SeriesFactory {
         XYChart.Series series = new XYChart.Series();
         series.setName(seriesName);
 
-        int x = 0;
 
         while (x <= factorList.size() -1 ){
+
             ResponsePovertyFactor factors = (ResponsePovertyFactor)  factorList.get(x);
 
-            series.getData().add(new XYChart.Data<String, Integer>("Unemployed", factors.getUnemployed()));
-            series.getData().add(new XYChart.Data<String, Integer>("Below City Threshold", factors.getBelowMinimun()));
-            series.getData().add(new XYChart.Data<String, Integer>("No Extra Income", factors.getNoOtherIncome()));
-            series.getData().add(new XYChart.Data<String, Integer>("Under Employed", factors.getUnderemployed()));
-            series.getData().add(new XYChart.Data<String, Integer>("Illegal Settlers", factors.getNoShelter()));
+            XYChart.Data data1  =  new XYChart.Data("Unemployed", factors.getUnemployed());
+            XYChart.Data data2 =  new XYChart.Data("UnderEmployed", factors.getUnderemployed());
+            XYChart.Data data3 =  new XYChart.Data("No other Income", factors.getNoOtherIncome());
+            XYChart.Data data4 =  new XYChart.Data("Below City Threshold", factors.getBelowMinimun());
+            XYChart.Data data5  =  new XYChart.Data("Illegal Settlers ", factors.getNoShelter());
+
+
+            data1.nodeProperty().addListener(new ChangeListener<Node>() {
+                @Override public void changed(ObservableValue<? extends Node> ov, Node oldNode, final Node node) {
+                    if (node != null) {
+                        displayLabelForData(data1);
+                    }
+                }
+            });
+            data2.nodeProperty().addListener(new ChangeListener<Node>() {
+                @Override public void changed(ObservableValue<? extends Node> ov, Node oldNode, final Node node) {
+                    if (node != null) {
+                        displayLabelForData(data2);
+                    }
+                }
+            });
+            data3.nodeProperty().addListener(new ChangeListener<Node>() {
+                @Override public void changed(ObservableValue<? extends Node> ov, Node oldNode, final Node node) {
+                    if (node != null) {
+                        displayLabelForData(data3);
+                    }
+                }
+            });
+            data4.nodeProperty().addListener(new ChangeListener<Node>() {
+                @Override public void changed(ObservableValue<? extends Node> ov, Node oldNode, final Node node) {
+                    if (node != null) {
+                        displayLabelForData(data4);
+                    }
+                }
+            });
+            data5.nodeProperty().addListener(new ChangeListener<Node>() {
+                @Override public void changed(ObservableValue<? extends Node> ov, Node oldNode, final Node node) {
+                    if (node != null) {
+                        displayLabelForData(data5);
+                    }
+                }
+            });
+
+            series.getData().addAll(data1, data2, data3, data4, data5);
 
             x++;
         }
+        x = 0;
         return series;
 
     }
@@ -61,14 +121,55 @@ public class SeriesFactory {
         ArrayList povertyList =   povertyFactorList;
 
         while (x <= povertyList.size() - 1){
-
             ResponsePovertyRate povertyRate = (ResponsePovertyRate) povertyList.get(x);
-            series.getData().add(new XYChart.Data(povertyRate.getBarangayName(), povertyRate.getUnresolvePopulation()));
+
+            final  XYChart.Data data =  new XYChart.Data(povertyRate.getBarangayName(), povertyRate.getUnresolvePopulation());
+
+            data.nodeProperty().addListener(new ChangeListener<Node>() {
+                @Override public void changed(ObservableValue<? extends Node> ov, Node oldNode, final Node node) {
+                    if (node != null) {
+                        displayLabelForData(data);
+                    }
+                }
+            });
+
+
+            series.getData().add(data);
+
             x++;
         }
 
+
+
         return series;
 
+    }
+
+    private void displayLabelForData(XYChart.Data<String, Number> data) {
+        final Node node = data.getNode();
+        final Text dataText = new Text(data.getYValue() + "");
+
+        node.parentProperty().addListener(new ChangeListener<Parent>() {
+            @Override public void changed(ObservableValue<? extends Parent> ov, Parent oldParent, Parent parent) {
+                Group parentGroup = (Group) parent;
+                parentGroup.getChildren().add(dataText);
+            }
+        });
+
+        node.boundsInParentProperty().addListener(new ChangeListener<Bounds>() {
+            @Override public void changed(ObservableValue<? extends Bounds> ov, Bounds oldBounds, Bounds bounds) {
+                dataText.setLayoutX(
+                        Math.round(
+                                bounds.getMinX() + bounds.getWidth() / 2 - dataText.prefWidth(-1) / 2
+                        )
+                );
+                dataText.setLayoutY(
+                        Math.round(
+                                bounds.getMinY() - dataText.prefHeight(-1) * 0.5
+                        )
+                );
+            }
+        });
     }
 
 }

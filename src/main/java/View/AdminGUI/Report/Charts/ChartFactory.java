@@ -26,7 +26,6 @@ public class ChartFactory {
         barChart.setAnimated(true);
 
 
-
         return barChart;
     }
     public LineChart createLineChart(String xTitle, String yLabel, String Title){
