@@ -455,7 +455,6 @@ public class FamilyForm extends GridPane{
         });
 
 
-
         ///////// return to normal node if this nodes are disable underEmployedCBox
 
         underEmployedCBox.disabledProperty().addListener(new ChangeListener<Boolean>() {

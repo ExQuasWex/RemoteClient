@@ -141,9 +141,8 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
             e.printStackTrace();
         }
     }
-
+    
     // CLIENT BASIC METHODS
-
 
     @Override
     public boolean register(StaffRegister staffRegister){
