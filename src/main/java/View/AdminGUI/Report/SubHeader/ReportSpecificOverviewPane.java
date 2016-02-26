@@ -1,6 +1,7 @@
 package View.AdminGUI.Report.SubHeader;
 
 import AdminModel.Params;
+import Controller.Controller;
 import View.AdminGUI.Report.interfaces.ReportButtonListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,6 +12,9 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
+
+import java.util.ArrayList;
+
 /**
  * Created by Didoy on 1/13/2016.
  */
@@ -50,8 +54,11 @@ public class ReportSpecificOverviewPane extends  HBox{
         View.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Params params = new Params(2012,1,0,"Dau", null);
-                System.out.println("Overview is called");
+
+                int initialyear = Integer.parseInt( (String)YearCB.getSelectionModel().getSelectedItem());
+                String barangayOne  = (String) BarangayCB.getSelectionModel().getSelectedItem();
+
+                Params params = new Params(initialyear, 0, 0, barangayOne, "");
                 reportButtonListener.generateReport(params);
             }
         });
@@ -94,10 +101,8 @@ public class ReportSpecificOverviewPane extends  HBox{
         private ObservableList getYears(){
 
             // fetch years here
-            ObservableList<String> initialYearLis = FXCollections.observableArrayList();
-            initialYearLis.add("2011");
-            initialYearLis.add("2013");
-            initialYearLis.add("All Years");
+            ArrayList list =  Controller.getInstance().getYears();
+            ObservableList<String> initialYearLis = FXCollections.observableArrayList(list);
 
             return initialYearLis;
         }

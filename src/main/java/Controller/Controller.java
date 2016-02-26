@@ -3,6 +3,7 @@ package Controller;
 import AdminModel.AdminInterfaceImp;
 import AdminModel.Params;
 import AdminModel.Report.Children.Model.ResponseCompareOverview;
+import AdminModel.Report.Children.Model.ResponseSpecificOverView;
 import AdminModel.Report.Parent.Model.ResponseOverviewReport;
 import AdminModel.RequestAccounts;
 import ClientModel.Database;
@@ -227,7 +228,7 @@ public class Controller implements TableItemListener {
         return adminDB.getCompareSpecificData( params,  type);
     }
 
-    public ArrayList getSpecificOverViewData(Params params, String type){
+    public ResponseSpecificOverView getSpecificOverViewData(Params params, String type){
 
         return adminDB.getSpecificOverViewData( params,  type);
     }

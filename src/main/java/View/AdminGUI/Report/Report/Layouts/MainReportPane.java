@@ -2,6 +2,7 @@ package View.AdminGUI.Report.Report.Layouts;
 
 import AdminModel.Params;
 import AdminModel.Report.Children.Model.ResponseCompareOverview;
+import AdminModel.Report.Children.Model.ResponseSpecificOverView;
 import AdminModel.Report.Parent.Model.ResponseOverviewReport;
 import Controller.Controller;
 import View.AdminGUI.Report.Enums.ReportCategoryMethod;
@@ -24,6 +25,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import utility.Logger;
 
 import java.util.ArrayList;
 
@@ -94,6 +96,7 @@ public class MainReportPane extends VBox {
                     public void generateReport(Params params) {
                         ReportCategoryMethod method = (ReportCategoryMethod) category.getSelectionModel().getSelectedItem();
                         String type = (String) Type.getSelectionModel().getSelectedItem();
+
                         initializeReport(method, type, params);
 
                     }
@@ -196,7 +199,6 @@ public class MainReportPane extends VBox {
             }
         });
 
-
     }
 
     private ObservableList getTypes(){
@@ -233,10 +235,16 @@ public class MainReportPane extends VBox {
             getChildren().remove(2);
             getChildren().add(columnview);
 
-            System.out.println("COMPARE_SPECIFIC");
         }else if (method == ReportCategoryMethod.SPECIFIC_OVERVIEW){
-           // data = controller.getSpecificOverViewData(param, type);
+            String barangayname = param.getBarangay1();
+            ResponseSpecificOverView responseSpecificOverView = controller.getSpecificOverViewData(param, type);
+
+            columnview.showSpecificOverViewReport(responseSpecificOverView, barangayname);
+            getChildren().remove(2);
+            getChildren().add(columnview);
+
             System.out.println("SPECIFIC_OVERVIEW");
+
         }else if (method == ReportCategoryMethod.SPECIFIC){
            // data = controller.getSpecific(param, type);
             System.out.println("SPECIFIC");

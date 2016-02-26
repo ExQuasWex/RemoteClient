@@ -4,6 +4,7 @@ import AdminModel.Params;
 import AdminModel.Report.Children.Model.ResponseCompareOverview;
 import AdminModel.Report.Children.Model.ResponsePovertyFactor;
 import AdminModel.Report.Children.Model.ResponsePovertyRate;
+import AdminModel.Report.Children.Model.ResponseSpecificOverView;
 import AdminModel.Report.Parent.Model.ResponseOverviewReport;
 import View.AdminGUI.Report.Charts.ChartFactory;
 import View.AdminGUI.Report.Charts.ColorRandom;
@@ -19,6 +20,7 @@ import javafx.scene.chart.*;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import utility.Logger;
 import utility.Utility;
 
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ public class ViewReportColumn extends VBox implements Reports {
 
     private ChartFactory chartFactory = new ChartFactory();
     private SeriesFactory seriesFactory = new SeriesFactory();
+
     public ViewReportColumn() {
         setAlignment(Pos.CENTER);
         setPadding(new Insets(20, 30 ,10 , 0));
@@ -67,20 +70,15 @@ public class ViewReportColumn extends VBox implements Reports {
 
         //-------------------- Barchart configuration -------------------//
         final BarChart<String,Number> bc = chartFactory.createBarChart("Population", "Factors", "Poverty Factor of the year 2016" );
-        XYChart.Series series1 = seriesFactory.createPovertyFactorSeries("Poverty Factors", factorList);
+        XYChart.Series series1 = seriesFactory.createPovertyFactorSeriesByList("Poverty Factors", factorList);
 
         bc.getData().addAll(series1);
 
-        for (int i = 0; i < bc.getData().size(); i++) {
-            for (Node node : bc.lookupAll(".series" + i)) {
-                String color = ColorRandom.RandomColor();
-                node.setStyle(String.valueOf(color));
-            }
-        }
+        chartFactory.addDiffrentColor(bc);
 
         bc.setCategoryGap(100);
 
-        vBox.getChildren().remove(0, vBox.getChildren().size());
+        RemoveAllChildren();
         vBox.getChildren().addAll(lineScrollPane, bc);
         scrollPane.setContent(null);
         scrollPane.setContent(vBox);
@@ -101,6 +99,8 @@ public class ViewReportColumn extends VBox implements Reports {
 
         barChart.getData().addAll(series1, series2);
 
+        chartFactory.addDiffrentColor(barChart);
+
         barChart.setPrefHeight(600);
         barChart.setCategoryGap(300);
 
@@ -108,13 +108,13 @@ public class ViewReportColumn extends VBox implements Reports {
         ArrayList  povertyFactorOneList = responseCompareOverview.getPovertyFactorOneList();
         ArrayList  povertyFactorOneList2 = responseCompareOverview.getPovertyFactorTwoList();
 
-        XYChart.Series lineseries1 = seriesFactory.createPovertyFactorSeries(yr1, povertyFactorOneList);
-        XYChart.Series lineseries2 = seriesFactory.createPovertyFactorSeries(yr2, povertyFactorOneList2);
+        XYChart.Series lineseries1 = seriesFactory.createPovertyFactorSeriesByList(yr1, povertyFactorOneList);
+        XYChart.Series lineseries2 = seriesFactory.createPovertyFactorSeriesByList(yr2, povertyFactorOneList2);
 
         LineChart lineChart = chartFactory.createLineChart("Factors", " Population"," Poverty Factors of " + yr1 + " vs " + yr2 );
         lineChart.getData().addAll(lineseries1, lineseries2);
 
-        vBox.getChildren().remove(0, vBox.getChildren().size());
+        RemoveAllChildren();
         vBox.getChildren().addAll(barChart, lineChart);
         scrollPane.setContent(null);
         scrollPane.setContent(vBox);
@@ -139,6 +139,7 @@ public class ViewReportColumn extends VBox implements Reports {
 
         barChart.getData().addAll(series1, series2);
 
+        chartFactory.addDiffrentColor(barChart);
 
         barChart.setCategoryGap(300);
 
@@ -146,13 +147,13 @@ public class ViewReportColumn extends VBox implements Reports {
         ArrayList  povertyFactorOneList = responseCompareOverview.getPovertyFactorOneList();
         ArrayList  povertyFactorOneList2 = responseCompareOverview.getPovertyFactorTwoList();
 
-        XYChart.Series lineseries1 = seriesFactory.createPovertyFactorSeries(barangayOne, povertyFactorOneList);
-        XYChart.Series lineseries2 = seriesFactory.createPovertyFactorSeries(barangayTwo, povertyFactorOneList2);
+        XYChart.Series lineseries1 = seriesFactory.createPovertyFactorSeriesByList(barangayOne, povertyFactorOneList);
+        XYChart.Series lineseries2 = seriesFactory.createPovertyFactorSeriesByList(barangayTwo, povertyFactorOneList2);
 
         LineChart lineChart = chartFactory.createLineChart("Population", "Poverty Factors"," Poverty Factors of " + yr1 + " vs " + yr2 );
         lineChart.getData().addAll(lineseries1, lineseries2);
 
-        vBox.getChildren().remove(0, vBox.getChildren().size());
+        RemoveAllChildren();
         vBox.getChildren().addAll(barChart, lineChart);
         scrollPane.setContent(null);
         scrollPane.setContent(vBox);
@@ -160,7 +161,40 @@ public class ViewReportColumn extends VBox implements Reports {
     }
 
     @Override
-    public void showSpecificOverViewReport() {
+    public void showSpecificOverViewReport(ResponseSpecificOverView responseSpecificOverView, String barangayName) {
+
+        ArrayList povertyPopulation = responseSpecificOverView.getMonthLyPopulationList();
+        ArrayList povertyFactorList = responseSpecificOverView.getMonthLyPovertyFactorList();
+
+        RemoveAllChildren();
+
+        // --- poverty populations ---- //
+        LineChart lineChart = chartFactory.createLineChart("Month", "Population", "Monthly Poverty Rate of " + barangayName );
+        XYChart.Series series = seriesFactory.createPovertySeriesSpecificOverView("Monthly Poverty Population", povertyPopulation);
+
+        lineChart.getData().add(series);
+
+        vBox.getChildren().addAll(lineChart);
+
+        // POVERTY FACTORS //
+        int x = 0;
+        while ( x <= povertyFactorList.size() -1 ){
+            ResponsePovertyFactor povertyFactor = (ResponsePovertyFactor) povertyFactorList.get(x);
+
+            BarChart barChart = chartFactory.createBarChart("Population", "Factors", povertyFactor.getMonth() + " Poverty Factors");
+            XYChart.Series factorSeries = seriesFactory.createPovertyFactorSeriesByData("", povertyFactor);
+
+            barChart.getData().add(factorSeries);
+
+            chartFactory.addDiffrentColor(barChart);
+
+            vBox.getChildren().addAll(barChart);
+
+            x++;
+        }
+
+        scrollPane.setContent(null);
+        scrollPane.setContent(vBox);
 
     }
 
@@ -168,4 +202,10 @@ public class ViewReportColumn extends VBox implements Reports {
     public void showSpecificReport() {
 
     }
+
+    private void RemoveAllChildren(){
+        vBox.getChildren().remove(0, vBox.getChildren().size());
+    }
+
+
 }

@@ -2,6 +2,7 @@ package AdminModel;
 
 
 import AdminModel.Report.Children.Model.ResponseCompareOverview;
+import AdminModel.Report.Children.Model.ResponseSpecificOverView;
 import AdminModel.Report.Parent.Model.ResponseOverviewReport;
 import RMI.AdminInterface;
 import RMI.Constant;
@@ -107,8 +108,6 @@ public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInter
     public ResponseCompareOverview getCompareSpecificData(Params params, String type){
         ResponseCompareOverview  responseCompareOverview = null;
 
-        ArrayList list = new ArrayList();
-
         try {
             responseCompareOverview =  server.getCompareSpecificData(params, type);
         } catch (RemoteException e) {
@@ -117,16 +116,17 @@ public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInter
         return  responseCompareOverview;
     }
     @Override
-    public ArrayList getSpecificOverViewData(Params params, String type){
-        ArrayList list = new ArrayList();
+    public ResponseSpecificOverView getSpecificOverViewData(Params params, String type){
+        ResponseSpecificOverView responseSpecificOverView = null;
 
         try {
-            list =  server.getSpecificOverViewData(params, type);
+            responseSpecificOverView =  server.getSpecificOverViewData(params, type);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        return  list;
+        return  responseSpecificOverView;
     }
+
     @Override
     public ArrayList getSpecific(Params params, String type){
         ArrayList list = new ArrayList();

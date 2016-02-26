@@ -253,7 +253,6 @@ public class ClientWindow extends CustomStage{
 
     }
 
-
     private void connect(){
 
                 Thread thread = new Thread(new Runnable() {

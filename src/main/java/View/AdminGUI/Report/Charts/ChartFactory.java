@@ -1,5 +1,6 @@
 package View.AdminGUI.Report.Charts;
 
+import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
@@ -38,5 +39,15 @@ public class ChartFactory {
         LineChart lineChart = new LineChart(lineXAxis, lineYAxis);
 
         return lineChart;
+    }
+
+    public void addDiffrentColor(BarChart bc){
+        for (int i = 0; i < bc.getData().size(); i++) {
+            for (Node node : bc.lookupAll(".series" + i)) {
+                String color = ColorRandom.RandomColor();
+                node.setStyle(String.valueOf(color));
+            }
+        }
+
     }
 }
