@@ -1,9 +1,11 @@
 package View.AdminGUI.Report.interfaces;
 
 import AdminModel.Params;
-import AdminModel.Report.Children.Model.ResponseCompareOverview;
-import AdminModel.Report.Children.Model.ResponseSpecificOverView;
+
+import AdminModel.Report.Parent.Children.Model.ResponseCompareOverview;
 import AdminModel.Report.Parent.Model.ResponseOverviewReport;
+import AdminModel.Report.Parent.Model.ResponseSpecific;
+import AdminModel.Report.Parent.Model.ResponseSpecificOverView;
 
 import java.util.ArrayList;
 
@@ -16,6 +18,6 @@ public interface Reports {
     public void showCompareOverviewReport(ResponseCompareOverview responseCompareOverview, Params params);
     public void showCompareSpecificReport(ResponseCompareOverview responseCompareOverview, Params params);
     public void showSpecificOverViewReport(ResponseSpecificOverView responseSpecificOverView, String barangayname);
-    public void showSpecificReport();
+    public void showSpecificReport(ResponseSpecific responseSpecific, Params params);
 
 }

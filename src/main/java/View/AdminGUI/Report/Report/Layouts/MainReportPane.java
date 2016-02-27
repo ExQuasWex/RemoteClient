@@ -1,9 +1,10 @@
 package View.AdminGUI.Report.Report.Layouts;
 
 import AdminModel.Params;
-import AdminModel.Report.Children.Model.ResponseCompareOverview;
-import AdminModel.Report.Children.Model.ResponseSpecificOverView;
+import AdminModel.Report.Parent.Children.Model.ResponseCompareOverview;
 import AdminModel.Report.Parent.Model.ResponseOverviewReport;
+import AdminModel.Report.Parent.Model.ResponseSpecific;
+import AdminModel.Report.Parent.Model.ResponseSpecificOverView;
 import Controller.Controller;
 import View.AdminGUI.Report.Enums.ReportCategoryMethod;
 import View.AdminGUI.Report.SubHeader.*;
@@ -243,10 +244,15 @@ public class MainReportPane extends VBox {
             getChildren().remove(2);
             getChildren().add(columnview);
 
-            System.out.println("SPECIFIC_OVERVIEW");
 
         }else if (method == ReportCategoryMethod.SPECIFIC){
-           // data = controller.getSpecific(param, type);
+            ResponseSpecific responseSpecific = controller.getSpecific(param, type);
+
+            columnview.showSpecificReport(responseSpecific, param);
+
+            getChildren().remove(2);
+            getChildren().add(columnview);
+
             System.out.println("SPECIFIC");
 
         }

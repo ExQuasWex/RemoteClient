@@ -246,7 +246,6 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
                     reg = LocateRegistry.getRegistry(System.setProperty("java.rmi.server.hostname",ipAddress), Constant.Remote_port, csf);
                     //Registry reg = LocateRegistry.getRegistry("localhost",Constant.Remote_port);
                     server = (RemoteMethods) reg.lookup(Constant.Remote_ID);
-
                     bol = server.checkDatabase();
 
                 } catch (RemoteException e) {
@@ -263,8 +262,6 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
         });
 
         thread.start();
-
-
 
         return bol;
     }

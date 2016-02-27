@@ -2,9 +2,10 @@ package Controller;
 
 import AdminModel.AdminInterfaceImp;
 import AdminModel.Params;
-import AdminModel.Report.Children.Model.ResponseCompareOverview;
-import AdminModel.Report.Children.Model.ResponseSpecificOverView;
+import AdminModel.Report.Parent.Children.Model.ResponseCompareOverview;
 import AdminModel.Report.Parent.Model.ResponseOverviewReport;
+import AdminModel.Report.Parent.Model.ResponseSpecific;
+import AdminModel.Report.Parent.Model.ResponseSpecificOverView;
 import AdminModel.RequestAccounts;
 import ClientModel.Database;
 import Remote.Method.FamilyModel.Family;
@@ -233,7 +234,7 @@ public class Controller implements TableItemListener {
         return adminDB.getSpecificOverViewData( params,  type);
     }
 
-    public ArrayList getSpecific(Params params, String type){
+    public ResponseSpecific getSpecific(Params params, String type){
 
         return adminDB.getSpecific(params, type);
     }

@@ -1,5 +1,6 @@
 package View.AdminGUI.Report.Charts;
 
+import View.Components.Screen;
 import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
@@ -50,4 +51,33 @@ public class ChartFactory {
         }
 
     }
+
+    public int getFlexibleGap(int size){
+        Double screenWidth = Screen.screen.getWidth()/2;
+        int baseWidth = screenWidth.intValue();
+        int gap = baseWidth/size;
+
+        return gap;
+    }
+
+    public double getFlexibleHeight(){
+
+        double ScrHeight = Screen.screen.getHeight();
+        double height = ((75*ScrHeight) / 100);
+
+        return height;
+    }
+
+    // 7 percent for 5 bar in barchart and 50 percent for 1 or 2 bar in barchart
+    public void setBarChartSizeFlexible(BarChart barChart, int percent ){
+        Double screen = Screen.screen.getWidth();
+        int baseWidth = screen.intValue();
+        int gap = baseWidth*percent / 100;
+
+        barChart.setPrefHeight(getFlexibleHeight());
+        barChart.setCategoryGap(gap);
+
+    }
+
+
 }

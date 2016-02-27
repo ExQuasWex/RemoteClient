@@ -3,7 +3,6 @@ package View.AdminGUI.Report.Charts;
 import AdminModel.Report.Children.Model.ResponseMonthlyPovertyRate;
 import AdminModel.Report.Children.Model.ResponsePovertyFactor;
 import AdminModel.Report.Children.Model.ResponsePovertyRate;
-import AdminModel.Report.Children.Model.ResponseSpecificOverView;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;

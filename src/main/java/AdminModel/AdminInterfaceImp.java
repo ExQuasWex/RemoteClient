@@ -1,9 +1,10 @@
 package AdminModel;
 
 
-import AdminModel.Report.Children.Model.ResponseCompareOverview;
-import AdminModel.Report.Children.Model.ResponseSpecificOverView;
+import AdminModel.Report.Parent.Children.Model.ResponseCompareOverview;
 import AdminModel.Report.Parent.Model.ResponseOverviewReport;
+import AdminModel.Report.Parent.Model.ResponseSpecific;
+import AdminModel.Report.Parent.Model.ResponseSpecificOverView;
 import RMI.AdminInterface;
 import RMI.Constant;
 import utility.TimedRMIclientSocketFactory;
@@ -128,15 +129,14 @@ public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInter
     }
 
     @Override
-    public ArrayList getSpecific(Params params, String type){
-        ArrayList list = new ArrayList();
-
+    public ResponseSpecific getSpecific(Params params, String type){
+        ResponseSpecific responseSpecific = null;
         try {
-            list =  server.getSpecific(params, type);
+            responseSpecific =  server.getSpecific(params, type);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        return  list;
+        return  responseSpecific;
     }
 
     @Override
