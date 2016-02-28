@@ -1,5 +1,6 @@
 package View.AdminGUI.Work;
 
+import PriorityModels.PriorityType;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -33,13 +34,19 @@ public class TableActionCell extends TableCell {
 
     }
 
-
     //Display button if the row is not empty
 
     @Override
     protected void updateItem(Object item, boolean empty) {
         super.updateItem(item, empty);
         if(!empty){
+            if (item == PriorityType.JOB){
+                resolutionBox.getSelectionModel().select("Job Opportunity");
+            }else if (item == PriorityType.HOME){
+                resolutionBox.getSelectionModel().select("Home");
+            }else if (item == PriorityType.FREE){
+                resolutionBox.getSelectionModel().clearSelection();
+            }
             setGraphic(resolutionBox);
         } else {
             setGraphic(null);

@@ -1,6 +1,7 @@
 package View.ClientWindow;
 
 import Controller.Controller;
+import ListModels.ChildrenSchoolCategory;
 import Remote.Method.FamilyModel.Family;
 import Remote.Method.FamilyModel.FamilyInfo;
 import Remote.Method.FamilyModel.FamilyPoverty;
@@ -281,7 +282,7 @@ public class FamilyForm extends GridPane{
         agefield.setPromptText("35");
         addressF.setPromptText("e.g 12345 Manga st. Mabalacat");
         yrResidency.setPromptText("e.g 2012");
-        numofChildrenF.setPromptText("e.g 4");
+        numofChildrenF.setPromptText("Number of children");
 
         SpouseName.setDisable(true);
 
@@ -368,16 +369,14 @@ public class FamilyForm extends GridPane{
                         int children = Integer.parseInt(numofChildrenF.getText());
                         if (children > 1 ){
                             numofChildrenF.setText(String.valueOf(children));
-                            if (childrenSchlCBox.getItems().contains("Some")){
-
-                            }else {
-                                childrenSchlCBox.getItems().add("Some");
+                            if (!childrenSchlCBox.getItems().contains(ChildrenSchoolCategory.SOME)){
+                                childrenSchlCBox.getItems().add(ChildrenSchoolCategory.SOME);
                             }
                             childrenSchlCBox.setDisable(false);
                         }else if (children == 1){
                             numofChildrenF.setText(String.valueOf(children));
                             childrenSchlCBox.setDisable(false);
-                            childrenSchlCBox.getItems().remove("Some");
+                            childrenSchlCBox.getItems().remove(ChildrenSchoolCategory.SOME);
                         }
                         else {
                             numofChildrenF.setText("0");
@@ -537,19 +536,16 @@ public class FamilyForm extends GridPane{
             String gender =  genderCB.getSelectionModel().getSelectedItem().toString();
             String address =  addressF.getText();
 
-
             //poverty factors
             String hasOtherIncome = otherIncomeCbox.getSelectionModel().getSelectedItem().toString();
             String isBelow8k = below8kCbox.getSelectionModel().getSelectedItem().toString();
             String ownership = ownershipCbox.getSelectionModel().getSelectedItem().toString();
             String occupancy = occupancyCBox.getSelectionModel().getSelectedItem().toString();
             String isunderEmployed = "";
-            String childrenScl;
+            ChildrenSchoolCategory childrenScl = null;
 
-                    if (childrenSchlCBox.getSelectionModel().isEmpty()){
-                        childrenScl = "";
-                    }else {
-                        childrenScl = childrenSchlCBox.getSelectionModel().getSelectedItem().toString();
+                    if (!childrenSchlCBox.getSelectionModel().isEmpty()){
+                        childrenScl = (ChildrenSchoolCategory) childrenSchlCBox.getSelectionModel().getSelectedItem();
                     }
 
                     if (underEmployedCBox.getSelectionModel().isEmpty()){

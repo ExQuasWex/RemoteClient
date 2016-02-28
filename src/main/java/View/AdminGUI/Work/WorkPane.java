@@ -3,8 +3,11 @@ package View.AdminGUI.Work;
 import AdminModel.Params;
 import AdminModel.ResponseModel.BarangayFamily;
 import Controller.Controller;
+import DecisionSupport.Prioritizer;
 import Remote.Method.FamilyModel.Family;
 import ListModels.UiModels;
+import Remote.Method.FamilyModel.FamilyInfo;
+import Remote.Method.FamilyModel.FamilyPoverty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -68,6 +71,16 @@ public class WorkPane extends BorderPane {
                 Params params = new Params(date , Barangay);
                 ArrayList list = ctr.getFamilyBarangay(params);
 
+                for (Object family :  list){
+                    Family fam = (Family) family;
+
+                    FamilyPoverty familyPoverty = fam.getFamilypoverty();
+                    FamilyInfo familyInfo = fam.getFamilyinfo();
+
+                    Prioritizer.addPriorityLevel(familyPoverty, familyInfo.getNumofChildren());
+
+                }
+
                 showTable(list);
 
             }
@@ -105,6 +118,7 @@ public class WorkPane extends BorderPane {
         TableColumn spouseName = new TableColumn();
         TableColumn surveyedDate = new TableColumn();
         TableColumn inputedDate = new TableColumn();
+        TableColumn priorityCol = new TableColumn();
         TableColumn Action = new TableColumn();
 
         check.setText("Selection");
@@ -114,12 +128,26 @@ public class WorkPane extends BorderPane {
         inputedDate.setText("Encode Date");
         surveyedDate.setText("Survey Date");
         Action.setText("Action");
-
+        priorityCol.setText("Priority Level");
 
         Action.setCellFactory(new Callback<TableColumn, TableCell>() {
             @Override
             public TableCell call(TableColumn param) {
                 return new TableActionCell();
+            }
+        });
+
+        Action.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Family, Integer>, ObservableValue<Family>>() {
+            @Override
+            public ObservableValue<Family> call(TableColumn.CellDataFeatures<Family, Integer> param) {
+                return new ReadOnlyObjectWrapper(param.getValue().getFamilypoverty().getPriorityType());
+            }
+        });
+
+        priorityCol.setCellFactory(new Callback<TableColumn, TableCell>() {
+            @Override
+            public TableCell call(TableColumn param) {
+                return new PriorityProgressBarCell();
             }
         });
 
@@ -154,6 +182,14 @@ public class WorkPane extends BorderPane {
             }
         });
 
+        priorityCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Family, Integer>, ObservableValue<Family>>() {
+            @Override
+            public ObservableValue<Family> call(TableColumn.CellDataFeatures<Family, Integer> param) {
+                return new ReadOnlyObjectWrapper(param.getValue().getFamilypoverty().getPriorityLevel());
+            }
+        });
+
+
         surveyedDate.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Family, Integer>, ObservableValue<Family>>() {
             @Override
             public ObservableValue<Family> call(TableColumn.CellDataFeatures<Family, Integer> param) {
@@ -176,7 +212,7 @@ public class WorkPane extends BorderPane {
         });
 
 
-        tableView.getColumns().addAll(ID, name, spouseName, inputedDate, surveyedDate, Action);
+        tableView.getColumns().addAll(ID, name, spouseName, inputedDate, surveyedDate, priorityCol, Action);
 
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);

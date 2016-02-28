@@ -1,6 +1,7 @@
 package View.ClientWindow;
 
 import Controller.Controller;
+import ListModels.ChildrenSchoolCategory;
 import Remote.Method.FamilyModel.Family;
 import Remote.Method.FamilyModel.FamilyInfo;
 import Remote.Method.FamilyModel.FamilyPoverty;
@@ -372,17 +373,14 @@ public class EditForm extends GridPane{
                     if (numofChildrenF.getText().matches("\\d+")){
                         int children = Integer.parseInt(numofChildrenF.getText());
                         if (children > 1 ){
-                            numofChildrenF.setText(String.valueOf(children));
-                            if (childrenSchlCBox.getItems().contains("Some")){
-
-                            }else {
-                                childrenSchlCBox.getItems().add("Some");
+                            if (!childrenSchlCBox.getItems().contains(ChildrenSchoolCategory.SOME)){
+                                childrenSchlCBox.getItems().add(ChildrenSchoolCategory.SOME);
                             }
                             childrenSchlCBox.setDisable(false);
                         }else if (children == 1){
                             numofChildrenF.setText(String.valueOf(children));
                             childrenSchlCBox.setDisable(false);
-                            childrenSchlCBox.getItems().remove("Some");
+                            childrenSchlCBox.getItems().remove(ChildrenSchoolCategory.SOME);
                         }
                         else {
                             numofChildrenF.setText("0");
@@ -468,8 +466,6 @@ public class EditForm extends GridPane{
         });
     }
 
-
-
     private ObservableList getMaritalStatus(){
         ObservableList<String> maritalStatus = FXCollections.observableArrayList();
         maritalStatus.add("Married");
@@ -517,13 +513,8 @@ public class EditForm extends GridPane{
         return  owenerShipList;
     }
     private ObservableList getChildrenSchool(){
-        ObservableList<String> owenerShipList = FXCollections.observableArrayList();
-        owenerShipList.add("Graduated");
-        owenerShipList.add("Vocational");
-        owenerShipList.add("In-School");
-        owenerShipList.add("Some");
-        owenerShipList.add("None");
-        return  owenerShipList;
+        ObservableList<String> childrenSchoolCategoryList = UiModels.getChildrenSchoolCategoryList();
+        return  childrenSchoolCategoryList;
     }
 
     private void SaveChanges(){
@@ -549,13 +540,11 @@ public class EditForm extends GridPane{
             String ownership = ownershipCbox.getSelectionModel().getSelectedItem().toString();
             String occupancy = occupancyCBox.getSelectionModel().getSelectedItem().toString();
             String isunderEmployed = "";
-            String childrenScl;
+               ChildrenSchoolCategory childrenScl = null;
 
-                    if (childrenSchlCBox.getSelectionModel().isEmpty()){
-                        childrenScl = "";
-                    }else {
-                        childrenScl = childrenSchlCBox.getSelectionModel().getSelectedItem().toString();
-                    }
+                if (!childrenSchlCBox.getSelectionModel().isEmpty()){
+                    childrenScl = (ChildrenSchoolCategory) childrenSchlCBox.getSelectionModel().getSelectedItem();
+                }
 
                     if (underEmployedCBox.getSelectionModel().isEmpty()){
                         isunderEmployed = "";
