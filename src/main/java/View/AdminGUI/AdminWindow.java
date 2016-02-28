@@ -3,6 +3,7 @@ package View.AdminGUI;
 import AdminModel.Report.Children.Model.ResponsePovertyRate;
 import AdminModel.RequestAccounts;
 import Controller.Controller;
+import View.AdminGUI.Home.HomePane;
 import View.AdminGUI.Listeners.AdminSlidePaneListner;
 import View.AdminGUI.Listeners.TableItemListener;
 import View.AdminGUI.Management.ManagementPane;
@@ -30,6 +31,7 @@ public class AdminWindow extends Stage{
     private ManagementPane managementPane;
     private  Controller ctr;
     private WorkPane workPane = new WorkPane();
+    private HomePane homePane = new HomePane();
 
     private Dimension windowScreen = Screen.screen;
 
@@ -48,9 +50,8 @@ public class AdminWindow extends Stage{
             }
 
             @Override
-            public void showInitialReport() {
-                showInitialReports();
-
+            public void showHomePane() {
+                ShowHomePane();
             }
 
             @Override
@@ -69,7 +70,7 @@ public class AdminWindow extends Stage{
             }
         });
 
-        showInitialReports();
+        ShowHomePane();
 
         // Components
         managementPane =  new ManagementPane(root);
@@ -110,23 +111,12 @@ public class AdminWindow extends Stage{
         root.setCenter(workPane);
 
     }
-    public void showInitialReports(){
-        int x = 0;
-
-        barangayDataList = ctr.getBarangayData();
-
-        ObservableList<PieChart.Data>  pieData = FXCollections.observableArrayList();
-                while (x <= barangayDataList.size() - 1){
-                    ResponsePovertyRate bd = (ResponsePovertyRate) barangayDataList.get(x);
-                    pieData.add(new PieChart.Data(bd.getBarangayName(),bd.getUnresolvePopulation()));
-                    x++;
-                }
-
-        PieChart pc = new PieChart(pieData);
-        pc.setTitle("General Reports");
+    public void ShowHomePane(){
+        barangayDataList = ctr.getBarangayData("2016");
+        homePane.setData(barangayDataList);
 
         root.setCenter(null);
-        root.setCenter(pc);
+        root.setCenter(homePane);
 
     }
 

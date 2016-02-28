@@ -2,10 +2,7 @@ package View.AdminGUI.Report.Charts;
 
 import View.ToolKit.Screen;
 import javafx.scene.Node;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.*;
 
 /**
  * Created by Didoy on 2/24/2016.
@@ -40,6 +37,12 @@ public class ChartFactory {
         LineChart lineChart = new LineChart(lineXAxis, lineYAxis);
 
         return lineChart;
+    }
+
+    public PieChart createPieChart(){
+        PieChart pieChart = new PieChart();
+
+        return pieChart;
     }
 
     public void addDiffrentColor(BarChart bc){

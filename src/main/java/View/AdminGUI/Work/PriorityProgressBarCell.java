@@ -13,6 +13,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 /**
  * Created by reiner on 2/28/2016.
@@ -35,6 +36,7 @@ public class PriorityProgressBarCell extends TableCell{
         this.setEditable(true);
 
         setAlignment(Pos.CENTER);
+        setTextAlignment(TextAlignment.CENTER);
 
       getStylesheets().add("/CSS/ProgressBarPriority.css");
 
@@ -58,9 +60,12 @@ public class PriorityProgressBarCell extends TableCell{
                 setProgressBar(progressBar, "orange-bar", .8);
 
             }else if(priorityLevel == PriorityLevel.Critical){
-                setProgressBar(progressBar, "red-hair", 1);
-
+                setProgressBar(progressBar, "red-bar", 1);
+            }else {
+                setProgressBar(progressBar, "orange-bar", .5);
             }
+
+
             prio = priorityLevel.toString();
             setGraphic(createGrpahics(prio));
 

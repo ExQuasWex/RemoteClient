@@ -197,26 +197,23 @@ public class WorkPane extends BorderPane {
             }
         });
 
-
         // response from node cells in Tableview
 
         booleanCell.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean uncCheck, Boolean iscCheck) {
 
-              ObservableList x  =  tableView.getSelectionModel().getSelectedIndices();
-                for (Object index : x){
+                ObservableList x = tableView.getSelectionModel().getSelectedIndices();
+                for (Object index : x) {
                     System.out.println(index);
                 }
             }
         });
 
-
         tableView.getColumns().addAll(ID, name, spouseName, inputedDate, surveyedDate, priorityCol, Action);
 
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
 
     }
 
@@ -269,10 +266,8 @@ public class WorkPane extends BorderPane {
 
     private ObservableList<String> getYears(){
         ObservableList<String> yearList = FXCollections.observableArrayList(ctr.getYears());
-
         return  yearList;
     }
-
 
     private void  checkAll(){
         tableView.getSelectionModel().selectAll();

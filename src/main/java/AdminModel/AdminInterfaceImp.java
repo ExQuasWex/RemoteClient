@@ -65,10 +65,10 @@ public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInter
     }
 
     @Override
-    public ArrayList getBarangayData() {
+    public ArrayList getBarangayData(String year) {
         ArrayList list = new ArrayList();
         try {
-            list = server.getBarangayData();
+            list = server.getBarangayData(year);
             System.out.println("list size: " + list.size());
         } catch (RemoteException e) {
             System.out.println("remote exceptopn Admin interfaceimp");

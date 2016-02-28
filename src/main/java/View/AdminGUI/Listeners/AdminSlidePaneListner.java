@@ -6,7 +6,7 @@ package View.AdminGUI.Listeners;
 public interface AdminSlidePaneListner {
 
     public void showManageMent();
-    public void showInitialReport();
+    public void showHomePane();
     public void Logout();
     public void showReport();
     public void ShowWorkPane();

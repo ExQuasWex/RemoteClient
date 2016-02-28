@@ -165,9 +165,8 @@ public class Controller implements TableItemListener {
 
     // ------------------------ ADMIN METHODS ----------------------//
 
-    public ArrayList getBarangayData(){
-        ArrayList list = adminDB.getBarangayData();
-        return adminDB.getBarangayData();
+    public ArrayList getBarangayData(String year){
+        return adminDB.getBarangayData(year);
     }
 
     public int getPendingAccounts(){
@@ -179,9 +178,7 @@ public class Controller implements TableItemListener {
         return clientDB.getRequestAccounts();
     }
 
-
     // ======================BACK TO FRONT END=================//
-
 
     public boolean updateStaffInfo(StaffInfo staffInfo) {
                 this.staffInfo = staffInfo;
