@@ -1,10 +1,9 @@
 package AdminModel;
 
-
-import AdminModel.Report.Parent.Children.Model.ResponseCompareOverview;
-import AdminModel.Report.Parent.Model.ResponseOverviewReport;
-import AdminModel.Report.Parent.Model.ResponseSpecific;
-import AdminModel.Report.Parent.Model.ResponseSpecificOverView;
+import AdminModel.Report.Parent.ResponseCompareOverview;
+import AdminModel.Report.Parent.ResponseOverviewReport;
+import AdminModel.Report.Parent.ResponseSpecific;
+import AdminModel.Report.Parent.ResponseSpecificOverView;
 import RMI.AdminInterface;
 import RMI.Constant;
 import utility.TimedRMIclientSocketFactory;
@@ -156,7 +155,6 @@ public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInter
 
         try {
              list = server.getFamilyBarangay(params);
-
 
         } catch (RemoteException e) {
             e.printStackTrace();

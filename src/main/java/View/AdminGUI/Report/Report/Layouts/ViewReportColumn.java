@@ -3,26 +3,18 @@ package View.AdminGUI.Report.Report.Layouts;
 import AdminModel.Params;
 import AdminModel.Report.Children.Model.ResponsePovertyFactor;
 import AdminModel.Report.Children.Model.ResponsePovertyRate;
-import AdminModel.Report.Parent.Children.Model.ResponseCompareOverview;
-import AdminModel.Report.Parent.Model.ResponseOverviewReport;
-import AdminModel.Report.Parent.Model.ResponseSpecific;
-import AdminModel.Report.Parent.Model.ResponseSpecificOverView;
+import AdminModel.Report.Parent.ResponseCompareOverview;
+import AdminModel.Report.Parent.ResponseOverviewReport;
+import AdminModel.Report.Parent.ResponseSpecific;
+import AdminModel.Report.Parent.ResponseSpecificOverView;
 import View.AdminGUI.Report.Charts.ChartFactory;
-import View.AdminGUI.Report.Charts.ColorRandom;
-import View.AdminGUI.Report.Charts.HexColors;
 import View.AdminGUI.Report.Charts.SeriesFactory;
 import View.AdminGUI.Report.interfaces.Reports;
-import View.Components.Screen;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.chart.*;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import utility.Logger;
 import utility.Utility;
 
 import java.util.ArrayList;
@@ -203,15 +195,12 @@ public class ViewReportColumn extends VBox implements Reports {
     public void showSpecificReport(ResponseSpecific responseSpecific, Params params) {
 
         String barangayName = params.getBarangay1();
-        String month = params.getStrmonth();
-        month = Utility.rebirtDigitalMonth(month);
-        String yr = String.valueOf(params.getYear());
-
+        String month = responseSpecific.getPovertyFactor().getMonth();
 
         ResponsePovertyFactor povertyFactor = responseSpecific.getPovertyFactor();
 
         // === poverty population === //
-        BarChart barChart = chartFactory.createBarChart("Population", "", "Poverty population  " + barangayName + " " + month +" " + yr  );
+        BarChart barChart = chartFactory.createBarChart("Population", "", "Poverty population  " + barangayName + " " + month +" "   );
 
         int population = responseSpecific.getBarangayPovertyPopulation();
         XYChart.Series  series = seriesFactory.createSeries("Poverty population", "Total poverty Population", population );
@@ -224,7 +213,7 @@ public class ViewReportColumn extends VBox implements Reports {
 
         // === poverty factors === //
 
-        LineChart lineChart = chartFactory.createLineChart("Factors", "Population", "Poverty factors of" + barangayName +" " + month +" " + yr);
+        LineChart lineChart = chartFactory.createLineChart("Factors", "Population", "Poverty factors of" + barangayName +" " + month +" " );
         XYChart.Series lineSeries = seriesFactory.createPovertyFactorSeriesByData("Factors", povertyFactor);
 
         lineChart.getData().addAll(lineSeries);

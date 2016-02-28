@@ -1,10 +1,10 @@
 package View.AdminGUI.Report.Report.Layouts;
 
 import AdminModel.Params;
-import AdminModel.Report.Parent.Children.Model.ResponseCompareOverview;
-import AdminModel.Report.Parent.Model.ResponseOverviewReport;
-import AdminModel.Report.Parent.Model.ResponseSpecific;
-import AdminModel.Report.Parent.Model.ResponseSpecificOverView;
+import AdminModel.Report.Parent.ResponseCompareOverview;
+import AdminModel.Report.Parent.ResponseOverviewReport;
+import AdminModel.Report.Parent.ResponseSpecific;
+import AdminModel.Report.Parent.ResponseSpecificOverView;
 import Controller.Controller;
 import View.AdminGUI.Report.Enums.ReportCategoryMethod;
 import View.AdminGUI.Report.SubHeader.*;
@@ -186,7 +186,6 @@ public class MainReportPane extends VBox {
             }
         });
 
-
         category.valueProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
@@ -212,7 +211,7 @@ public class MainReportPane extends VBox {
 
     private void initializeReport(ReportCategoryMethod method, String type, Params param){
         ViewReportColumn columnview = new ViewReportColumn();
-        ResponseOverviewReport  overviewReport = null;
+        ResponseOverviewReport overviewReport = null;
 
         if (method == ReportCategoryMethod.OVERVIEW){
 
@@ -258,7 +257,6 @@ public class MainReportPane extends VBox {
         }
 
     }
-
 
     private void generateSubheader(ReportCategoryMethod cat){
         if (cat.equals(ReportCategoryMethod.OVERVIEW)){

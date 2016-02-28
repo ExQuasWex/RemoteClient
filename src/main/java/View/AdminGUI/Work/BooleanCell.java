@@ -30,7 +30,6 @@ public class BooleanCell<S, T> extends TableCell {
         this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         this.setEditable(true);
 
-
     }
 
 

@@ -9,7 +9,7 @@ import View.AdminGUI.Management.ManagementPane;
 import View.AdminGUI.Report.Report.Layouts.MainReportPane;
 import View.AdminGUI.Work.WorkPane;
 import View.Login.LoginWindow;
-import View.Components.Screen;
+import View.ToolKit.Screen;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;

@@ -3,6 +3,7 @@ package View.AdminGUI.Report.SubHeader;
 import AdminModel.Params;
 import Controller.Controller;
 import View.AdminGUI.Report.interfaces.ReportButtonListener;
+import ListModels.UiModels;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -57,48 +58,19 @@ public class ReportSpecificPane extends HBox {
             public void handle(ActionEvent event) {
 
                 String month = (String) MonthCB.getSelectionModel().getSelectedItem();
-                month = Utility.DigitalizeMonth(month);
-
-                int initialyear = Integer.parseInt( (String)YearCB.getSelectionModel().getSelectedItem());
+                String year = ( (String)YearCB.getSelectionModel().getSelectedItem());
                 String barangay  = (String) BarangayCB.getSelectionModel().getSelectedItem();
 
-                Params params = new Params(initialyear,  month, barangay);
+                String date = Utility.concatinateYearAndMonth(year, month);
+
+                Params params = new Params(date , barangay);
                 reportButtonListener.generateReport(params);
             }
         });
 
     }
     private ObservableList getBarangay(){
-
-        ObservableList<String> baranagayList = FXCollections.observableArrayList();
-        baranagayList.add("Atlo Bola");
-        baranagayList.add("Bical");
-        baranagayList.add("Bundangul");
-        baranagayList.add("Cacutud");
-        baranagayList.add("Calumpang");
-        baranagayList.add("Camchilles");
-        baranagayList.add("Dapdap");
-        baranagayList.add("Dau");
-        baranagayList.add("Dolores");
-        baranagayList.add("Duquit");
-        baranagayList.add("Lakandula");
-        baranagayList.add("Mabiga");
-        baranagayList.add("Macapagal village");
-        baranagayList.add("Mamatitang");
-        baranagayList.add("Mangalit");
-        baranagayList.add("Marcos village");
-        baranagayList.add("Mawaque");
-        baranagayList.add("Paralayunan");
-        baranagayList.add("Publasyon");
-        baranagayList.add("San Francisco");
-        baranagayList.add("San Joaquin");
-        baranagayList.add("Sta. Ines");
-        baranagayList.add("Sta. Maria");
-        baranagayList.add("Sto. Rosario");
-        baranagayList.add("Sapang Balen");
-        baranagayList.add("Sapang Biabas");
-        baranagayList.add("Tabun");
-
+        ObservableList baranagayList = UiModels.getBarangayListModel();
         return  baranagayList;
     }
 
@@ -116,22 +88,8 @@ public class ReportSpecificPane extends HBox {
     }
 
     private ObservableList getMonths(){
-        // fetch years here
-        ObservableList<String> months = FXCollections.observableArrayList();
-        months.add("January");
-        months.add("February");
-        months.add("March");
-        months.add("April");
-        months.add("May");
-        months.add("June");
-        months.add("July");
-        months.add("August");
-        months.add("September");
-        months.add("October");
-        months.add("November");
-        months.add("December");
-        months.add("All months");
+       ObservableList monthsList = UiModels.getMonthListModel();
 
-        return months;
+        return monthsList;
     }
 }

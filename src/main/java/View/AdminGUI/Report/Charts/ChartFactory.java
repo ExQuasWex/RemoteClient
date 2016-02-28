@@ -1,6 +1,6 @@
 package View.AdminGUI.Report.Charts;
 
-import View.Components.Screen;
+import View.ToolKit.Screen;
 import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;

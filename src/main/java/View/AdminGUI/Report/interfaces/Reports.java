@@ -1,11 +1,10 @@
 package View.AdminGUI.Report.interfaces;
 
 import AdminModel.Params;
-
-import AdminModel.Report.Parent.Children.Model.ResponseCompareOverview;
-import AdminModel.Report.Parent.Model.ResponseOverviewReport;
-import AdminModel.Report.Parent.Model.ResponseSpecific;
-import AdminModel.Report.Parent.Model.ResponseSpecificOverView;
+import AdminModel.Report.Parent.ResponseCompareOverview;
+import AdminModel.Report.Parent.ResponseOverviewReport;
+import AdminModel.Report.Parent.ResponseSpecific;
+import AdminModel.Report.Parent.ResponseSpecificOverView;
 
 import java.util.ArrayList;
 

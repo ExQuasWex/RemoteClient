@@ -5,6 +5,7 @@ import Remote.Method.FamilyModel.Family;
 import Remote.Method.FamilyModel.FamilyInfo;
 import Remote.Method.FamilyModel.FamilyPoverty;
 import View.ClientWindow.Listeners.FamilyFormListener;
+import ListModels.UiModels;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -15,22 +16,17 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.*;
 import utility.FamilyNodes;
 import utility.Utility;
 
-import java.awt.*;
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.regex.Pattern;
 
 
 /**
@@ -290,7 +286,7 @@ public class FamilyForm extends GridPane{
         SpouseName.setDisable(true);
 
         maritalCBox = new ComboBox(getMaritalStatus());
-        barangayCb = new ComboBox(getBarangayCb());
+        barangayCb = new ComboBox(getBarangayListModel());
         genderCB    = new ComboBox(getGender());
 
         maritalCBox.setPrefWidth(140);
@@ -470,37 +466,8 @@ public class FamilyForm extends GridPane{
     }
 
 
-    private ObservableList getBarangayCb(){
-        ObservableList<String> baranagayList = FXCollections.observableArrayList();
-        baranagayList.add("Atlo Bola");
-        baranagayList.add("Bical");
-        baranagayList.add("Bundangul");
-        baranagayList.add("Cacutud");
-        baranagayList.add("Calumpang");
-        baranagayList.add("Camchilles");
-        baranagayList.add("Dapdap");
-        baranagayList.add("Dau");
-        baranagayList.add("Dolores");
-        baranagayList.add("Duquit");
-        baranagayList.add("Lakandula");
-        baranagayList.add("Mabiga");
-        baranagayList.add("Macapagal village");
-        baranagayList.add("Mamatitang");
-        baranagayList.add("Mangalit");
-        baranagayList.add("Marcos village");
-        baranagayList.add("Mawaque");
-        baranagayList.add("Paralayunan");
-        baranagayList.add("Publasyon");
-        baranagayList.add("San Francisco");
-        baranagayList.add("San Joaquin");
-        baranagayList.add("Sta. Ines");
-        baranagayList.add("Sta. Maria");
-        baranagayList.add("Sto. Rosario");
-        baranagayList.add("Sapang Balen");
-        baranagayList.add("Sapang Biabas");
-        baranagayList.add("Tabun");
-
-        return  baranagayList;
+    private ObservableList getBarangayListModel() {
+        return UiModels.getBarangayListModel();
     }
 
     private ObservableList getMaritalStatus(){
@@ -551,12 +518,7 @@ public class FamilyForm extends GridPane{
         return  owenerShipList;
     }
     private ObservableList getChildrenSchool(){
-        ObservableList<String> owenerShipList = FXCollections.observableArrayList();
-        owenerShipList.add("Graduated");
-        owenerShipList.add("Vocational");
-        owenerShipList.add("In-School");
-        owenerShipList.add("Some");
-        owenerShipList.add("None");
+        ObservableList<String> owenerShipList = UiModels.getChildrenSchoolCategoryList();
         return  owenerShipList;
     }
 

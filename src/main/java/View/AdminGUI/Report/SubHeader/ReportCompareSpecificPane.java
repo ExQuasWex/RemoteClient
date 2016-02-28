@@ -3,6 +3,7 @@ package View.AdminGUI.Report.SubHeader;
 import AdminModel.Params;
 import Controller.Controller;
 import View.AdminGUI.Report.interfaces.ReportButtonListener;
+import ListModels.UiModels;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -70,35 +71,7 @@ public class ReportCompareSpecificPane extends HBox {
 
     private ObservableList getBarangay(){
 
-        ObservableList<String> baranagayList = FXCollections.observableArrayList();
-        baranagayList.add("Atlo Bola");
-        baranagayList.add("Bical");
-        baranagayList.add("Bundangul");
-        baranagayList.add("Cacutud");
-        baranagayList.add("Calumpang");
-        baranagayList.add("Camchilles");
-        baranagayList.add("Dapdap");
-        baranagayList.add("Dau");
-        baranagayList.add("Dolores");
-        baranagayList.add("Duquit");
-        baranagayList.add("Lakandula");
-        baranagayList.add("Mabiga");
-        baranagayList.add("Macapagal village");
-        baranagayList.add("Mamatitang");
-        baranagayList.add("Mangalit");
-        baranagayList.add("Marcos village");
-        baranagayList.add("Mawaque");
-        baranagayList.add("Paralayunan");
-        baranagayList.add("Publasyon");
-        baranagayList.add("San Francisco");
-        baranagayList.add("San Joaquin");
-        baranagayList.add("Sta. Ines");
-        baranagayList.add("Sta. Maria");
-        baranagayList.add("Sto. Rosario");
-        baranagayList.add("Sapang Balen");
-        baranagayList.add("Sapang Biabas");
-        baranagayList.add("Tabun");
-
+        ObservableList baranagayList = UiModels.getBarangayListModel();
         return  baranagayList;
     }
 

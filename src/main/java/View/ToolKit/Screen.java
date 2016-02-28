@@ -1,4 +1,4 @@
-package View.Components;
+package View.ToolKit;
 
 import java.awt.*;
 

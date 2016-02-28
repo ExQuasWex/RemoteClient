@@ -1,4 +1,4 @@
-package View.Components;
+package View.ToolKit;
 
 import Controller.Controller;
 import javafx.beans.property.SimpleDoubleProperty;

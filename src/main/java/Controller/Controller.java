@@ -2,24 +2,21 @@ package Controller;
 
 import AdminModel.AdminInterfaceImp;
 import AdminModel.Params;
-import AdminModel.Report.Parent.Children.Model.ResponseCompareOverview;
-import AdminModel.Report.Parent.Model.ResponseOverviewReport;
-import AdminModel.Report.Parent.Model.ResponseSpecific;
-import AdminModel.Report.Parent.Model.ResponseSpecificOverView;
+
+import AdminModel.Report.Parent.ResponseCompareOverview;
+import AdminModel.Report.Parent.ResponseOverviewReport;
+import AdminModel.Report.Parent.ResponseSpecific;
+import AdminModel.Report.Parent.ResponseSpecificOverView;
 import AdminModel.RequestAccounts;
 import ClientModel.Database;
 import Remote.Method.FamilyModel.Family;
 import View.AdminGUI.Listeners.TableItemListener;
-import View.ClientWindow.ClientWindow;
-import View.Components.LoadBar;
+import View.ToolKit.LoadBar;
 import clientModel.ClientEntries;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
-import com.sun.deploy.util.SessionState;
 import global.SecretDetails;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import utility.Utility;
 
