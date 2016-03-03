@@ -6,12 +6,15 @@ import AdminModel.Report.Children.Model.ResponsePovertyRate;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import utility.Logger;
 
@@ -24,6 +27,7 @@ public class SeriesFactory {
 
     int x = 0;
 
+    private SeriesListener seriesListener;
     public XYChart.Series createSeries(String seriesName, String xValue, int yValue  ){
 
         XYChart.Series series = new XYChart.Series();
@@ -46,7 +50,7 @@ public class SeriesFactory {
 
     }
 
-    public XYChart.Series createPovertyFactorSeriesByList(String seriesName, ArrayList povertyFactorList  ){
+    public XYChart.Series createPovertyFactorSeriesByList(String seriesName, ArrayList povertyFactorList   ){
 
         ArrayList factorList =   povertyFactorList;
 
@@ -106,10 +110,12 @@ public class SeriesFactory {
             x++;
         }
         x = 0;
+
+
         return series;
     }
 
-    public XYChart.Series createPovertyFactorSeriesByData(String seriesName, ResponsePovertyFactor povertyFactor  ){
+    public XYChart.Series createPovertyFactorSeriesByData(String seriesName, ResponsePovertyFactor povertyFactor   ){
 
         XYChart.Series series = new XYChart.Series();
         series.setName(seriesName);
@@ -159,6 +165,7 @@ public class SeriesFactory {
 
             series.getData().addAll(data1, data2, data3, data4, data5);
 
+
         return series;
     }
 
@@ -191,11 +198,12 @@ public class SeriesFactory {
             x++;
         }
 
+
         return series;
     }
 
 
-    public XYChart.Series createPovertySeriesSpecificOverView(String seriesName, ArrayList povertyPopulationList  ){
+    public XYChart.Series createPovertySeriesSpecificOverView(String seriesName, ArrayList povertyPopulationList   ){
 
         XYChart.Series series = new XYChart.Series();
         series.setName(seriesName);
@@ -253,6 +261,43 @@ public class SeriesFactory {
                 );
             }
         });
+    }
+
+    public void addHoverToSeries(XYChart.Series series, String date, String barangay){
+        ObservableList<XYChart.Data> listData = series.getData();
+
+        for (XYChart.Data data : listData){
+            Node node = data.getNode();
+            node.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    String value = (String) data.getXValue();
+
+                       seriesListener.provideData(value, date, barangay);
+
+                }
+            });
+
+            node.setOnMouseEntered(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    node.setScaleX(node.getScaleX() + .5);
+                    node.setScaleY(node.getScaleY() + .5);
+                }
+            });
+            node.setOnMouseExited(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    node.setScaleX(node.getScaleX() - .5);
+                    node.setScaleY(node.getScaleY() - .5);
+                }
+            });
+
+        };
+    }
+
+    public void addSeriesFactoryListener(SeriesListener seriesListener){
+        this.seriesListener = seriesListener;
     }
 
 }

@@ -1,12 +1,15 @@
 package View.AdminGUI.Report.Report.Layouts;
 
+import AdminModel.Enum.FactorCategoryParameter;
 import AdminModel.Params;
 import AdminModel.Report.Parent.ResponseCompareOverview;
 import AdminModel.Report.Parent.ResponseOverviewReport;
 import AdminModel.Report.Parent.ResponseSpecific;
 import AdminModel.Report.Parent.ResponseSpecificOverView;
 import Controller.Controller;
-import View.AdminGUI.Report.Enums.ReportCategoryMethod;
+import AdminModel.Enum.ReportCategoryMethod;
+import View.AdminGUI.Report.Report.Layouts.Listener.MainReportPaneListener;
+import View.AdminGUI.Report.Report.Layouts.Listener.ViewReportLayoutListener;
 import View.AdminGUI.Report.SubHeader.*;
 import View.AdminGUI.Report.interfaces.ReportButtonListener;
 import javafx.beans.value.ChangeListener;
@@ -27,15 +30,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import utility.Logger;
-
-import java.util.ArrayList;
+import utility.Utility;
 
 /**
  * Created by Didoy on 1/12/2016.
  */
 public class MainReportPane extends VBox {
 
-    private static MainReportPane mainReportPane = null;
+
     // header components
     private HBox header ;
     private ComboBox category;
@@ -51,10 +53,12 @@ public class MainReportPane extends VBox {
     private ReportSpecificPane reportSpecificPane;
 
     private VBox InitialPane;
-
+    private ViewReportColumn reportColumnPane = new ViewReportColumn();
     private Controller controller = Controller.getInstance();
 
-    private MainReportPane(){
+    private MainReportPaneListener mainReportPaneListener;
+
+    public MainReportPane(){
         overViewPane = new ReportOverViewPane();
         reportComparePane = new ReportComparePane();
         reportSpecificOverviewPane = new ReportSpecificOverviewPane();
@@ -63,59 +67,74 @@ public class MainReportPane extends VBox {
 
         InitialPane = getInitialPane();
 
-
-                overViewPane.addReportButtonListener(new ReportButtonListener() {
-                    @Override
-                    public void generateReport(Params params) {
-                        ReportCategoryMethod method = (ReportCategoryMethod) category.getSelectionModel().getSelectedItem();
-                        String type = (String) Type.getSelectionModel().getSelectedItem();
-                        initializeReport(method, type, params);
-
-                    }
-                });
-                reportComparePane.addReportButtonListener(new ReportButtonListener() {
-                    @Override
-                    public void generateReport(Params params) {
-                        ReportCategoryMethod method = (ReportCategoryMethod) category.getSelectionModel().getSelectedItem();
-                        String type = (String) Type.getSelectionModel().getSelectedItem();
-                        initializeReport(method, type, params);
-
-                    }
-                });
-
-                reportCompareSpecificPane.addReportButtonListener(new ReportButtonListener() {
-                    @Override
-                    public void generateReport(Params params) {
-                        ReportCategoryMethod method = (ReportCategoryMethod) category.getSelectionModel().getSelectedItem();
-                        String type = (String) Type.getSelectionModel().getSelectedItem();
-                        initializeReport(method, type, params);
-
-                    }
-                });
-                 reportSpecificOverviewPane.addReportButtonListener(new ReportButtonListener() {
-                    @Override
-                    public void generateReport(Params params) {
-                        ReportCategoryMethod method = (ReportCategoryMethod) category.getSelectionModel().getSelectedItem();
-                        String type = (String) Type.getSelectionModel().getSelectedItem();
-
-                        initializeReport(method, type, params);
-
-                    }
-                });
-                reportSpecificPane.addReportButtonListener(new ReportButtonListener() {
-                    @Override
-                    public void generateReport(Params params) {
-                        ReportCategoryMethod method = (ReportCategoryMethod) category.getSelectionModel().getSelectedItem();
-                        String type = (String) Type.getSelectionModel().getSelectedItem();
-                        initializeReport(method, type, params);
-
-                    }
-                });
+        addPaneListeners();
 
         getStylesheets().add("/CSS/AdminReportCSS.css");
         setSpacing(15);
         setVgrow(InitialPane, Priority.ALWAYS);
         getChildren().addAll(createHeader(), overViewPane, InitialPane);
+
+    }
+
+    private void addPaneListeners(){
+
+        overViewPane.addReportButtonListener(new ReportButtonListener() {
+            @Override
+            public void generateReport(Params params) {
+                ReportCategoryMethod method = (ReportCategoryMethod) category.getSelectionModel().getSelectedItem();
+                String type = (String) Type.getSelectionModel().getSelectedItem();
+                initializeReport(method, type, params);
+
+            }
+        });
+        reportComparePane.addReportButtonListener(new ReportButtonListener() {
+            @Override
+            public void generateReport(Params params) {
+                ReportCategoryMethod method = (ReportCategoryMethod) category.getSelectionModel().getSelectedItem();
+                String type = (String) Type.getSelectionModel().getSelectedItem();
+                initializeReport(method, type, params);
+
+            }
+        });
+
+        reportCompareSpecificPane.addReportButtonListener(new ReportButtonListener() {
+            @Override
+            public void generateReport(Params params) {
+                ReportCategoryMethod method = (ReportCategoryMethod) category.getSelectionModel().getSelectedItem();
+                String type = (String) Type.getSelectionModel().getSelectedItem();
+                initializeReport(method, type, params);
+
+            }
+        });
+        reportSpecificOverviewPane.addReportButtonListener(new ReportButtonListener() {
+            @Override
+            public void generateReport(Params params) {
+                ReportCategoryMethod method = (ReportCategoryMethod) category.getSelectionModel().getSelectedItem();
+                String type = (String) Type.getSelectionModel().getSelectedItem();
+
+                initializeReport(method, type, params);
+
+            }
+        });
+        reportSpecificPane.addReportButtonListener(new ReportButtonListener() {
+            @Override
+            public void generateReport(Params params) {
+                ReportCategoryMethod method = (ReportCategoryMethod) category.getSelectionModel().getSelectedItem();
+                String type = (String) Type.getSelectionModel().getSelectedItem();
+                initializeReport(method, type, params);
+
+            }
+        });
+
+        reportColumnPane.addViewReportLayoutListener(new ViewReportLayoutListener() {
+            @Override
+            public void getReportChartParameters(ReportCategoryMethod reportCategoryMethod, String xValue, String date, String barangayName) {
+
+                Params params = getParameters(reportCategoryMethod, xValue, date, barangayName);
+
+                mainReportPaneListener.getReportChartParameters(params, reportCategoryMethod);
+            }
+        });
 
     }
 
@@ -162,7 +181,6 @@ public class MainReportPane extends VBox {
         columnView.setSelected(true);
 
         // set categories
-        ObservableList<ReportCategoryMethod> categories = FXCollections.observableArrayList(ReportCategoryMethod.values());
 
         category.setItems(getCategories());
         Type.setItems(getTypes());
@@ -210,47 +228,45 @@ public class MainReportPane extends VBox {
     }
 
     private void initializeReport(ReportCategoryMethod method, String type, Params param){
-        ViewReportColumn columnview = new ViewReportColumn();
+
         ResponseOverviewReport overviewReport = null;
 
         if (method == ReportCategoryMethod.OVERVIEW){
 
             overviewReport = controller.getOverViewData(param, type);
-            columnview.showOverViewReport(overviewReport);
+            reportColumnPane.showOverViewReport( overviewReport, param);
             getChildren().remove(2);
-            getChildren().add(columnview);
+            getChildren().add(reportColumnPane);
 
         }else if (method == ReportCategoryMethod.COMPARE_OVERVIEW){
             ResponseCompareOverview compareOverview  = controller.getCompareOverViewData(param, type);
 
-            columnview.showCompareOverviewReport(compareOverview, param);
+            reportColumnPane.showCompareOverviewReport(compareOverview, param);
             getChildren().remove(2);
-            getChildren().add(columnview);
+            getChildren().add(reportColumnPane);
 
         }else if (method == ReportCategoryMethod.COMPARE_SPECIFIC){
 
             ResponseCompareOverview compareOverview  = controller.getCompareSpecificData(param, type);
 
-            columnview.showCompareSpecificReport(compareOverview, param);
+            reportColumnPane.showCompareSpecificReport(compareOverview, param);
             getChildren().remove(2);
-            getChildren().add(columnview);
+            getChildren().add(reportColumnPane);
 
         }else if (method == ReportCategoryMethod.SPECIFIC_OVERVIEW){
-            String barangayname = param.getBarangay1();
             ResponseSpecificOverView responseSpecificOverView = controller.getSpecificOverViewData(param, type);
 
-            columnview.showSpecificOverViewReport(responseSpecificOverView, barangayname);
+            reportColumnPane.showSpecificOverViewReport(responseSpecificOverView, param);
             getChildren().remove(2);
-            getChildren().add(columnview);
-
+            getChildren().add(reportColumnPane);
 
         }else if (method == ReportCategoryMethod.SPECIFIC){
             ResponseSpecific responseSpecific = controller.getSpecific(param, type);
 
-            columnview.showSpecificReport(responseSpecific, param);
+            reportColumnPane.showSpecificReport(responseSpecific, param);
 
             getChildren().remove(2);
-            getChildren().add(columnview);
+            getChildren().add(reportColumnPane);
 
             System.out.println("SPECIFIC");
 
@@ -284,14 +300,66 @@ public class MainReportPane extends VBox {
         return  categoryList;
     }
 
-    public static MainReportPane getInstance(){
+    public void addMainReportPaneListener(MainReportPaneListener mainReportPaneListener){
+        this.mainReportPaneListener = mainReportPaneListener;
+    }
 
-            if (mainReportPane == null){
-                mainReportPane = new MainReportPane();
-                return mainReportPane;
-            }else {
-                return mainReportPane;
+    private Params getParameters (ReportCategoryMethod reportCategoryMethod,String xValue, String date, String barangayName){
+        boolean isFactortType = false;
+        Params params = null;
+
+        for(FactorCategoryParameter c : FactorCategoryParameter.values()){
+            if (c.toString().equals(xValue)){
+                isFactortType = true;
             }
+        }
+
+        System.out.println(isFactortType);
+        Logger.Log(" Report Type " + reportCategoryMethod.toString() + " xValue: " +xValue+ " date " + date + " Barangay: " + barangayName);
+
+
+              if (reportCategoryMethod.equals(ReportCategoryMethod.OVERVIEW)){
+                     if (isFactortType){
+                         params = new Params(date, "", xValue );
+                     }else {
+                         barangayName = xValue;
+                         params = new Params(date, barangayName, "" );
+                     }
+              }
+              else if (reportCategoryMethod.equals(ReportCategoryMethod.COMPARE_OVERVIEW)){
+                     if (isFactortType){
+                         params = new Params(date, "", xValue );
+                     }else {
+                         barangayName = xValue;
+                         params = new Params(date, barangayName, "" );
+                     }
+              }
+              else if (reportCategoryMethod.equals(ReportCategoryMethod.COMPARE_SPECIFIC)){
+
+                     if (isFactortType){
+                         params = new Params(date, barangayName, xValue );
+                     }else {
+                         params = new Params(date,  barangayName );
+                     }
+
+              }
+              else if (reportCategoryMethod.equals(ReportCategoryMethod.SPECIFIC_OVERVIEW)){
+                    if (isFactortType){
+                        params = new Params(date, barangayName, xValue );
+                    }else {
+                        params = new Params(date, barangayName, xValue );
+                    }
+              }
+              else if (reportCategoryMethod.equals(ReportCategoryMethod.SPECIFIC)){
+                    if (isFactortType){
+                        params = new Params(date, barangayName, xValue );
+                    }else {
+                        params = new Params(date, barangayName, xValue );
+                    }
+              }
+              else {
+              }
+        return params;
     }
 
 }

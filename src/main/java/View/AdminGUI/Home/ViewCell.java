@@ -1,14 +1,10 @@
 package View.AdminGUI.Home;
 
-import PriorityModels.PriorityType;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import View.AdminGUI.Home.Listeners.ViewCellListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.TableCell;
+import javafx.scene.control.*;
 
 /**
  * Created by reiner on 2/29/2016.
@@ -17,16 +13,27 @@ public class ViewCell extends TableCell {
 
 private Button view = new Button("View People");
 
-    public ViewCell() {
+    private ViewCellListener listener;
+    public ViewCell(ViewCellListener listener) {
 
         this.setGraphic(view);
         this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         this.setEditable(true);
 
+        this.listener = listener;
+
         view.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                TableRow row = getTableRow();
+                int index =  row.getIndex();
 
+               TableView tableView =  getTableView();
+               TableColumn tableColumn = (TableColumn) tableView.getColumns().get(0);
+
+                String barangayName = (String) tableColumn.getCellData(index);
+
+                listener.viewData(barangayName);
             }
         });
     }

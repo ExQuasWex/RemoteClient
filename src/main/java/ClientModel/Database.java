@@ -180,8 +180,6 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
             }else{
                 DemolishCallBack();
             }
-
-
         } catch (RemoteException e) {
             e.printStackTrace();
         }

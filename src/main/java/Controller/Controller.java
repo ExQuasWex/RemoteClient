@@ -1,6 +1,7 @@
 package Controller;
 
 import AdminModel.AdminInterfaceImp;
+import AdminModel.Enum.ReportCategoryMethod;
 import AdminModel.Params;
 
 import AdminModel.Report.Parent.ResponseCompareOverview;
@@ -237,9 +238,9 @@ public class Controller implements TableItemListener {
     }
 
 
-    public ArrayList getFamilyBarangay(Params params){
+    public ArrayList getFamilyBarangay(Params params, ReportCategoryMethod method){
         ArrayList list = new ArrayList();
-        list = adminDB.getFamilyBarangay(params);
+        list = adminDB.getFamilyBarangay(params, method);
         // Utility.showMessageBox("Error Unable to get Data", Alert.AlertType.INFORMATION);
 
         return list;

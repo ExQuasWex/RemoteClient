@@ -1,5 +1,6 @@
 package AdminModel;
 
+import AdminModel.Enum.ReportCategoryMethod;
 import AdminModel.Report.Parent.ResponseCompareOverview;
 import AdminModel.Report.Parent.ResponseOverviewReport;
 import AdminModel.Report.Parent.ResponseSpecific;
@@ -150,11 +151,11 @@ public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInter
     }
 
     @Override
-    public ArrayList getFamilyBarangay(Params params)   {
+    public ArrayList getFamilyBarangay(Params params, ReportCategoryMethod method)   {
         ArrayList list = new ArrayList();
 
         try {
-             list = server.getFamilyBarangay(params);
+             list = server.getFamilyBarangay(params, method);
 
         } catch (RemoteException e) {
             e.printStackTrace();

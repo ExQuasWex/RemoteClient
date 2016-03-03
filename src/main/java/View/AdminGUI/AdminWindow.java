@@ -1,24 +1,25 @@
 package View.AdminGUI;
 
-import AdminModel.Report.Children.Model.ResponsePovertyRate;
+import AdminModel.Enum.ReportCategoryMethod;
+import AdminModel.Params;
 import AdminModel.RequestAccounts;
 import Controller.Controller;
+import Remote.Method.FamilyModel.Family;
 import View.AdminGUI.Home.HomePane;
+import View.AdminGUI.Home.Listeners.HomePaneListener;
 import View.AdminGUI.Listeners.AdminSlidePaneListner;
 import View.AdminGUI.Listeners.TableItemListener;
 import View.AdminGUI.Management.ManagementPane;
+import View.AdminGUI.Report.Report.Layouts.Listener.MainReportPaneListener;
 import View.AdminGUI.Report.Report.Layouts.MainReportPane;
+import View.AdminGUI.Work.Listener.WorkPaneListener;
 import View.AdminGUI.Work.WorkPane;
 import View.Login.LoginWindow;
 import View.ToolKit.Screen;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.chart.PieChart;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -32,16 +33,33 @@ public class AdminWindow extends Stage{
     private  Controller ctr;
     private WorkPane workPane = new WorkPane();
     private HomePane homePane = new HomePane();
-
-    private Dimension windowScreen = Screen.screen;
-
+    private AdminSlidePane adminSlidePane = new AdminSlidePane();
+    private MainReportPane mainReportPane = new MainReportPane();
     public AdminWindow(){
         ctr = Controller.getInstance();
 
         root = new BorderPane();
-
-        AdminSlidePane adminSlidePane = new AdminSlidePane();
         root.setLeft(adminSlidePane);
+
+        ShowHomePane();
+
+        // Components
+        managementPane =  new ManagementPane(root);
+
+        addComponentListeners();
+
+        // main settings
+        setWidth(Screen.screen.getWidth());
+        setHeight(Screen.screen.getHeight());
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add("/CSS/ClientWindowCSS.css");
+        setScene(scene);
+        centerOnScreen();
+
+        show();
+
+    }
+    private void addComponentListeners(){
 
         adminSlidePane.addAdminSlidePaneListener(new AdminSlidePaneListner() {
             @Override
@@ -70,38 +88,56 @@ public class AdminWindow extends Stage{
             }
         });
 
-        ShowHomePane();
+        managementPane.addTableListener(new TableItemListener() {
+            @Override
+            public boolean Approve(RequestAccounts ra) {
 
-        // Components
-        managementPane =  new ManagementPane(root);
+                return ctr.Approve(ra);
+            }
 
-            managementPane.addTableListener(new TableItemListener() {
-                @Override
-                public boolean Approve(RequestAccounts ra) {
+            @Override
+            public boolean ApproveAdmin(RequestAccounts ra) {
+                return ctr.ApproveAdmin(ra);
+            }
 
-                    return ctr.Approve(ra);
-                }
+            @Override
+            public boolean Reject(RequestAccounts ra) {
+                return ctr.Reject(ra);
+            }
+        });
 
-                @Override
-                public boolean ApproveAdmin(RequestAccounts ra) {
-                    return ctr.ApproveAdmin(ra);
-                }
+        workPane.addWorkPaneListener(new WorkPaneListener() {
+            @Override
+            public void showWorkPane() {
+                root.setCenter(null);
+                root.setCenter(workPane);
+            }
+        });
 
-                @Override
-                public boolean Reject(RequestAccounts ra) {
-                    return ctr.Reject(ra);
-                }
-            });
+        homePane.addHomePaneListeners(new HomePaneListener() {
 
-        // main settings
-        setWidth(windowScreen.getWidth());
-        setHeight(windowScreen.getHeight());
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add("/CSS/ClientWindowCSS.css");
-        setScene(scene);
-        centerOnScreen();
+            @Override
+            public void viewPeople(String barangayName, String year) {
+                Params params = new Params(year , barangayName);
+                ArrayList<Family> list = ctr.getFamilyBarangay(params, null);
+                workPane.showTable(list);
+            }
 
-        show();
+            @Override
+            public void refresh() {
+
+            }
+        });
+
+
+        mainReportPane.addMainReportPaneListener(new MainReportPaneListener() {
+            @Override
+            public void getReportChartParameters(Params params, ReportCategoryMethod method) {
+
+                ArrayList<Family> list = ctr.getFamilyBarangay(params, method);
+                workPane.showTable(list);
+            }
+        });
 
     }
 
@@ -112,8 +148,11 @@ public class AdminWindow extends Stage{
 
     }
     public void ShowHomePane(){
+        // add year options
+        String year = "2016";
         barangayDataList = ctr.getBarangayData("2016");
-        homePane.setData(barangayDataList);
+
+        homePane.setData(barangayDataList, year);
 
         root.setCenter(null);
         root.setCenter(homePane);
@@ -127,13 +166,13 @@ public class AdminWindow extends Stage{
     }
 
     public  void ShowReport(){
-        root.setCenter(MainReportPane.getInstance());
+        root.setCenter(null);
+        root.setCenter(mainReportPane);
     }
 
     public  void AdminLogout(){
          ctr.Logout();
          close();
          new LoginWindow();
-
     }
 }

@@ -9,6 +9,9 @@ import AdminModel.Report.Parent.ResponseSpecific;
 import AdminModel.Report.Parent.ResponseSpecificOverView;
 import View.AdminGUI.Report.Charts.ChartFactory;
 import View.AdminGUI.Report.Charts.SeriesFactory;
+import View.AdminGUI.Report.Charts.SeriesListener;
+import AdminModel.Enum.ReportCategoryMethod;
+import View.AdminGUI.Report.Report.Layouts.Listener.ViewReportLayoutListener;
 import View.AdminGUI.Report.interfaces.Reports;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -26,9 +29,12 @@ public class ViewReportColumn extends VBox implements Reports {
 
     private ScrollPane scrollPane = new ScrollPane();
     private VBox vBox = new VBox();
+    private String currentYear =  Utility.getCurrentYear();
 
     private ChartFactory chartFactory = new ChartFactory();
     private SeriesFactory seriesFactory = new SeriesFactory();
+    private ViewReportLayoutListener viewReportLayoutListener;
+    private ReportCategoryMethod reportCategoryMethod;
 
     public ViewReportColumn() {
         setAlignment(Pos.CENTER);
@@ -40,17 +46,26 @@ public class ViewReportColumn extends VBox implements Reports {
         scrollPane.setPadding(new Insets(0, 30, 0, 30));
         getChildren().addAll(scrollPane);
 
+        seriesFactory.addSeriesFactoryListener(new SeriesListener() {
+            @Override
+            public void provideData(String xDataValue, String date, String barangay) {
+                viewReportLayoutListener.getReportChartParameters( reportCategoryMethod, xDataValue, date, barangay);
+            }
+        });
+
     }
 
     @Override
-    public void showOverViewReport( ResponseOverviewReport reportObject) {
+    public void showOverViewReport(  ResponseOverviewReport reportObject, Params params) {
+        reportCategoryMethod = ReportCategoryMethod.OVERVIEW;
+        String year = Utility.getCurrentYear();
+
         //Line Chart Configuration
         ArrayList factorList =  reportObject.getFactorList();
         ArrayList<ResponsePovertyRate> povertyList = reportObject.getPovertyList();
 
         ScrollPane lineScrollPane = new ScrollPane();
         lineScrollPane.setFitToWidth(true);
-        String currentYear = Utility.getCurrentYear();
 
         XYChart.Series lineseries = seriesFactory.createPovertyPopulationSeries("Poverty Population", povertyList);
         lineseries.setName("Poverty Population");
@@ -61,6 +76,8 @@ public class ViewReportColumn extends VBox implements Reports {
 
         lineScrollPane.setContent(lineChart);
 
+        seriesFactory.addHoverToSeries(lineseries, currentYear, "");
+
         //-------------------- Barchart configuration -------------------//
         final BarChart<String,Number> bc = chartFactory.createBarChart("Population", "Factors", "Poverty Factor of the year 2016" );
         XYChart.Series series1 = seriesFactory.createPovertyFactorSeriesByList("Poverty Factors", factorList);
@@ -69,6 +86,8 @@ public class ViewReportColumn extends VBox implements Reports {
         chartFactory.addDiffrentColor(bc);
 
         chartFactory.setBarChartSizeFlexible(bc, 7);
+
+        seriesFactory.addHoverToSeries(series1, currentYear, "");
 
         RemoveAllChildren();
         vBox.getChildren().addAll(lineScrollPane, bc);
@@ -79,6 +98,7 @@ public class ViewReportColumn extends VBox implements Reports {
 
     @Override
     public void showCompareOverviewReport(ResponseCompareOverview responseCompareOverview, Params params) {
+        reportCategoryMethod = ReportCategoryMethod.COMPARE_OVERVIEW;
 
         // ==================== Poverty Poppulation ======================//
         String yr1 = String.valueOf(params.getYear());
@@ -91,20 +111,24 @@ public class ViewReportColumn extends VBox implements Reports {
 
         barChart.getData().addAll(series1, series2);
 
+        seriesFactory.addHoverToSeries(series1, yr1, "");
+        seriesFactory.addHoverToSeries(series2, yr2, "");
+
         chartFactory.addDiffrentColor(barChart);
         chartFactory.setBarChartSizeFlexible(barChart, 50);
 
-
-
-        // ==================== Factors  ======================//
+        // ==================== Factors   ======================//
         ArrayList  povertyFactorOneList = responseCompareOverview.getPovertyFactorOneList();
         ArrayList  povertyFactorOneList2 = responseCompareOverview.getPovertyFactorTwoList();
 
-        XYChart.Series lineseries1 = seriesFactory.createPovertyFactorSeriesByList(yr1, povertyFactorOneList);
-        XYChart.Series lineseries2 = seriesFactory.createPovertyFactorSeriesByList(yr2, povertyFactorOneList2);
+        XYChart.Series lineseries1 = seriesFactory.createPovertyFactorSeriesByList(yr1, povertyFactorOneList );
+        XYChart.Series lineseries2 = seriesFactory.createPovertyFactorSeriesByList(yr2, povertyFactorOneList2 );
 
         LineChart lineChart = chartFactory.createLineChart("Factors", " Population"," Poverty Factors of " + yr1 + " vs " + yr2 );
         lineChart.getData().addAll(lineseries1, lineseries2);
+
+        seriesFactory.addHoverToSeries(lineseries1, yr1, "");
+        seriesFactory.addHoverToSeries(lineseries2, yr2, "");
 
         RemoveAllChildren();
         vBox.getChildren().addAll(barChart, lineChart);
@@ -115,6 +139,8 @@ public class ViewReportColumn extends VBox implements Reports {
 
     @Override
     public void showCompareSpecificReport(ResponseCompareOverview responseCompareOverview, Params params) {
+        reportCategoryMethod = ReportCategoryMethod.COMPARE_SPECIFIC;
+
 
         // ==================== Poverty Barchart  ======================//
         String yr1 = String.valueOf(params.getYear());
@@ -129,6 +155,8 @@ public class ViewReportColumn extends VBox implements Reports {
         XYChart.Series series2 = seriesFactory.createSeries(barangayTwo, yr2, responseCompareOverview.getUnresolvePopulationYeartwo());
 
         barChart.getData().addAll(series1, series2);
+        seriesFactory.addHoverToSeries(series1, yr1, barangayOne );
+        seriesFactory.addHoverToSeries(series2, yr2, barangayTwo );
 
         chartFactory.addDiffrentColor(barChart);
 
@@ -144,6 +172,9 @@ public class ViewReportColumn extends VBox implements Reports {
         LineChart lineChart = chartFactory.createLineChart("Population", "Poverty Factors"," Poverty Factors of " + yr1 + " vs " + yr2 );
         lineChart.getData().addAll(lineseries1, lineseries2);
 
+        seriesFactory.addHoverToSeries(lineseries1, yr1, barangayOne);
+        seriesFactory.addHoverToSeries(lineseries2, yr2, barangayTwo);
+
         RemoveAllChildren();
         vBox.getChildren().addAll(barChart, lineChart);
         scrollPane.setContent(null);
@@ -152,7 +183,10 @@ public class ViewReportColumn extends VBox implements Reports {
     }
 
     @Override
-    public void showSpecificOverViewReport(ResponseSpecificOverView responseSpecificOverView, String barangayName) {
+    public void showSpecificOverViewReport( ResponseSpecificOverView responseSpecificOverView, Params params) {
+        reportCategoryMethod = ReportCategoryMethod.SPECIFIC_OVERVIEW;
+        String year = String.valueOf(params.getYear());
+        String barangayName = params.getBarangay1();
 
         ArrayList povertyPopulation = responseSpecificOverView.getMonthLyPopulationList();
         ArrayList povertyFactorList = responseSpecificOverView.getMonthLyPovertyFactorList();
@@ -161,9 +195,11 @@ public class ViewReportColumn extends VBox implements Reports {
 
         // --- poverty populations ---- //
         LineChart lineChart = chartFactory.createLineChart("Month", "Population", "Monthly Poverty Rate of " + barangayName );
-        XYChart.Series series = seriesFactory.createPovertySeriesSpecificOverView("Monthly Poverty Population", povertyPopulation);
+        XYChart.Series series = seriesFactory.createPovertySeriesSpecificOverView("Monthly Poverty Population", povertyPopulation );
 
         lineChart.getData().add(series);
+
+        seriesFactory.addHoverToSeries(series, year, barangayName);
 
         vBox.getChildren().addAll(lineChart);
 
@@ -171,13 +207,17 @@ public class ViewReportColumn extends VBox implements Reports {
         int x = 0;
         while ( x <= povertyFactorList.size() -1 ){
             ResponsePovertyFactor povertyFactor = (ResponsePovertyFactor) povertyFactorList.get(x);
+            String month  = povertyFactor.getMonth();
 
-            BarChart barChart = chartFactory.createBarChart("Population", "Factors", povertyFactor.getMonth() + " Poverty Factors");
-            XYChart.Series factorSeries = seriesFactory.createPovertyFactorSeriesByData("", povertyFactor);
+            BarChart barChart = chartFactory.createBarChart("Population", "Factors", month + " Poverty Factors");
+
+            XYChart.Series factorSeries = seriesFactory.createPovertyFactorSeriesByData("Factors", povertyFactor );
 
             barChart.getData().add(factorSeries);
             chartFactory.setBarChartSizeFlexible(barChart, 7);
 
+            String date = Utility.concatinateYearAndMonth(year, month);
+            seriesFactory.addHoverToSeries(factorSeries, date, barangayName);
 
             chartFactory.addDiffrentColor(barChart);
 
@@ -193,9 +233,12 @@ public class ViewReportColumn extends VBox implements Reports {
 
     @Override
     public void showSpecificReport(ResponseSpecific responseSpecific, Params params) {
+        reportCategoryMethod = ReportCategoryMethod.SPECIFIC;
+        String month = responseSpecific.getPovertyFactor().getMonth();
+
+        String date = params.getDate();
 
         String barangayName = params.getBarangay1();
-        String month = responseSpecific.getPovertyFactor().getMonth();
 
         ResponsePovertyFactor povertyFactor = responseSpecific.getPovertyFactor();
 
@@ -206,6 +249,8 @@ public class ViewReportColumn extends VBox implements Reports {
         XYChart.Series  series = seriesFactory.createSeries("Poverty population", "Total poverty Population", population );
 
         barChart.getData().addAll(series);
+
+        seriesFactory.addHoverToSeries(series, date, barangayName);
 
         chartFactory.setBarChartSizeFlexible(barChart, 50);
 
@@ -218,6 +263,8 @@ public class ViewReportColumn extends VBox implements Reports {
 
         lineChart.getData().addAll(lineSeries);
 
+        seriesFactory.addHoverToSeries(lineSeries, date, barangayName);
+
         RemoveAllChildren();
         vBox.getChildren().addAll(barChart, lineChart);
         scrollPane.setContent(null);
@@ -229,6 +276,9 @@ public class ViewReportColumn extends VBox implements Reports {
         vBox.getChildren().remove(0, vBox.getChildren().size());
     }
 
+    public void addViewReportLayoutListener(ViewReportLayoutListener viewReportLayoutListener){
+        this.viewReportLayoutListener = viewReportLayoutListener;
+    }
 
 }
 

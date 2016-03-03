@@ -13,10 +13,10 @@ import java.util.ArrayList;
  */
 public interface Reports {
 
-    public void showOverViewReport(ResponseOverviewReport reportObject);
+    public void showOverViewReport(ResponseOverviewReport reportObject, Params params);
     public void showCompareOverviewReport(ResponseCompareOverview responseCompareOverview, Params params);
     public void showCompareSpecificReport(ResponseCompareOverview responseCompareOverview, Params params);
-    public void showSpecificOverViewReport(ResponseSpecificOverView responseSpecificOverView, String barangayname);
+    public void showSpecificOverViewReport(ResponseSpecificOverView responseSpecificOverView, Params params);
     public void showSpecificReport(ResponseSpecific responseSpecific, Params params);
 
 }

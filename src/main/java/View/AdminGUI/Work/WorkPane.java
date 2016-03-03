@@ -8,6 +8,7 @@ import Remote.Method.FamilyModel.Family;
 import ListModels.UiModels;
 import Remote.Method.FamilyModel.FamilyInfo;
 import Remote.Method.FamilyModel.FamilyPoverty;
+import View.AdminGUI.Work.Listener.WorkPaneListener;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -51,6 +52,8 @@ public class WorkPane extends BorderPane {
     private Params params;
 
     private     TableColumn check;
+    private WorkPaneListener workPaneListener;
+
     public WorkPane() {
 
         generateHeader();
@@ -69,17 +72,7 @@ public class WorkPane extends BorderPane {
                 String date = Utility.concatinateYearAndMonth(Year, Month);
 
                 Params params = new Params(date , Barangay);
-                ArrayList list = ctr.getFamilyBarangay(params);
-
-                for (Object family :  list){
-                    Family fam = (Family) family;
-
-                    FamilyPoverty familyPoverty = fam.getFamilypoverty();
-                    FamilyInfo familyInfo = fam.getFamilyinfo();
-
-                    Prioritizer.addPriorityLevel(familyPoverty, familyInfo.getNumofChildren());
-
-                }
+                ArrayList list = ctr.getFamilyBarangay(params,  null);
 
                 showTable(list);
 
@@ -217,13 +210,25 @@ public class WorkPane extends BorderPane {
 
     }
 
-    private void showTable(ArrayList list){
+    public void showTable(ArrayList<Family> list){
 
-        ObservableList<BarangayFamily> ItemList = FXCollections.observableArrayList(list);
+        for (Object family :  list){
+            Family fam = (Family) family;
+
+            FamilyPoverty familyPoverty = fam.getFamilypoverty();
+            FamilyInfo familyInfo = fam.getFamilyinfo();
+
+            Prioritizer.addPriorityLevel(familyPoverty, familyInfo.getNumofChildren());
+
+        }
+
+        ObservableList<Family> ItemList = FXCollections.observableArrayList(list);
 
         tableView.setItems(ItemList);
 
         setCenter(tableView);
+        workPaneListener.showWorkPane();
+
     }
 
     private void generateTools(){
@@ -277,6 +282,10 @@ public class WorkPane extends BorderPane {
     private void  deselectAll(){
         tableView.getSelectionModel().clearSelection();
 
+    }
+
+    public void addWorkPaneListener(WorkPaneListener workPaneListener){
+        this.workPaneListener = workPaneListener;
     }
 
 

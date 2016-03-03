@@ -1,9 +1,9 @@
 package View.AdminGUI.Home;
 
-import AdminModel.Report.Children.Model.ResponsePovertyRate;
 import BarangayData.BarangayData;
 import PriorityModels.PriorityLevel;
-import Remote.Method.FamilyModel.Family;
+import View.AdminGUI.Home.Listeners.HomePaneListener;
+import View.AdminGUI.Home.Listeners.ViewCellListener;
 import View.AdminGUI.Report.Charts.ChartFactory;
 import View.AdminGUI.Work.PriorityProgressBarCell;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -13,7 +13,6 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
@@ -29,6 +28,9 @@ public class HomePane extends VBox{
     private ChartFactory chartFactory = new ChartFactory();
 
     private PieChart pieChart =  chartFactory.createPieChart();
+    String year;
+
+    private HomePaneListener homePaneListener;
 
     public HomePane() {
         createTable();
@@ -50,7 +52,8 @@ public class HomePane extends VBox{
         createColumns();
     }
 
-    public void setData(ArrayList<BarangayData> list){
+    public void setData(ArrayList<BarangayData> list, String year){
+        this.year = year;
         ObservableList data = FXCollections.observableArrayList(list);
 
         tableView.getItems().clear();
@@ -70,6 +73,15 @@ public class HomePane extends VBox{
 
         priorityType.setVisible(false);
 
+
+        ViewCellListener viewCellListener = new ViewCellListener() {
+            @Override
+            public void viewData(String barangayName) {
+
+                homePaneListener.viewPeople(barangayName, year);
+            }
+        };
+
         priorityLevel.setCellFactory(new Callback<TableColumn, TableCell>() {
             @Override
             public TableCell call(TableColumn param) {
@@ -80,7 +92,7 @@ public class HomePane extends VBox{
         view.setCellFactory(new Callback<TableColumn, TableCell>() {
             @Override
             public TableCell call(TableColumn param) {
-                return new ViewCell();
+                return new ViewCell(viewCellListener);
             }
         });
 
@@ -138,5 +150,9 @@ public class HomePane extends VBox{
 
         pieChart.setData(pieData);
 
+    }
+
+    public void addHomePaneListeners(HomePaneListener listener){
+        homePaneListener = listener;
     }
 }

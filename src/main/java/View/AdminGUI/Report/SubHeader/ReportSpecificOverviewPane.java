@@ -41,7 +41,6 @@ public class ReportSpecificOverviewPane extends  HBox{
             YearCB = new ComboBox();
             BarangayCB = new ComboBox();
 
-
             YearCB.setPromptText("Year");
             BarangayCB.setPromptText("Barangay");
 
