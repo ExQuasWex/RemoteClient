@@ -51,7 +51,7 @@ public class SeriesFactory {
     }
 
     public XYChart.Series createPovertyFactorSeriesByList(String seriesName, ArrayList povertyFactorList   ){
-
+        int x = 0;
         ArrayList factorList =   povertyFactorList;
 
         XYChart.Series series = new XYChart.Series();
@@ -66,7 +66,7 @@ public class SeriesFactory {
             XYChart.Data data2 =  new XYChart.Data("UnderEmployed", factors.getUnderemployed());
             XYChart.Data data3 =  new XYChart.Data("No other Income", factors.getNoOtherIncome());
             XYChart.Data data4 =  new XYChart.Data("Below City Threshold", factors.getBelowMinimun());
-            XYChart.Data data5  =  new XYChart.Data("Illegal Settlers ", factors.getNoShelter());
+            XYChart.Data data5  =  new XYChart.Data("No Home", factors.getNoShelter());
 
 
             data1.nodeProperty().addListener(new ChangeListener<Node>() {
@@ -124,7 +124,7 @@ public class SeriesFactory {
             XYChart.Data data2 =  new XYChart.Data("UnderEmployed", povertyFactor.getUnderemployed());
             XYChart.Data data3 =  new XYChart.Data("No other Income", povertyFactor.getNoOtherIncome());
             XYChart.Data data4 =  new XYChart.Data("Below City Threshold", povertyFactor.getBelowMinimun());
-            XYChart.Data data5  =  new XYChart.Data("Illegal Settlers ", povertyFactor.getNoShelter());
+            XYChart.Data data5  =  new XYChart.Data("No Home", povertyFactor.getNoShelter());
 
 
             data1.nodeProperty().addListener(new ChangeListener<Node>() {

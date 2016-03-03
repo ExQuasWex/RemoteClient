@@ -234,7 +234,6 @@ public class ViewReportColumn extends VBox implements Reports {
     @Override
     public void showSpecificReport(ResponseSpecific responseSpecific, Params params) {
         reportCategoryMethod = ReportCategoryMethod.SPECIFIC;
-        String month = responseSpecific.getPovertyFactor().getMonth();
 
         String date = params.getDate();
 
@@ -243,7 +242,7 @@ public class ViewReportColumn extends VBox implements Reports {
         ResponsePovertyFactor povertyFactor = responseSpecific.getPovertyFactor();
 
         // === poverty population === //
-        BarChart barChart = chartFactory.createBarChart("Population", "", "Poverty population  " + barangayName + " " + month +" "   );
+        BarChart barChart = chartFactory.createBarChart("Population", "", "Poverty population  " + barangayName  +" "   );
 
         int population = responseSpecific.getBarangayPovertyPopulation();
         XYChart.Series  series = seriesFactory.createSeries("Poverty population", "Total poverty Population", population );
@@ -258,7 +257,7 @@ public class ViewReportColumn extends VBox implements Reports {
 
         // === poverty factors === //
 
-        LineChart lineChart = chartFactory.createLineChart("Factors", "Population", "Poverty factors of" + barangayName +" " + month +" " );
+        LineChart lineChart = chartFactory.createLineChart("Factors", "Population", "Poverty factors of" + barangayName  +" " );
         XYChart.Series lineSeries = seriesFactory.createPovertyFactorSeriesByData("Factors", povertyFactor);
 
         lineChart.getData().addAll(lineSeries);
