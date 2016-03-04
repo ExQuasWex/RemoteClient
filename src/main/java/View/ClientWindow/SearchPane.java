@@ -39,7 +39,6 @@ public class SearchPane extends HBox  {
 
     }
 
-
     private void init(){
         searchBtn.setPrefWidth(150);
 
@@ -60,7 +59,6 @@ public class SearchPane extends HBox  {
         });
 
     }
-
 
     public void addSearchPaneListener(SearchPaneListener SearchPaneListener){
         searchPaneListener = SearchPaneListener;

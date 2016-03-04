@@ -6,9 +6,13 @@ import Controller.Controller;
 import DecisionSupport.Prioritizer;
 import Remote.Method.FamilyModel.Family;
 import ListModels.UiModels;
+import Remote.Method.FamilyModel.FamilyHistory;
 import Remote.Method.FamilyModel.FamilyInfo;
 import Remote.Method.FamilyModel.FamilyPoverty;
 import View.AdminGUI.Work.Listener.WorkPaneListener;
+import View.ClientWindow.SearchTabWindow;
+import View.ToolKit.MessageBox;
+import clientModel.StaffInfo;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -19,6 +23,8 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
@@ -31,6 +37,7 @@ import java.util.ArrayList;
  */
 public class WorkPane extends BorderPane {
 
+    public static boolean isRevoke = false;
     private HBox toolBox = new HBox();
     private HBox HBOX = new HBox();
     private Button View = new Button("View");
@@ -49,7 +56,9 @@ public class WorkPane extends BorderPane {
     private TableActionCell tableActionCell = new TableActionCell();
 
     private Controller ctr = Controller.getInstance();
-    private Params params;
+
+    private ContextMenu contextMenu = new ContextMenu();
+    private MenuItem viewMenuItem = new MenuItem("View");
 
     private     TableColumn check;
     private WorkPaneListener workPaneListener;
@@ -60,6 +69,8 @@ public class WorkPane extends BorderPane {
         generateTools();
 
         establishTable();
+
+        setContextMenu();
 
         View.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -96,11 +107,61 @@ public class WorkPane extends BorderPane {
         save.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("save");
+                if (tableView.getItems().isEmpty()) {
+                    Utility.showMessageBox("There are no data available", Alert.AlertType.ERROR);
+
+                }else {
+                    if (tableView.getSelectionModel().getSelectedItems().isEmpty()){
+                        Utility.showMessageBox("Please select row in the table", Alert.AlertType.ERROR);
+
+                    }
+                    else {
+                        boolean isConfirm = Utility.showConfirmationMessage("Are you sure you want to apply these actions?", Alert.AlertType.CONFIRMATION);
+
+                        if (isConfirm){
+                            StaffInfo staffInfo = ctr.getStaffInfo();
+                            String password = staffInfo.getPassword();
+                            boolean x = MessageBox.confirmMessageWithPassword("Enter your password", "Password Confirmation",password);
+                                    if (x){
+                                        saveChanges();
+                                    }else {
+                                        Utility.showMessageBox("Incorrect Password", Alert.AlertType.ERROR);
+                                    }
+                            }
+                    }
+                }
+
 
             }
         });
 
+    }
+
+    private void setContextMenu(){
+        contextMenu.getItems().add(viewMenuItem);
+
+        viewMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+             ObservableList<Family>  familyList =  tableView.getSelectionModel().getSelectedItems();
+
+                SearchTabWindow searchTabWindow = SearchTabWindow.getInstance();
+
+                searchTabWindow.addTab(familyList);
+                searchTabWindow.show();
+            }
+        });
+
+        tableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getButton().equals(MouseButton.SECONDARY)){
+                    double x  = event.getScreenX();
+                    double y = event.getScreenY();
+                    showContextMenu(HBOX, x, y);
+                }
+            }
+        });
     }
 
     private void establishTable(){
@@ -288,6 +349,38 @@ public class WorkPane extends BorderPane {
         this.workPaneListener = workPaneListener;
     }
 
+    private void showContextMenu(HBox root, double x, double y){
+        contextMenu.show(root, x, y);
+    }
 
+    private void saveChanges(){
+
+        ObservableList familyList =  tableView.getSelectionModel().getSelectedItems();
+        ObservableList rowList =  tableView.getSelectionModel().getSelectedIndices();
+
+        int x = 0;
+
+        while (x<= rowList.size() - 1){
+            TableColumn column = (TableColumn) tableView.getColumns().get(6);
+            tableActionCell = (TableActionCell) column.getCellFactory().call(column);
+
+            RevokeHistory revokeHistory = tableActionCell.getSelectedItem();
+
+            if (revokeHistory != null){
+                Family family = (Family) familyList.get(x);
+
+                FamilyHistory familyHistory = family.getFamilyHistory();
+
+                familyHistory.setRevoke(revokeHistory.isRevoke());
+                familyHistory.setRevokeDescription(revokeHistory.getRevokeDesck());
+                familyHistory.setAction(revokeHistory.getSolution());
+            }
+
+            x++;
+        }
+        //workPaneListener.saveChanges(familyList);
+    }
 
 }
+
+

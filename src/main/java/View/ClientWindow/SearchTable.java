@@ -67,6 +67,7 @@ public class SearchTable extends VBox {
         innerVBox = new VBox();
 
         table = new TableView();
+        table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         idCol = new TableColumn("ID");
@@ -111,9 +112,10 @@ public class SearchTable extends VBox {
         viewItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Family family = table.getSelectionModel().getSelectedItem();
+                ObservableList familyList = table.getSelectionModel().getSelectedItems();
                 SearchTabWindow searchTabWindow = SearchTabWindow.getInstance();
-                searchTabWindow.addTab(family.getFamilyinfo().getName(), family);
+
+                searchTabWindow.addTab(familyList);
                 searchTabWindow.show();
             }
         });
@@ -139,7 +141,6 @@ public class SearchTable extends VBox {
 
     private void showContextMenu(BorderPane root, double x, double y){
         contextMenu.show(root, x, y);
-
     }
 
     public void setData(ArrayList data){

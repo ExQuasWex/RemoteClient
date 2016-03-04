@@ -5,6 +5,8 @@ import AdminModel.Params;
 import AdminModel.RequestAccounts;
 import Controller.Controller;
 import Remote.Method.FamilyModel.Family;
+import Remote.Method.FamilyModel.FamilyHistory;
+import Remote.Method.FamilyModel.FamilyInfo;
 import View.AdminGUI.Home.HomePane;
 import View.AdminGUI.Home.Listeners.HomePaneListener;
 import View.AdminGUI.Listeners.AdminSlidePaneListner;
@@ -16,9 +18,11 @@ import View.AdminGUI.Work.Listener.WorkPaneListener;
 import View.AdminGUI.Work.WorkPane;
 import View.Login.LoginWindow;
 import View.ToolKit.Screen;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import utility.Utility;
 
 import java.util.ArrayList;
 
@@ -111,6 +115,28 @@ public class AdminWindow extends Stage{
             public void showWorkPane() {
                 root.setCenter(null);
                 root.setCenter(workPane);
+            }
+
+            @Override
+            public void saveChanges(ObservableList famiyList) {
+
+                String date = Utility.getCurrentDate();
+                String AdminName = ctr.getStaffInfo().getName();
+                int x = 0;
+                while (x <= famiyList.size() - 1){
+                    Family family = (Family) famiyList.get(x);
+                    FamilyInfo familyInfo = family.getFamilyinfo();
+                    int familyID = familyInfo.familyId();
+
+                    //FamilyHistory familyHistory = new FamilyHistory(null,familyID,date,AdminName )
+
+                    x++;
+                }
+
+
+
+
+
             }
         });
 

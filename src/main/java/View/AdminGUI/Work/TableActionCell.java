@@ -1,6 +1,7 @@
 package View.AdminGUI.Work;
 
 import PriorityModels.PriorityType;
+import View.ToolKit.MessageBox;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -15,6 +16,9 @@ import javafx.scene.control.TableCell;
 public class TableActionCell extends TableCell {
 
     private ComboBox resolutionBox = new ComboBox();
+    private boolean isPrvoke;
+    private String provokeDescription = null;
+    private RevokeHistory revokeHistory = null;
 
     public TableActionCell() {
 
@@ -24,7 +28,15 @@ public class TableActionCell extends TableCell {
             @Override
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
                 String item = (String) resolutionBox.getSelectionModel().getSelectedItem();
-                System.out.println(item);
+                    if (item != oldValue){
+                            provokeDescription = MessageBox.showHistoryDialog("What is your reason for changing this?","Information Box");
+
+                        if (provokeDescription != null) {
+                            isPrvoke = true;
+                            revokeHistory = new RevokeHistory(isPrvoke, item, provokeDescription);
+                        }
+                    }
+
             }
         });
 
@@ -59,5 +71,9 @@ public class TableActionCell extends TableCell {
         itemList.add("Home");
 
     return itemList;
+    }
+
+    public RevokeHistory getSelectedItem(){
+       return revokeHistory;
     }
 }

@@ -1,7 +1,9 @@
 package View.ClientWindow;
 
 import Remote.Method.FamilyModel.Family;
+import Remote.Method.FamilyModel.FamilyHistory;
 import Remote.Method.FamilyModel.FamilyInfo;
+import Remote.Method.FamilyModel.FamilyPoverty;
 import View.ClientWindow.Listeners.EditableListener;
 import View.Login.CustomStage;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -27,6 +29,7 @@ import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -82,73 +85,102 @@ public class SearchTabWindow extends CustomStage {
         return  searchTabWindow;
     }
 
-    public void addTab(String tabName, Family fam){
-        Tab tab = new Tab(tabName);
+    public void addTab( ObservableList familyList){
+        int x = 0;
 
-        FamilyInfo familyInfo = fam.getFamilyinfo();
+        while (x <= familyList.size() - 1){
+            Map map  = new LinkedHashMap<>();
 
-        String numofChildren = String.valueOf(familyInfo.getNumofChildren());
-        String surveyedYr = String.valueOf(familyInfo.getSurveyedYr());
-        String residenceYR = String.valueOf(familyInfo.getResidencyYr());
+            Family fam = (Family) familyList.get(x);
 
-        Map map  = new LinkedHashMap<>();
-        map.put("Name",familyInfo.getName());
-        map.put("MaritalStatus",familyInfo.getMaritalStatus());
-        map.put("Spouse",familyInfo.getSpouseName());
-        map.put("Number of Childred",numofChildren);
-        map.put("Entry Date",familyInfo.getInputDate());
-        map.put("Year Issued",surveyedYr);
-        map.put("Year of Residency",residenceYR);
-        map.put("Barangay",familyInfo.getBarangay());
-        map.put("Address",familyInfo.getAddress());
-        map.put("Age",familyInfo.getAge());
+            FamilyInfo familyInfo = fam.getFamilyinfo();
+            FamilyPoverty familyPoverty = fam.getFamilypoverty();
+            FamilyHistory familyHistory = fam.getFamilyHistory();
 
+            String name =  familyInfo.getName();
+            Tab tab = new Tab(name);
 
-        ObservableList data = FXCollections.observableArrayList(map.entrySet());
+            String numofChildren = String.valueOf(familyInfo.getNumofChildren());
+            String surveyedYr = String.valueOf(familyInfo.getSurveyedYr());
+            String residenceYR = String.valueOf(familyInfo.getResidencyYr());
 
-        TableView tableView = new TableView();
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        tableView.setEditable(true);
+            map.put("Name",familyInfo.getName());
+            map.put("MaritalStatus",familyInfo.getMaritalStatus());
+            map.put("Spouse",familyInfo.getSpouseName());
+            map.put("Number of Childred",numofChildren);
+            map.put("Entry Date",familyInfo.getInputDate());
+            map.put("Year Issued",surveyedYr);
+            map.put("Year of Residency",residenceYR);
+            map.put("Barangay",familyInfo.getBarangay());
+            map.put("Address",familyInfo.getAddress());
+            map.put("Age",familyInfo.getAge());
 
-        TableColumn Category = new TableColumn("Category");
-        TableColumn Value = new TableColumn("Value");
+            map.put("","");
 
-        tableView.setItems(data);
-
-        Category.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<String, String>, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) {
-                return new ReadOnlyObjectWrapper<String>(param.getValue().getKey());
-            }
-        });
-
-
-        Value.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<String, String>, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) {
-                return new ReadOnlyObjectWrapper<String>(param.getValue().getValue());
-            }
-        });
-
-        Value.setSortType(TableColumn.SortType.DESCENDING);
-        Category.setSortType(TableColumn.SortType.DESCENDING);
-
-        tableView.getColumns().addAll(Category, Value);
+            map.put("Occupancy",familyPoverty.getOccupancy());
+            map.put("UnderEmployed",familyPoverty.getIsunderEmployed());
+            map.put("Ownership",familyPoverty.getOwnership());
+            map.put("Other Income",familyPoverty.getHasotherIncome());
+            map.put("Threshold",familyPoverty.getIsbelow8k());
+            map.put("Children in School",familyPoverty.getChildreninSchool());
 
 
-        editButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                editableListener.Edit(fam);
-            }
-        });
+                if (familyHistory != null){
+                    map.put("ID",familyHistory.getId());
+                    map.put("Action",familyHistory.getAction());
+                    map.put("Date",familyHistory.getDate());
+                    map.put("Admin",familyHistory.getAdminName());
+                    map.put("Revoke",familyHistory.isRevoke());
+                    map.put("Revoke Description",familyHistory.getRevokeDescription());
+                }
 
-        ScrollPane scrollPane = new ScrollPane(tableView);
-        scrollPane.setFitToWidth(true);
-        tab.setContent(scrollPane);
-        tabPane.getTabs().add(tab);
 
-        tabPane.getSelectionModel().select(tab);
+
+            ObservableList data = FXCollections.observableArrayList(map.entrySet());
+
+            TableView tableView = new TableView();
+            tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+            TableColumn Category = new TableColumn("Category");
+            TableColumn Value = new TableColumn("Value");
+
+            tableView.setItems(data);
+
+            Category.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<String, String>, String>, ObservableValue<String>>() {
+                @Override
+                public ObservableValue<String> call(TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) {
+                    return new ReadOnlyObjectWrapper<String>(param.getValue().getKey());
+                }
+            });
+
+
+            Value.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<String, String>, String>, ObservableValue<String>>() {
+                @Override
+                public ObservableValue<String> call(TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) {
+                    return new ReadOnlyObjectWrapper<String>(param.getValue().getValue());
+                }
+            });
+
+            Value.setSortType(TableColumn.SortType.DESCENDING);
+            Category.setSortType(TableColumn.SortType.DESCENDING);
+
+            tableView.getColumns().addAll(Category, Value);
+
+
+            editButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    editableListener.Edit(fam);
+                }
+            });
+
+
+            tab.setContent(tableView);
+            tabPane.getTabs().add(tab);
+            tabPane.getSelectionModel().select(tab);
+
+            x ++;
+        }
 
         requestFocus();
 

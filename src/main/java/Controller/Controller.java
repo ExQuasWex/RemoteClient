@@ -106,7 +106,6 @@ public class Controller implements TableItemListener {
     }
 
 
-
     // ====================== CLIENT  METHODS =================//
     /*
         if instant save is true the server automatically save the
@@ -115,7 +114,6 @@ public class Controller implements TableItemListener {
     public  boolean addFamilyInfo(boolean instantSave, Family family){
         return clientDB.addFamilyInfo(instantSave ,family);
     }
-
 
     public void UpdateFamilyInformation(Family family){
 
