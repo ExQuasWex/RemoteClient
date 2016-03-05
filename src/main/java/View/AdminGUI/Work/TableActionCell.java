@@ -3,18 +3,13 @@ package View.AdminGUI.Work;
 import PriorityModels.PriorityType;
 import Remote.Method.FamilyModel.Family;
 import Remote.Method.FamilyModel.FamilyHistory;
-import View.ToolKit.MessageBox;
-import javafx.application.Platform;
+import ToolKit.MessageBox;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.*;
-
-import java.util.ArrayList;
 
 /**
  * Created by Didoy on 2/1/2016.

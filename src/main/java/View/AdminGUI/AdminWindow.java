@@ -16,9 +16,10 @@ import View.AdminGUI.Report.Report.Layouts.Listener.MainReportPaneListener;
 import View.AdminGUI.Report.Report.Layouts.MainReportPane;
 import View.AdminGUI.Work.Listener.WorkPaneListener;
 import View.AdminGUI.Work.WorkPane;
+import View.ExportDatabasePane;
 import View.Login.LoginWindow;
-import View.ToolKit.LoadBar;
-import View.ToolKit.Screen;
+import ToolKit.LoadBar;
+import ToolKit.Screen;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -41,7 +42,11 @@ public class AdminWindow extends Stage{
     private HomePane homePane = new HomePane();
     private AdminSlidePane adminSlidePane = new AdminSlidePane();
     private MainReportPane mainReportPane = new MainReportPane();
+    private ExportDatabasePane exportDatabasePane;
+
     public AdminWindow(){
+        exportDatabasePane = new ExportDatabasePane(this);
+
         ctr = Controller.getInstance();
 
         root = new BorderPane();
@@ -86,6 +91,11 @@ public class AdminWindow extends Stage{
             @Override
             public void showReport() {
                 ShowReport();
+            }
+
+            @Override
+            public void showExportDatabase() {
+                ShowExportPane();
             }
 
             @Override
@@ -222,5 +232,9 @@ public class AdminWindow extends Stage{
          ctr.Logout();
          close();
          new LoginWindow();
+    }
+    private void ShowExportPane(){
+        root.setCenter(null);
+        root.setCenter(exportDatabasePane);
     }
 }

@@ -40,6 +40,8 @@ public class FamilyForm extends GridPane{
     private Button save;
     private  Button cancel;
 
+    public static String orginalName = "";
+
     private ScrollPane scrollPane;
 
     private GridPane subGrid;
@@ -117,6 +119,23 @@ public class FamilyForm extends GridPane{
             @Override
             public void handle(ActionEvent event) {
                 if (Validate()){
+                    String  name = Name.getText().trim();
+
+                    if (Controller.isNotified && orginalName.equals("")){
+                        orginalName = name;
+                    }
+
+                   else if (Controller.isNotified && !(orginalName.equals(""))){
+                        if (!orginalName.equals(name)){
+                            orginalName = name;
+                            Controller.isNotified = false;
+                            System.out.println("second if called");
+
+                        }
+                    }
+                    System.out.println("Original name: " + orginalName);
+                    System.out.println(name);
+
                     Save();
                 }
             }
@@ -561,15 +580,16 @@ public class FamilyForm extends GridPane{
             FamilyPoverty familyPoverty  = new FamilyPoverty(hasOtherIncome,isBelow8k,ownership,
                     occupancy,isunderEmployed,childrenScl, dateissued, Utility.getCurrentMonth());
 
-            family = new Family(familyInfo,familyPoverty);
+        family = new Family(familyInfo,familyPoverty);
 
-             // send data to clientWindow
+
+            // send data to clientWindow
             familyFormListener.handle(family);
 
             // Doesn't clear data unless notification is falls
-        if (!Controller.isNotified){
-            clear();
-        }
+//        if (!Controller.isNotified){
+//            clear();
+//        }
 
     }
 

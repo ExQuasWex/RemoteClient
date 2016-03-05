@@ -10,7 +10,7 @@ import Remote.Method.FamilyModel.FamilyInfo;
 import Remote.Method.FamilyModel.FamilyPoverty;
 import View.AdminGUI.Work.Listener.WorkPaneListener;
 import View.ClientWindow.SearchTabWindow;
-import View.ToolKit.MessageBox;
+import ToolKit.MessageBox;
 import clientModel.StaffInfo;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;

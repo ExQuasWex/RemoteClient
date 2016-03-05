@@ -62,10 +62,8 @@ public class SlidePane extends HBox{
         help.setPrefHeight(30);
         logout.setPrefHeight(30);
 
-
         // set the images of textfields
         accountinfo.getStyleClass().add("AccountTextField");
-
 
         leftVbox = new VBox();
         leftVbox.getStyleClass().add("vBox-list");
@@ -135,7 +133,6 @@ public class SlidePane extends HBox{
                     slidePaneListener.showEditForm();
                 }
             });
-
 
         //splitpane
         getChildren().addAll(leftVbox, rightVbox);

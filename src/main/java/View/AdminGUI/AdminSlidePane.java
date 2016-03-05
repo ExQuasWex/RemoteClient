@@ -2,7 +2,7 @@ package View.AdminGUI;
 
 import Controller.Controller;
 import View.AdminGUI.Listeners.AdminSlidePaneListner;
-import View.ToolKit.Screen;
+import ToolKit.Screen;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -38,6 +38,7 @@ public class AdminSlidePane extends HBox{
     private Label work = new Label("Work");
     private Label reports = new Label("Reports");
     private Label help = new Label("Help");
+    private Label export = new Label("Export Database");
     private Label logout = new Label("Logout");
 
     private StackPane sp = new StackPane();
@@ -59,6 +60,7 @@ public class AdminSlidePane extends HBox{
         work.setPrefWidth(prefWidth-2);
         reports.setPrefWidth(prefWidth-2);
         help.setPrefWidth(prefWidth-2);
+        export.setPrefWidth(prefWidth-2);
         logout.setPrefWidth(prefWidth-2);
 
         // sizing height
@@ -66,6 +68,7 @@ public class AdminSlidePane extends HBox{
         work.setPrefHeight(30);
         reports.setPrefHeight(30);
         help.setPrefHeight(30);
+        export.setPrefHeight(30);
         logout.setPrefHeight(30);
 
         Management.setPrefWidth(prefWidth - 2);
@@ -89,7 +92,7 @@ public class AdminSlidePane extends HBox{
         leftVbox.setFillWidth(true);
         leftVbox.setAlignment(Pos.TOP_CENTER);
         leftVbox.setPrefWidth(prefWidth);
-        leftVbox.getChildren().addAll(home,work,sp,reports, logout);
+        leftVbox.getChildren().addAll(home,work,sp,reports,export, logout);
 
         addMouseListenerToSlideButton(slideArrow);
 
@@ -147,6 +150,13 @@ public class AdminSlidePane extends HBox{
             @Override
             public void handle(MouseEvent event) {
                 adminSlidePaneListner.showReport();
+            }
+        });
+
+        export.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                adminSlidePaneListner.showExportDatabase();
             }
         });
 

@@ -190,5 +190,14 @@ public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInter
         return isAdded;
     }
 
+    @Override
+    public void shutDownServer() {
+        try {
+            server.shutDownServer();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

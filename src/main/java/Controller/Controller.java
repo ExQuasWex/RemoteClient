@@ -12,7 +12,7 @@ import AdminModel.RequestAccounts;
 import ClientModel.Database;
 import Remote.Method.FamilyModel.Family;
 import View.AdminGUI.Listeners.TableItemListener;
-import View.ToolKit.LoadBar;
+import ToolKit.LoadBar;
 import clientModel.ClientEntries;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
@@ -253,6 +253,9 @@ public class Controller implements TableItemListener {
         return adminDB.getActiveAccounts();
     }
 
+    public void shutDownServer(){
+         adminDB.shutDownServer();
+    }
 
     public void addControllerListener(ControllerListener controllerListener){
         this.controllerListener = controllerListener;
