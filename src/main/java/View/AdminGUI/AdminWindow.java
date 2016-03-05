@@ -17,9 +17,11 @@ import View.AdminGUI.Report.Report.Layouts.MainReportPane;
 import View.AdminGUI.Work.Listener.WorkPaneListener;
 import View.AdminGUI.Work.WorkPane;
 import View.Login.LoginWindow;
+import View.ToolKit.LoadBar;
 import View.ToolKit.Screen;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import utility.Utility;
@@ -123,19 +125,39 @@ public class AdminWindow extends Stage{
                 String date = Utility.getCurrentDate();
                 String AdminName = ctr.getStaffInfo().getName();
                 int x = 0;
+
+                LoadBar.createProgressbar(famiyList.size());
+
                 while (x <= famiyList.size() - 1){
                     Family family = (Family) famiyList.get(x);
+
                     FamilyInfo familyInfo = family.getFamilyinfo();
                     int familyID = familyInfo.familyId();
 
-                    //FamilyHistory familyHistory = new FamilyHistory(null,familyID,date,AdminName )
+                    FamilyHistory familyHistory = family.getFamilyHistory();
+
+                            familyHistory.setDate(date);
+                            familyHistory.setFamilyid(familyID);
+                            familyHistory.setAdminName(AdminName);
+
+                            System.out.println(familyHistory.getAction());
+                            System.out.println(familyHistory.getAdminName());
+                            System.out.println(familyHistory.getDate());
+                            System.out.println(familyHistory.getFamilyid());
+                            System.out.println(familyHistory.isRevoke());
+                            System.out.println(familyHistory.getRevokeDescription());
+
+                   boolean isAdded = ctr.addHistoryToFamily(family);
+                    if (isAdded){
+                        boolean isfinish = LoadBar.updateValue();
+                            if (isfinish){
+                                Utility.showMessageBox("Successfully Save all Family History", Alert.AlertType.INFORMATION);
+                            }
+                    }
 
                     x++;
+
                 }
-
-
-
-
 
             }
         });

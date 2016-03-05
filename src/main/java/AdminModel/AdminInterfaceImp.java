@@ -7,6 +7,7 @@ import AdminModel.Report.Parent.ResponseSpecific;
 import AdminModel.Report.Parent.ResponseSpecificOverView;
 import RMI.AdminInterface;
 import RMI.Constant;
+import Remote.Method.FamilyModel.Family;
 import utility.TimedRMIclientSocketFactory;
 import utility.Utility;
 
@@ -174,6 +175,19 @@ public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInter
         }
 
         return list;
+    }
+
+    @Override
+    public boolean addHistoryToFamily(Family family) {
+        boolean isAdded = false ;
+
+        try {
+            isAdded = server.addHistoryToFamily(family);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+        return isAdded;
     }
 
 

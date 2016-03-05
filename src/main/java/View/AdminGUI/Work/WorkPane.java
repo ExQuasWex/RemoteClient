@@ -1,7 +1,6 @@
 package View.AdminGUI.Work;
 
 import AdminModel.Params;
-import AdminModel.ResponseModel.BarangayFamily;
 import Controller.Controller;
 import DecisionSupport.Prioritizer;
 import Remote.Method.FamilyModel.Family;
@@ -53,7 +52,6 @@ public class WorkPane extends BorderPane {
     private ComboBox<String> year = new ComboBox<String>();
 
     private BooleanCell booleanCell = new BooleanCell();
-    private TableActionCell tableActionCell = new TableActionCell();
 
     private Controller ctr = Controller.getInstance();
 
@@ -113,7 +111,6 @@ public class WorkPane extends BorderPane {
                 }else {
                     if (tableView.getSelectionModel().getSelectedItems().isEmpty()){
                         Utility.showMessageBox("Please select row in the table", Alert.AlertType.ERROR);
-
                     }
                     else {
                         boolean isConfirm = Utility.showConfirmationMessage("Are you sure you want to apply these actions?", Alert.AlertType.CONFIRMATION);
@@ -187,7 +184,7 @@ public class WorkPane extends BorderPane {
         Action.setCellFactory(new Callback<TableColumn, TableCell>() {
             @Override
             public TableCell call(TableColumn param) {
-                return new TableActionCell();
+                return new TableActionCell(tableView);
             }
         });
 
@@ -356,29 +353,33 @@ public class WorkPane extends BorderPane {
     private void saveChanges(){
 
         ObservableList familyList =  tableView.getSelectionModel().getSelectedItems();
-        ObservableList rowList =  tableView.getSelectionModel().getSelectedIndices();
 
         int x = 0;
 
-        while (x<= rowList.size() - 1){
-            TableColumn column = (TableColumn) tableView.getColumns().get(6);
-            tableActionCell = (TableActionCell) column.getCellFactory().call(column);
+        while (x<= familyList.size() - 1){
 
-            RevokeHistory revokeHistory = tableActionCell.getSelectedItem();
+            Family family = (Family) familyList.get(x);
+            String action = family.getFamilypoverty().getPriorityType().toString();
+            FamilyHistory familyHistory = family.getFamilyHistory();
 
-            if (revokeHistory != null){
-                Family family = (Family) familyList.get(x);
-
-                FamilyHistory familyHistory = family.getFamilyHistory();
-
-                familyHistory.setRevoke(revokeHistory.isRevoke());
-                familyHistory.setRevokeDescription(revokeHistory.getRevokeDesck());
-                familyHistory.setAction(revokeHistory.getSolution());
+            if (familyHistory != null) {
+                if (!familyHistory.isRevoke()){
+                    familyHistory.setRevoke(false);
+                    familyHistory.setRevokeDescription("");
+                    familyHistory.setAction(action);
+                }
+            }else {
+                familyHistory = new FamilyHistory();
+                familyHistory.setRevoke(false);
+                familyHistory.setRevokeDescription("");
+                familyHistory.setAction(action);
             }
+            family.setFamilyHistory(familyHistory);
 
+            family.setFamilyHistory(familyHistory);
             x++;
         }
-        //workPaneListener.saveChanges(familyList);
+        workPaneListener.saveChanges(familyList);
     }
 
 }

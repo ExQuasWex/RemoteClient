@@ -1,5 +1,8 @@
 package View.ToolKit;
 
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import utility.Utility;
 
 import javax.swing.*;
 import java.sql.ResultSet;
@@ -59,7 +63,9 @@ private static String option = "";
                 return null;
             }
         });
+
        Optional response =  dialog.showAndWait();
+        passwordField.requestFocus();
 
         if (response.isPresent()){
 
@@ -84,6 +90,7 @@ private static String option = "";
 
         Text textHeader = new Text(text);
         ComboBox comboBox = new ComboBox();
+        comboBox.setPromptText("Options");
 
         comboBox.setItems(opList);
 
@@ -99,7 +106,6 @@ private static String option = "";
         dialog.setTitle(title);
         dialog.setContentText(text);
 
-
         ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
 
@@ -109,20 +115,25 @@ private static String option = "";
 
                 ButtonType type = (ButtonType) param;
                 if (type == okButtonType){
-                    option = (String) comboBox.getSelectionModel().getSelectedItem();
-                    return option;
+                    return okButtonType;
 
-                }else {
-                    option = "";
                 }
                 return null;
             }
         });
+                                Optional<ButtonType> response =  dialog.showAndWait();
 
-        Optional response =  dialog.showAndWait();
-            if (response.isPresent()){
-                option = (String) response.get();
-            }
+                                if (response.isPresent()){
+                                    if (response.get() == okButtonType){
+                                        option = (String) comboBox.getSelectionModel().getSelectedItem();
+                                       if (option == null){
+                                           Utility.showMessageBox("PLease select description in optionlist", Alert.AlertType.INFORMATION);
+                                           option = null;
+                                       }
+                                    }else {
+                                        option = null;
+                                    }
+                                }
 
         return  option;
     }

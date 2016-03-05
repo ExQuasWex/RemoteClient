@@ -177,6 +177,10 @@ public class Controller implements TableItemListener {
         return clientDB.getRequestAccounts();
     }
 
+    public boolean addHistoryToFamily(Family family){
+        return  adminDB.addHistoryToFamily(family);
+    }
+
     // ======================BACK TO FRONT END=================//
 
     public boolean updateStaffInfo(StaffInfo staffInfo) {

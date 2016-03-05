@@ -44,15 +44,20 @@ public class LoadBar {
          stage.show();
     }
 
-    public static void updateValue() {
+    public static boolean  updateValue() {
+        boolean isFinish = false;
         valueProperty.set(valueProperty.get() + percent);
-        double x = pb.getProgress() * 100;
+        Double x = pb.getProgress() * 100;
 
-        text.setText(String.valueOf(x));
-        if (x == 100){
+        text.setText(String.valueOf(x.intValue()));
+        if (x >= 100){
             stage.close();
             Controller.clientEntryList.clear();
+            isFinish = true;
         }
+        return  isFinish;
     }
+
+
 
 }
