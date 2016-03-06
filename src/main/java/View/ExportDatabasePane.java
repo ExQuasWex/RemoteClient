@@ -1,5 +1,6 @@
 package View;
 
+import Controller.Controller;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -85,12 +86,10 @@ public class ExportDatabasePane extends BorderPane {
 
                     if (confirmed){
 
-                        //Controller.getInstance().shutDownServer();
 
-                        File source = new File(dbPath);
+                        File source = Controller.getInstance().getBackUp();
                         File dest = new File(path);
                         try {
-                            FileUtils.copyDirectory(source, dest);
                             FileUtils.copyDirectoryToDirectory(source, dest);
                             Utility.showMessageBox("Successfully copied Database, you can now Turn On the Server", Alert.AlertType.INFORMATION);
 

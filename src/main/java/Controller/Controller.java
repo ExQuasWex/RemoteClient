@@ -11,7 +11,7 @@ import AdminModel.Report.Parent.ResponseSpecificOverView;
 import AdminModel.RequestAccounts;
 import ClientModel.Database;
 import Remote.Method.FamilyModel.Family;
-import View.AdminGUI.Listeners.TableItemListener;
+import View.AdminGUI.Listeners.TableAccountListener;
 import ToolKit.LoadBar;
 import clientModel.ClientEntries;
 import clientModel.StaffInfo;
@@ -21,13 +21,14 @@ import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import utility.Utility;
 
+import java.io.File;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 /**
  * Created by Didoy on 8/25/2015.
  */
-public class Controller implements TableItemListener {
+public class Controller implements TableAccountListener {
 
     Database clientDB ;
     private  StaffInfo staffInfo;
@@ -253,8 +254,8 @@ public class Controller implements TableItemListener {
         return adminDB.getActiveAccounts();
     }
 
-    public void shutDownServer(){
-         adminDB.shutDownServer();
+    public File getBackUp(){
+         return adminDB.getBackUp();
     }
 
     public void addControllerListener(ControllerListener controllerListener){

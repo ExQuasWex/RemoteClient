@@ -8,6 +8,7 @@ import AdminModel.Report.Parent.ResponseSpecific;
 import AdminModel.Report.Parent.ResponseSpecificOverView;
 import Controller.Controller;
 import AdminModel.Enum.ReportCategoryMethod;
+import ToolKit.Printer;
 import View.AdminGUI.Report.Report.Layouts.Listener.MainReportPaneListener;
 import View.AdminGUI.Report.Report.Layouts.Listener.ViewReportLayoutListener;
 import View.AdminGUI.Report.SubHeader.*;
@@ -20,10 +21,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -55,6 +53,7 @@ public class MainReportPane extends VBox {
     private VBox InitialPane;
     private ViewReportColumn reportColumnPane = new ViewReportColumn();
     private Controller controller = Controller.getInstance();
+    private Button print = new Button("Print");
 
     private MainReportPaneListener mainReportPaneListener;
 
@@ -74,6 +73,12 @@ public class MainReportPane extends VBox {
         setVgrow(InitialPane, Priority.ALWAYS);
         getChildren().addAll(createHeader(), overViewPane, InitialPane);
 
+        print.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Printer.Print(columnView, null);
+            }
+        });
     }
 
     private void addPaneListeners(){
@@ -190,7 +195,7 @@ public class MainReportPane extends VBox {
 
         addCategoryListener();
 
-        header.getChildren().addAll(categoryLabel, category, Type, columnView, gridView);
+        header.getChildren().addAll(categoryLabel, category, Type, print,  columnView, gridView);
 
         return header;
     }

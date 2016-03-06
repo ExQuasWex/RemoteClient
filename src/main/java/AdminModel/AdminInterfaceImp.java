@@ -11,6 +11,7 @@ import Remote.Method.FamilyModel.Family;
 import utility.TimedRMIclientSocketFactory;
 import utility.Utility;
 
+import java.io.File;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -191,12 +192,14 @@ public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInter
     }
 
     @Override
-    public void shutDownServer() {
+    public File getBackUp()  {
+        File file = null;
         try {
-            server.shutDownServer();
+            file =  server.getBackUp();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+        return file;
     }
 
 

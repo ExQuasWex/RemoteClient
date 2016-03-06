@@ -10,7 +10,7 @@ import Remote.Method.FamilyModel.FamilyInfo;
 import View.AdminGUI.Home.HomePane;
 import View.AdminGUI.Home.Listeners.HomePaneListener;
 import View.AdminGUI.Listeners.AdminSlidePaneListner;
-import View.AdminGUI.Listeners.TableItemListener;
+import View.AdminGUI.Listeners.TableAccountListener;
 import View.AdminGUI.Management.ManagementPane;
 import View.AdminGUI.Report.Report.Layouts.Listener.MainReportPaneListener;
 import View.AdminGUI.Report.Report.Layouts.MainReportPane;
@@ -104,7 +104,7 @@ public class AdminWindow extends Stage{
             }
         });
 
-        managementPane.addTableListener(new TableItemListener() {
+        managementPane.addTableListener(new TableAccountListener() {
             @Override
             public boolean Approve(RequestAccounts ra) {
 

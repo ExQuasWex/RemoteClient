@@ -5,7 +5,7 @@ import Controller.Controller;
 import RMI.Constant;
 import RMI.RemoteMethods;
 import Remote.Method.FamilyModel.Family;
-import View.AdminGUI.Listeners.TableItemListener;
+import View.AdminGUI.Listeners.TableAccountListener;
 import clientModel.StaffInfo;
 import clientModel.StaffRegister;
 import global.Credentials;
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 /**
  * Created by Didoy on 8/24/2015.
  */
-public class Database extends UnicastRemoteObject implements RemoteMethods, TableItemListener {
+public class Database extends UnicastRemoteObject implements RemoteMethods, TableAccountListener {
 
    private RemoteMethods server;
    private boolean bol;
