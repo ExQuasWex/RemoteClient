@@ -1,10 +1,11 @@
 package View.AdminGUI.Management;
 
+import AdminModel.Enum.AccountApproveStatus;
+import AdminModel.Enum.AccountStatus;
 import AdminModel.RequestAccounts;
 import Controller.Controller;
 import View.AdminGUI.Listeners.TableAccountListener;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,7 +16,6 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Callback;
 import utility.Utility;
@@ -58,7 +58,7 @@ public class RequestAccountTable extends TableView{
             @Override
             public void handle(ActionEvent event) {
                 RequestAccounts ra = (RequestAccounts)  getSelectionModel().getSelectedItem();
-                boolean isActivated = tableAccountListener.Approve(ra);
+                boolean isActivated = tableAccountListener.approveAccount(ra.getId(), AccountApproveStatus.APPROVED);
                 if (isActivated){
                     Utility.showMessageBox("Account Activated as Encoder", Alert.AlertType.INFORMATION);
                     refreshTable(getRequestAccounts());
@@ -75,7 +75,7 @@ public class RequestAccountTable extends TableView{
             @Override
             public void handle(ActionEvent event) {
                 RequestAccounts  ra = (RequestAccounts)  getSelectionModel().getSelectedItem();
-                boolean isActivated =  tableAccountListener.ApproveAdmin(ra);
+                boolean isActivated = tableAccountListener.approveAccount(ra.getId(), AccountApproveStatus.ADMIN);
 
                 if (isActivated){
                     Utility.showMessageBox("Account Activated as Admin", Alert.AlertType.INFORMATION);
@@ -92,7 +92,7 @@ public class RequestAccountTable extends TableView{
             public void handle(ActionEvent event) {
                 RequestAccounts  ra = (RequestAccounts) getSelectionModel().getSelectedItem();
 
-                boolean isRejected =  tableAccountListener.Reject(ra);
+                boolean isRejected =  tableAccountListener.approveAccount(ra.getId(), AccountApproveStatus.REJECT);
 
                 if (isRejected){
                     Utility.showMessageBox("Account is Now Rejected", Alert.AlertType.INFORMATION);
@@ -127,7 +127,7 @@ public class RequestAccountTable extends TableView{
     private void buildContextMenus(){
         // request table
         contextMenu = new ContextMenu();
-        contextMenu.getItems().addAll(approveItem,AdminItem,reject);
+        contextMenu.getItems().addAll(approveItem, AdminItem, reject);
         contextMenu.setAutoHide(true);
 
     }
@@ -176,6 +176,10 @@ public class RequestAccountTable extends TableView{
 
     private void closeOptions(ContextMenu contextMenu){
         contextMenu.hide();
+    }
+
+    public void addAccountTableListener(TableAccountListener tableAccountListener){
+        this.tableAccountListener = tableAccountListener;
     }
 
 

@@ -29,7 +29,7 @@ import java.util.ArrayList;
 /**
  * Created by Didoy on 8/24/2015.
  */
-public class Database extends UnicastRemoteObject implements RemoteMethods, TableAccountListener {
+public class Database extends UnicastRemoteObject implements RemoteMethods {
 
    private RemoteMethods server;
    private boolean bol;
@@ -296,47 +296,6 @@ public class Database extends UnicastRemoteObject implements RemoteMethods, Tabl
     }
 
 
-
-// methods from TableItemListener interface
-    @Override
-    public boolean Approve(RequestAccounts ra) {
-        boolean x = false;
-
-        try {
-            x = server.Approve(ra);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-
-        return x;
-    }
-
-    @Override
-    public boolean ApproveAdmin(RequestAccounts ra) {
-        boolean isActivated = false;
-
-            try {
-                isActivated = server.ApproveAdmin(ra);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-
-        return isActivated;
-    }
-
-    @Override
-    public boolean Reject(RequestAccounts ra) {
-        boolean isRejected = false;
-
-
-        try {
-            isRejected =  server.Reject(ra);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-
-        return isRejected;
-    }
 
     @Override
     public String getMethodIdentifiers() {

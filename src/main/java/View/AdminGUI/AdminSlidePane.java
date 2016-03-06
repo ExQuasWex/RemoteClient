@@ -3,6 +3,7 @@ package View.AdminGUI;
 import Controller.Controller;
 import View.AdminGUI.Listeners.AdminSlidePaneListner;
 import ToolKit.Screen;
+import View.AdminGUI.Management.ManagementTable;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -11,6 +12,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -85,18 +87,18 @@ public class AdminSlidePane extends HBox{
         rightVbox.getChildren().add(slideArrow);
         rightVbox.setAlignment(Pos.CENTER);
 
-        putNotification(Management);
+         Node node =    putNotification(Management);
 
         leftVbox = new VBox();
         leftVbox.getStyleClass().add("vBox-list");
         leftVbox.setFillWidth(true);
         leftVbox.setAlignment(Pos.TOP_CENTER);
         leftVbox.setPrefWidth(prefWidth);
-        leftVbox.getChildren().addAll(home,work,sp,reports,export, logout);
+        leftVbox.getChildren().addAll(home,work, node,reports,export, logout);
 
         addMouseListenerToSlideButton(slideArrow);
 
-         addComponentListener();
+        addComponentListener();
 
         //splitpane
         setPrefWidth(prefWidth * 1.2);
@@ -104,8 +106,11 @@ public class AdminSlidePane extends HBox{
 
     }
 
+    private void buildConstructor(){
+
+    }
+
     private void addComponentListener(){
-        isNotificationOut = false;
 
         Management.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -199,20 +204,24 @@ public class AdminSlidePane extends HBox{
 
     }
 
-    private void putNotification(Label lbl){
-
+    private Node putNotification(Label lbl){
+        Node node = null;
         int numberOfRequest = getRequestNumber();
 
-            if (numberOfRequest != 0){
-                totalRequest = String.valueOf(numberOfRequest);
-                addNotification(lbl);
+            if (numberOfRequest < 1){
+                node = Management;
                 isNotificationOut = true;
+
             }else {
-                sp.getChildren().add(Management);
+                totalRequest = String.valueOf(numberOfRequest);
+                isNotificationOut = true;
+                node =  addNotification(lbl);
+
             }
+        return node;
     }
 
-    private void addNotification(Label lbl){
+    private Node addNotification(Label lbl){
 
         final StackPane sp = new StackPane();
         final Rectangle redRect = new Rectangle();
@@ -234,7 +243,7 @@ public class AdminSlidePane extends HBox{
         sp.setMargin(redRect, new Insets(0, 0, 0, 100));
         sp.setMargin(text, new Insets   (0, 0, 0, 100));
 
-        this.sp = sp;
+        return  sp;
     }
 
     private int getRequestNumber(){
@@ -279,7 +288,6 @@ public class AdminSlidePane extends HBox{
 
         t.play();
     }
-
     public HBox getInstance(){
         return  this;
     }

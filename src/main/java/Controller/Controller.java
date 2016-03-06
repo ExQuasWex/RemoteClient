@@ -1,6 +1,8 @@
 package Controller;
 
 import AdminModel.AdminInterfaceImp;
+import AdminModel.Enum.AccountApproveStatus;
+import AdminModel.Enum.AccountStatus;
 import AdminModel.Enum.ReportCategoryMethod;
 import AdminModel.Params;
 
@@ -47,7 +49,6 @@ public class Controller implements TableAccountListener {
         try {
             clientDB = new Database();
             adminDB = new AdminInterfaceImp();
-
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -195,24 +196,6 @@ public class Controller implements TableAccountListener {
     }
 
 
-
-    @Override
-    public boolean Approve(RequestAccounts ra) {
-        return clientDB.Approve(ra);
-    }
-
-    @Override
-    public boolean ApproveAdmin(RequestAccounts ra) {
-        return clientDB.ApproveAdmin(ra);
-    }
-
-    @Override
-    public boolean Reject(RequestAccounts ra) {
-        return clientDB.Reject(ra);
-    }
-
-
-
     // ==================== ADMIN REPORTS ===================//
 
     public ResponseOverviewReport getOverViewData(Params params, String type){
@@ -244,10 +227,17 @@ public class Controller implements TableAccountListener {
     public ArrayList getFamilyBarangay(Params params, ReportCategoryMethod method){
         ArrayList list = new ArrayList();
         list = adminDB.getFamilyBarangay(params, method);
-        // Utility.showMessageBox("Error Unable to get Data", Alert.AlertType.INFORMATION);
-
         return list;
 
+    }
+    @Override
+    public boolean updateAccountStatus(int id, AccountStatus status) {
+        return adminDB.updateAccountStatus(id, status);
+    }
+
+    @Override
+    public boolean approveAccount(int id, AccountApproveStatus status) {
+        return adminDB.approveAccount(id, status);
     }
 
     public ArrayList getActiveAccounts( ){
@@ -261,5 +251,7 @@ public class Controller implements TableAccountListener {
     public void addControllerListener(ControllerListener controllerListener){
         this.controllerListener = controllerListener;
     }
+
+
 }
 

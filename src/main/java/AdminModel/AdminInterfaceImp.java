@@ -1,5 +1,7 @@
 package AdminModel;
 
+import AdminModel.Enum.AccountApproveStatus;
+import AdminModel.Enum.AccountStatus;
 import AdminModel.Enum.ReportCategoryMethod;
 import AdminModel.Report.Parent.ResponseCompareOverview;
 import AdminModel.Report.Parent.ResponseOverviewReport;
@@ -200,6 +202,28 @@ public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInter
             e.printStackTrace();
         }
         return file;
+    }
+
+    @Override
+    public boolean updateAccountStatus(int id, AccountStatus status)  {
+        boolean isUpdated = false;
+        try {
+            isUpdated =  server.updateAccountStatus(id, status);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return isUpdated;
+    }
+
+    @Override
+    public boolean approveAccount(int id, AccountApproveStatus status)   {
+        boolean isUpdated = false;
+        try {
+            isUpdated =  server.approveAccount(id, status);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return isUpdated;
     }
 
 

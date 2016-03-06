@@ -1,9 +1,10 @@
 package View.AdminGUI.Management;
 
+import AdminModel.Enum.AccountStatus;
 import AdminModel.ResponseModel.ActiveAccounts;
 import Controller.Controller;
+import View.AdminGUI.Listeners.TableAccountListener;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,6 +17,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Callback;
+import utility.Utility;
 
 import java.util.ArrayList;
 
@@ -34,6 +36,8 @@ public class ManagementTable extends TableView {
     private MenuItem enable = new MenuItem("Enable");
     private MenuItem disable = new MenuItem("Disable");
     private MenuItem delete = new MenuItem("Delete");
+
+   private TableAccountListener tableAccountListener;
 
     ObservableList data;
 
@@ -103,21 +107,29 @@ public class ManagementTable extends TableView {
         enable.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                updateAccountStatus(AccountStatus.APPROVED);
+                int id  = getSelectedTableID();
+                boolean isActivated =  tableAccountListener.updateAccountStatus(id, AccountStatus.APPROVED);
+
+                showConfirmation(isActivated, "Account Sucessfully Enabled" );
+
             }
         });
 
         disable.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                updateAccountStatus(AccountStatus.DISABLE);
+                int id  = getSelectedTableID();
+                boolean isActivated = tableAccountListener.updateAccountStatus(id, AccountStatus.DISABLE);
+                showConfirmation(isActivated, "Account Successfully Disabled" );
             }
         });
 
         delete.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                updateAccountStatus(AccountStatus.DELETE);
+                int id  = getSelectedTableID();
+                boolean isActivated = tableAccountListener.updateAccountStatus(id, AccountStatus.DELETE);
+                showConfirmation(isActivated, "Account Successfully Deleted" );
             }
         });
 
@@ -159,9 +171,31 @@ public class ManagementTable extends TableView {
         contextMenu.hide();
     }
 
-    private void updateAccountStatus(AccountStatus accountStatus){
-        System.out.println(accountStatus.toString());
+    public void addAccountTableListener(TableAccountListener tableAccountListener){
+        this.tableAccountListener = tableAccountListener;
     }
 
+    private int getSelectedTableID(){
+        int index = getSelectionModel().getSelectedIndex();
+        TableColumn idCol = (TableColumn) getColumns().get(0);
+        int id = (int) idCol.getCellData(index);
+        return id;
+    }
+
+    private void showConfirmation(boolean isActivated, String message){
+        if (isActivated){
+            Utility.showMessageBox(message, Alert.AlertType.INFORMATION);
+            refreshTable();
+        }else{
+            Utility.showMessageBox("Cannot grant your request right now please try again later", Alert.AlertType.ERROR);
+            refreshTable();
+        }
+
+    }
+
+    private void refreshTable(){
+        ArrayList list = Controller.getInstance().getActiveAccounts();
+        setData(list);
+    }
 
 }

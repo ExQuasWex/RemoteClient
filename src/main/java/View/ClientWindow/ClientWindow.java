@@ -3,6 +3,7 @@ package View.ClientWindow;
 import Controller.Controller;
 import Controller.ControllerListener;
 import Remote.Method.FamilyModel.Family;
+import ToolKit.Screen;
 import View.ClientWindow.Listeners.*;
 import View.Login.CustomStage;
 import View.Login.LoginWindow;
@@ -23,6 +24,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.WindowEvent;
 import utility.Utility;
 
 import java.awt.*;
@@ -47,10 +49,9 @@ public class ClientWindow extends CustomStage{
 
     private  StaffInfo staffInfo;
 
-    private Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+    private Dimension screen = Screen.screen;
 
     private  double padding = 0.0 ;
-
 
     public ClientWindow(){
 
@@ -80,6 +81,13 @@ public class ClientWindow extends CustomStage{
                         NotifyClient(familyList);
                 }
             });
+
+        setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                LogoutWindow();
+            }
+        });
 
     }
 
@@ -452,7 +460,6 @@ public class ClientWindow extends CustomStage{
 
         SearchTabWindow.getInstance().close();
         new LoginWindow();
-        System.out.println("log out fnish from clientWindow");
 
     }
 

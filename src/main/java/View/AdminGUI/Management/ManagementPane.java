@@ -1,5 +1,7 @@
 package View.AdminGUI.Management;
 
+import AdminModel.Enum.AccountApproveStatus;
+import AdminModel.Enum.AccountStatus;
 import Controller.Controller;
 import View.AdminGUI.Listeners.TableAccountListener;
 import javafx.collections.FXCollections;
@@ -46,36 +48,40 @@ public class ManagementPane extends  BorderPane {
 
     public ManagementPane(BorderPane root){
 
-        totalRequest = getRequestNumber();
+        int accounts = getRequestNumber();
 
         // Initialize
-        grid = initialize(root, totalRequest);
+        grid = initialize(root, accounts);
         toggleGroup.selectToggle(requestToggle);
 
+        addAccountTableListeners();
         setRequestTableCenter();
         setTop(grid);
     }
-    private GridPane initialize(BorderPane root, String totalRequest){
+    private GridPane initialize(BorderPane root, int totalRequest){
         final StackPane sp = new StackPane();
         final Rectangle redRect = new Rectangle();
         final Text text  = new Text();
 
-        text.setText(totalRequest);
-        text.setFill(Color.WHITE);
+        if (totalRequest >= 1){
 
-        redRect.setFill(Color.web("#ff4d4d"));
-        redRect.setArcWidth(6);
-        redRect.setArcHeight(6);
+            text.setText(String.valueOf(totalRequest));
+            text.setFill(Color.WHITE);
 
-        redRect.setWidth(text.getLayoutBounds().getWidth()+5);
-        redRect.setHeight(15);
+            redRect.setFill(Color.web("#ff4d4d"));
+            redRect.setArcWidth(6);
+            redRect.setArcHeight(6);
 
-        sp.getChildren().addAll(requestToggle,redRect,text);
-        sp.setMargin(redRect, new Insets(0, 0, 0, 65));
-        sp.setMargin(text, new Insets   (0, 0, 0, 65 ));
+            redRect.setWidth(text.getLayoutBounds().getWidth()+5);
+            redRect.setHeight(15);
 
-        sp.setAlignment(Pos.CENTER);
+            sp.getChildren().addAll(requestToggle,redRect,text);
+            sp.setMargin(redRect, new Insets(0, 0, 0, 65));
+            sp.setMargin(text, new Insets   (0, 0, 0, 65 ));
 
+            sp.setAlignment(Pos.CENTER);
+
+        }
         GridPane gp = new GridPane();
         gp.setPadding(new Insets(10));
 
@@ -92,7 +98,12 @@ public class ManagementPane extends  BorderPane {
 
         gp.setConstraints(sp,0,0,1,1, HPos.CENTER, VPos.TOP);
         gp.setConstraints(manageToggle, 1,0,1,1, HPos.CENTER, VPos.TOP);
-        gp.getChildren().addAll(sp, manageToggle);
+
+        if (totalRequest >= 1){
+            gp.getChildren().addAll(sp, manageToggle);
+        }else {
+            gp.getChildren().addAll(requestToggle, manageToggle);
+        }
 
         isNoTificationOut = false;
 
@@ -126,11 +137,10 @@ public class ManagementPane extends  BorderPane {
         tableListener = tableAccountListener;
     }
 
-    private String getRequestNumber(){
+    private int getRequestNumber(){
         int pendingAccounts = Controller.getInstance().getPendingAccounts();
-        String pendingStr = String.valueOf(pendingAccounts);
 
-        return pendingStr;
+        return pendingAccounts;
     }
 
     private void  setAccountTableCenter(){
@@ -146,6 +156,33 @@ public class ManagementPane extends  BorderPane {
         setCenter(null);
         setCenter(requestAccountTable);
 
+    }
+
+    private void addAccountTableListeners(){
+        managementTable.addAccountTableListener(new TableAccountListener() {
+            @Override
+            public boolean updateAccountStatus(int id, AccountStatus status) {
+              return tableListener.updateAccountStatus(id, status);
+
+            }
+
+            @Override
+            public boolean approveAccount(int id, AccountApproveStatus status) {
+                return false;
+            }
+        });
+
+        requestAccountTable.addAccountTableListener(new TableAccountListener() {
+            @Override
+            public boolean updateAccountStatus(int id, AccountStatus status) {
+                return false;
+            }
+
+            @Override
+            public boolean approveAccount(int id, AccountApproveStatus status) {
+                return tableListener.approveAccount(id, status);
+            }
+        });
     }
 
 }

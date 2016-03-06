@@ -1,5 +1,7 @@
 package View.AdminGUI;
 
+import AdminModel.Enum.AccountApproveStatus;
+import AdminModel.Enum.AccountStatus;
 import AdminModel.Enum.ReportCategoryMethod;
 import AdminModel.Params;
 import AdminModel.RequestAccounts;
@@ -16,15 +18,18 @@ import View.AdminGUI.Report.Report.Layouts.Listener.MainReportPaneListener;
 import View.AdminGUI.Report.Report.Layouts.MainReportPane;
 import View.AdminGUI.Work.Listener.WorkPaneListener;
 import View.AdminGUI.Work.WorkPane;
+import View.ClientWindow.SearchTabWindow;
 import View.ExportDatabasePane;
 import View.Login.LoginWindow;
 import ToolKit.LoadBar;
 import ToolKit.Screen;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import utility.Utility;
 
 import java.util.ArrayList;
@@ -67,8 +72,6 @@ public class AdminWindow extends Stage{
         setScene(scene);
         centerOnScreen();
 
-        show();
-
     }
     private void addComponentListeners(){
 
@@ -106,21 +109,16 @@ public class AdminWindow extends Stage{
 
         managementPane.addTableListener(new TableAccountListener() {
             @Override
-            public boolean Approve(RequestAccounts ra) {
-
-                return ctr.Approve(ra);
+            public boolean updateAccountStatus(int id, AccountStatus status) {
+                return ctr.updateAccountStatus(id, status);
             }
 
             @Override
-            public boolean ApproveAdmin(RequestAccounts ra) {
-                return ctr.ApproveAdmin(ra);
-            }
-
-            @Override
-            public boolean Reject(RequestAccounts ra) {
-                return ctr.Reject(ra);
+            public boolean approveAccount(int id, AccountApproveStatus status) {
+                return ctr.approveAccount(id, status);
             }
         });
+
 
         workPane.addWorkPaneListener(new WorkPaneListener() {
             @Override
@@ -138,7 +136,7 @@ public class AdminWindow extends Stage{
 
                 LoadBar.createProgressbar(famiyList.size());
 
-                while (x <= famiyList.size() - 1){
+                while (x <= famiyList.size() - 1) {
                     Family family = (Family) famiyList.get(x);
 
                     FamilyInfo familyInfo = family.getFamilyinfo();
@@ -146,23 +144,23 @@ public class AdminWindow extends Stage{
 
                     FamilyHistory familyHistory = family.getFamilyHistory();
 
-                            familyHistory.setDate(date);
-                            familyHistory.setFamilyid(familyID);
-                            familyHistory.setAdminName(AdminName);
+                    familyHistory.setDate(date);
+                    familyHistory.setFamilyid(familyID);
+                    familyHistory.setAdminName(AdminName);
 
-                            System.out.println(familyHistory.getAction());
-                            System.out.println(familyHistory.getAdminName());
-                            System.out.println(familyHistory.getDate());
-                            System.out.println(familyHistory.getFamilyid());
-                            System.out.println(familyHistory.isRevoke());
-                            System.out.println(familyHistory.getRevokeDescription());
+                    System.out.println(familyHistory.getAction());
+                    System.out.println(familyHistory.getAdminName());
+                    System.out.println(familyHistory.getDate());
+                    System.out.println(familyHistory.getFamilyid());
+                    System.out.println(familyHistory.isRevoke());
+                    System.out.println(familyHistory.getRevokeDescription());
 
-                   boolean isAdded = ctr.addHistoryToFamily(family);
-                    if (isAdded){
+                    boolean isAdded = ctr.addHistoryToFamily(family);
+                    if (isAdded) {
                         boolean isfinish = LoadBar.updateValue();
-                            if (isfinish){
-                                Utility.showMessageBox("Successfully Save all Family History", Alert.AlertType.INFORMATION);
-                            }
+                        if (isfinish) {
+                            Utility.showMessageBox("Successfully Save all Family History", Alert.AlertType.INFORMATION);
+                        }
                     }
 
                     x++;
@@ -229,12 +227,15 @@ public class AdminWindow extends Stage{
     }
 
     public  void AdminLogout(){
-         ctr.Logout();
-         close();
-         new LoginWindow();
+            new LoginWindow();
+            ctr.Logout();
+            close();
+
     }
     private void ShowExportPane(){
         root.setCenter(null);
         root.setCenter(exportDatabasePane);
     }
+
+
 }

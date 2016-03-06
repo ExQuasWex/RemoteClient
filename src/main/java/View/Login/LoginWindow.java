@@ -47,6 +47,9 @@ public class LoginWindow extends CustomStage {
     private RegisterPane registerPane;
     private ForgotPasswordPane forgotPasswordPane;
 
+    private ClientWindow clientWindow;
+    private AdminWindow adminWindow;
+
     public   LoginWindow(){
         super(30,30,600,400);
 
@@ -221,16 +224,22 @@ public class LoginWindow extends CustomStage {
 
     public void ShowClientWindow(){
         // show Client Window
-        ClientWindow cw = new ClientWindow();
-        cw.show();
+        clientWindow = new ClientWindow();
+        clientWindow.show();
+
 
         // list to ClientWindow when to close
-        cw.setOnCloseRequest(new EventHandler<WindowEvent>() {
+        clientWindow.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
-                cw.closeClientWindow();
+                boolean x = Utility.showConfirmationMessage("Are you sure you want to Logout?", Alert.AlertType.CONFIRMATION);
+                    if (x){
+                        clientWindow.closeClientWindow();
+                    }
+
             }
         });
+
 
     }
 
@@ -238,7 +247,19 @@ public class LoginWindow extends CustomStage {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                new AdminWindow();
+                adminWindow = new AdminWindow();
+                adminWindow.show();
+
+                adminWindow.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                    @Override
+                    public void handle(WindowEvent event) {
+                        boolean x = Utility.showConfirmationMessage("Are you sure you want to Logout?", Alert.AlertType.CONFIRMATION);
+                        if (x){
+                            adminWindow.AdminLogout();
+                        }
+                    }
+                });
+
             }
         });
     }
