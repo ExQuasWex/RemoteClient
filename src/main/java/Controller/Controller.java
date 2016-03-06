@@ -244,6 +244,11 @@ public class Controller implements TableAccountListener {
         return adminDB.getActiveAccounts();
     }
 
+    public boolean isTheAccountOnline(String  username) {
+        return  adminDB.isTheAccountOnline(username);
+    }
+
+
     public File getBackUp(){
          return adminDB.getBackUp();
     }

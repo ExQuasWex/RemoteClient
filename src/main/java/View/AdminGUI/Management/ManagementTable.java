@@ -108,10 +108,8 @@ public class ManagementTable extends TableView {
             @Override
             public void handle(ActionEvent event) {
                 int id  = getSelectedTableID();
-                boolean isActivated =  tableAccountListener.updateAccountStatus(id, AccountStatus.APPROVED);
-
-                showConfirmation(isActivated, "Account Sucessfully Enabled" );
-
+                String username = getSelectedTableUsername();
+                UpdateAccountStatus(id, username, AccountStatus.APPROVED);
             }
         });
 
@@ -119,8 +117,8 @@ public class ManagementTable extends TableView {
             @Override
             public void handle(ActionEvent event) {
                 int id  = getSelectedTableID();
-                boolean isActivated = tableAccountListener.updateAccountStatus(id, AccountStatus.DISABLE);
-                showConfirmation(isActivated, "Account Successfully Disabled" );
+                String username = getSelectedTableUsername();
+                UpdateAccountStatus(id, username, AccountStatus.DISABLE);
             }
         });
 
@@ -128,8 +126,8 @@ public class ManagementTable extends TableView {
             @Override
             public void handle(ActionEvent event) {
                 int id  = getSelectedTableID();
-                boolean isActivated = tableAccountListener.updateAccountStatus(id, AccountStatus.DELETE);
-                showConfirmation(isActivated, "Account Successfully Deleted" );
+                String username = getSelectedTableUsername();
+                UpdateAccountStatus(id, username, AccountStatus.DELETE);
             }
         });
 
@@ -182,6 +180,14 @@ public class ManagementTable extends TableView {
         return id;
     }
 
+    private String getSelectedTableUsername(){
+        int index = getSelectionModel().getSelectedIndex();
+        TableColumn userCol = (TableColumn) getColumns().get(1);
+        String username = (String) userCol.getCellData(index);
+        return username;
+    }
+
+
     private void showConfirmation(boolean isActivated, String message){
         if (isActivated){
             Utility.showMessageBox(message, Alert.AlertType.INFORMATION);
@@ -196,6 +202,21 @@ public class ManagementTable extends TableView {
     private void refreshTable(){
         ArrayList list = Controller.getInstance().getActiveAccounts();
         setData(list);
+    }
+
+    private void UpdateAccountStatus(int id, String Username, AccountStatus status){
+
+        String stats = status.toString();
+        boolean isConfirm =   Utility.showConfirmationMessage("Save changes made?", Alert.AlertType.CONFIRMATION);
+        if (isConfirm){
+            boolean isOnline = Controller.getInstance().isTheAccountOnline(Username);
+            if (!isOnline){
+                boolean isActivated = tableAccountListener.updateAccountStatus(id, AccountStatus.DISABLE);
+                showConfirmation(isActivated, "Account Successfully " + stats );
+            }else {
+                Utility.showMessageBox("Cant save the changes made, the account is still online", Alert.AlertType.ERROR);
+            }
+        }
     }
 
 }

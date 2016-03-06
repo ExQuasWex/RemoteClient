@@ -8,6 +8,7 @@ import ListModels.UiModels;
 import Remote.Method.FamilyModel.FamilyHistory;
 import Remote.Method.FamilyModel.FamilyInfo;
 import Remote.Method.FamilyModel.FamilyPoverty;
+import ToolKit.Printer;
 import View.AdminGUI.Work.Listener.WorkPaneListener;
 import View.ClientWindow.SearchTabWindow;
 import ToolKit.MessageBox;
@@ -21,6 +22,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.print.PrinterJob;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -46,6 +48,7 @@ public class WorkPane extends BorderPane {
     private Button SelectAll = new Button("Select All");
     private Button Deselect  = new Button("Deselect All");
     private Button save  = new Button("Save Changes");
+    private Button print  = new Button("Print");
 
     private ComboBox<String> barangay = new ComboBox<String>();
     private ComboBox<String> month = new ComboBox<String>();
@@ -105,30 +108,14 @@ public class WorkPane extends BorderPane {
         save.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (tableView.getItems().isEmpty()) {
-                    Utility.showMessageBox("There are no data available", Alert.AlertType.ERROR);
+                 Save();
+            }
+        });
 
-                }else {
-                    if (tableView.getSelectionModel().getSelectedItems().isEmpty()){
-                        Utility.showMessageBox("Please select row in the table", Alert.AlertType.ERROR);
-                    }
-                    else {
-                        boolean isConfirm = Utility.showConfirmationMessage("Are you sure you want to apply these actions?", Alert.AlertType.CONFIRMATION);
-
-                        if (isConfirm){
-                            StaffInfo staffInfo = ctr.getStaffInfo();
-                            String password = staffInfo.getPassword();
-                            boolean x = MessageBox.confirmMessageWithPassword("Enter your password", "Password Confirmation",password);
-                                    if (x){
-                                        saveChanges();
-                                    }else {
-                                        Utility.showMessageBox("Incorrect Password", Alert.AlertType.ERROR);
-                                    }
-                            }
-                    }
-                }
-
-
+        print.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Printer.Print( tableView, null);
             }
         });
 
@@ -265,6 +252,7 @@ public class WorkPane extends BorderPane {
 
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        tableView.setPadding(new Insets(20));
 
     }
 
@@ -295,7 +283,7 @@ public class WorkPane extends BorderPane {
         toolBox.setPadding(new Insets(50));
         toolBox.setSpacing(7);
 
-        toolBox.getChildren().addAll(SelectAll, Deselect, save);
+        toolBox.getChildren().addAll(SelectAll, Deselect, print, save);
 
         setBottom(toolBox);
 
@@ -380,6 +368,32 @@ public class WorkPane extends BorderPane {
             x++;
         }
         workPaneListener.saveChanges(familyList);
+    }
+
+    private void Save(){
+        if (tableView.getItems().isEmpty()) {
+            Utility.showMessageBox("There are no data available", Alert.AlertType.ERROR);
+
+        }else {
+            if (tableView.getSelectionModel().getSelectedItems().isEmpty()){
+                Utility.showMessageBox("Please select row in the table", Alert.AlertType.ERROR);
+            }
+            else {
+                boolean isConfirm = Utility.showConfirmationMessage("Are you sure you want to apply these actions?", Alert.AlertType.CONFIRMATION);
+
+                if (isConfirm){
+                    StaffInfo staffInfo = ctr.getStaffInfo();
+                    String password = staffInfo.getPassword();
+                    boolean x = MessageBox.confirmMessageWithPassword("Enter your password", "Password Confirmation",password);
+                    if (x){
+                        saveChanges();
+                    }else {
+                        Utility.showMessageBox("Incorrect Password", Alert.AlertType.ERROR);
+                    }
+                }
+            }
+        }
+
     }
 
 }

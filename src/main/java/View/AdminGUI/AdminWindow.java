@@ -58,8 +58,6 @@ public class AdminWindow extends Stage{
         root.setLeft(adminSlidePane);
 
         ShowHomePane();
-
-        // Components
         managementPane =  new ManagementPane(root);
 
         addComponentListeners();
@@ -68,7 +66,7 @@ public class AdminWindow extends Stage{
         setWidth(Screen.screen.getWidth());
         setHeight(Screen.screen.getHeight());
         Scene scene = new Scene(root);
-        scene.getStylesheets().add("/CSS/ClientWindowCSS.css");
+        scene.getStylesheets().add("/CSS/AdminWindowCSS.css");
         setScene(scene);
         centerOnScreen();
 
@@ -227,11 +225,17 @@ public class AdminWindow extends Stage{
     }
 
     public  void AdminLogout(){
+
+        boolean x = Utility.showConfirmationMessage("Are you sure you want to Logout?", Alert.AlertType.CONFIRMATION);
+        if (x){
             new LoginWindow();
             ctr.Logout();
             close();
+        }else {
+        }
 
     }
+
     private void ShowExportPane(){
         root.setCenter(null);
         root.setCenter(exportDatabasePane);

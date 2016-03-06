@@ -226,5 +226,16 @@ public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInter
         return isUpdated;
     }
 
+    @Override
+    public boolean isTheAccountOnline(String username)   {
+        boolean isOnline = false;
+        try {
+            isOnline =  server.isTheAccountOnline(username);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return isOnline;
+    }
+
 
 }

@@ -10,6 +10,7 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
@@ -34,7 +35,7 @@ public class HomePane extends VBox{
 
     public HomePane() {
         createTable();
-
+        setPadding(new Insets(20));
         setSpacing(10);
         setAlignment(Pos.CENTER);
 

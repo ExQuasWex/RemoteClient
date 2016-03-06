@@ -48,6 +48,9 @@ public class AdminSlidePane extends HBox{
     private    boolean  isNotificationOut;
     private AdminSlidePaneListner adminSlidePaneListner;
 
+    final Rectangle redRect = new Rectangle();
+    final Text text  = new Text();
+
     private Dimension windowScreen = Screen.screen;
 
     public AdminSlidePane( ){
@@ -106,10 +109,6 @@ public class AdminSlidePane extends HBox{
 
     }
 
-    private void buildConstructor(){
-
-    }
-
     private void addComponentListener(){
 
         Management.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -117,14 +116,15 @@ public class AdminSlidePane extends HBox{
             public void handle(MouseEvent event)
             {
                 if (isNotificationOut){
-                    adminSlidePaneListner.showManageMent();
                     isNotificationOut = true;
 
                 }else{
                     isNotificationOut = true;
-                    sp.getChildren().remove(1,3);
-                    adminSlidePaneListner.showManageMent();
+                    sp.getChildren().removeAll(redRect, text);
+                    System.out.println("remove red");
+
                 }
+                adminSlidePaneListner.showManageMent();
             }
         });
 
@@ -147,7 +147,6 @@ public class AdminSlidePane extends HBox{
             @Override
             public void handle(MouseEvent event) {
                 adminSlidePaneListner.ShowWorkPane();
-
             }
         });
 
@@ -214,7 +213,7 @@ public class AdminSlidePane extends HBox{
 
             }else {
                 totalRequest = String.valueOf(numberOfRequest);
-                isNotificationOut = true;
+                isNotificationOut = false;
                 node =  addNotification(lbl);
 
             }
@@ -222,10 +221,6 @@ public class AdminSlidePane extends HBox{
     }
 
     private Node addNotification(Label lbl){
-
-        final StackPane sp = new StackPane();
-        final Rectangle redRect = new Rectangle();
-        final Text text  = new Text();
 
         text.setText(totalRequest);
         text.setFill(Color.WHITE);

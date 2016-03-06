@@ -34,7 +34,6 @@ public class ManagementPane extends  BorderPane {
 
     private GridPane grid;
     private boolean isNoTificationOut;
-    private String totalRequest;
 
     private TableAccountListener tableListener;
 
@@ -81,6 +80,8 @@ public class ManagementPane extends  BorderPane {
 
             sp.setAlignment(Pos.CENTER);
 
+            isNoTificationOut = false;
+
         }
         GridPane gp = new GridPane();
         gp.setPadding(new Insets(10));
@@ -105,19 +106,14 @@ public class ManagementPane extends  BorderPane {
             gp.getChildren().addAll(requestToggle, manageToggle);
         }
 
-        isNoTificationOut = false;
-
         requestToggle.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
-                if (isNoTificationOut) {
-                    setRequestTableCenter();
-                } else{
+                if (!isNoTificationOut){
                     isNoTificationOut = true;
                     sp.getChildren().removeAll(redRect, text);
-                    setRequestTableCenter();
                 }
+                setRequestTableCenter();
             }
         });
         manageToggle.setOnAction(new EventHandler<ActionEvent>() {
@@ -132,7 +128,6 @@ public class ManagementPane extends  BorderPane {
     }
 
     // Optimize here
-
     public void addTableListener(TableAccountListener tableAccountListener){
         tableListener = tableAccountListener;
     }

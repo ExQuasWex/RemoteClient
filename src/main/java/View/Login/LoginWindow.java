@@ -227,7 +227,6 @@ public class LoginWindow extends CustomStage {
         clientWindow = new ClientWindow();
         clientWindow.show();
 
-
         // list to ClientWindow when to close
         clientWindow.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
@@ -235,8 +234,9 @@ public class LoginWindow extends CustomStage {
                 boolean x = Utility.showConfirmationMessage("Are you sure you want to Logout?", Alert.AlertType.CONFIRMATION);
                     if (x){
                         clientWindow.closeClientWindow();
+                    }else {
+                        event.consume();
                     }
-
             }
         });
 
@@ -256,7 +256,10 @@ public class LoginWindow extends CustomStage {
                         boolean x = Utility.showConfirmationMessage("Are you sure you want to Logout?", Alert.AlertType.CONFIRMATION);
                         if (x){
                             adminWindow.AdminLogout();
+                        }else {
+                            event.consume();
                         }
+
                     }
                 });
 

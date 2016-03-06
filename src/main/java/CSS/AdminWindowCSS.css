@@ -1,0 +1,11 @@
+.scroll-pane{
+    -fx-background-color:transparent;
+}
+.label{
+    -fx-font-size: 13px;
+}.text-field {
+     -fx-font-size: 13px;
+ }
+ .table-view{
+     -fx-background-color:transparent;
+ }
