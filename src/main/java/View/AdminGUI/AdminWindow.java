@@ -12,6 +12,7 @@ import Remote.Method.FamilyModel.FamilyInfo;
 import View.AdminGUI.Home.HistoryTable;
 import View.AdminGUI.Home.HomePane;
 import View.AdminGUI.Home.Listeners.HomePaneListener;
+import View.AdminGUI.Home.PeopleTable;
 import View.AdminGUI.Home.ResolveTable;
 import View.AdminGUI.Listeners.AdminSlidePaneListner;
 import View.AdminGUI.Listeners.TableAccountListener;
@@ -175,6 +176,12 @@ public class AdminWindow extends Stage{
             }
 
             @Override
+            public void viewAllPeople(String barangayName, String year) {
+                ArrayList<Family> list = ctr.viewAllPeople(barangayName, year);
+                showPeopleTable(list);
+            }
+
+            @Override
             public void refresh() {
             }
 
@@ -265,6 +272,14 @@ public class AdminWindow extends Stage{
 
     private void showHistoryTable(ArrayList data){
         HistoryTable table = new HistoryTable();
+        root.setCenter(null);
+
+        table.setData(data);
+        root.setCenter(table);
+    }
+
+    private void showPeopleTable(ArrayList data){
+        PeopleTable table = new PeopleTable();
         root.setCenter(null);
 
         table.setData(data);

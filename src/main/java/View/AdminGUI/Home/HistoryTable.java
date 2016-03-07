@@ -26,6 +26,7 @@ public class HistoryTable extends BorderPane {
     TableColumn Name = new TableColumn("Name");
     TableColumn ID = new TableColumn("ID");
     TableColumn num = new TableColumn("#");
+    TableColumn admin = new TableColumn("Admin");
     TableColumn changed = new TableColumn("IsChange");
     TableColumn Action = new TableColumn("Action");
     TableColumn Descrip = new TableColumn("Description");
@@ -41,6 +42,14 @@ public class HistoryTable extends BorderPane {
     }
 
     private void establishColumns(){
+
+        admin.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<FamilyHistory, String>, ObservableValue<FamilyHistory>>() {
+            @Override
+            public ObservableValue<FamilyHistory> call(TableColumn.CellDataFeatures<FamilyHistory, String> param) {
+                return new ReadOnlyObjectWrapper(param.getValue().getAdminName());
+            }
+        });
+
 
         changed.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<FamilyHistory, String>, ObservableValue<FamilyHistory>>() {
             @Override

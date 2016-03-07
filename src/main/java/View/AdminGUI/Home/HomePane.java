@@ -3,10 +3,7 @@ package View.AdminGUI.Home;
 import BarangayData.BarangayData;
 import PriorityModels.PriorityLevel;
 import View.AdminGUI.Home.Cells.*;
-import View.AdminGUI.Home.Listeners.HistoryCellListener;
-import View.AdminGUI.Home.Listeners.HomePaneListener;
-import View.AdminGUI.Home.Listeners.StatusCellListener;
-import View.AdminGUI.Home.Listeners.ViewCellListener;
+import View.AdminGUI.Home.Listeners.*;
 import View.AdminGUI.Report.Charts.ChartFactory;
 import View.AdminGUI.Work.PriorityProgressBarCell;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -79,6 +76,13 @@ public class HomePane extends VBox{
 
         priorityType.setVisible(false);
 
+        ViewPopleCellListener viewPopleCellListener = new ViewPopleCellListener() {
+            @Override
+            public void viewAllPeople(String barangayName, String date) {
+                    homePaneListener.viewAllPeople(barangayName, date);
+            }
+        };
+
         HistoryCellListener historyCellListener = new HistoryCellListener() {
             @Override
             public void showFamilyHistories(String barangayName, String date) {
@@ -128,7 +132,7 @@ public class HomePane extends VBox{
         view.setCellFactory(new Callback<TableColumn, TableCell>() {
             @Override
             public TableCell call(TableColumn param) {
-                return new ViewCell(viewCellListener);
+                return new ViewCell(viewPopleCellListener);
             }
         });
 

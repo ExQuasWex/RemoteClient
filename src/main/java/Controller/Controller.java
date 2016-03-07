@@ -233,6 +233,7 @@ public class Controller implements TableAccountListener {
         return list;
 
     }
+
     @Override
     public boolean updateAccountStatus(int id, AccountStatus status) {
         return adminDB.updateAccountStatus(id, status);
@@ -256,6 +257,10 @@ public class Controller implements TableAccountListener {
     }
     public ArrayList showFamilyHistories(String barangayName, String date){
         return adminDB.getBarangayFamilyHistories(barangayName, date);
+    }
+
+    public ArrayList viewAllPeople(String barangayName, String date){
+        return adminDB.viewAllPeople(barangayName, date);
     }
 
     public File getBackUp(){

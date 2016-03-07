@@ -1,11 +1,13 @@
 package View.AdminGUI.Home.Cells;
 
 import View.AdminGUI.Home.Listeners.ViewCellListener;
+import View.AdminGUI.Home.Listeners.ViewPopleCellListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import utility.Utility;
 
 /**
  * Created by reiner on 2/29/2016.
@@ -16,15 +18,13 @@ private Button view = new Button("View People");
 
     private ViewCellListener listener;
 
-    public ViewCell(ViewCellListener listener) {
+    public ViewCell(ViewPopleCellListener listener) {
         setAlignment(Pos.CENTER);
 
 
         this.setGraphic(view);
         this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         this.setEditable(true);
-
-        this.listener = listener;
 
         view.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -36,8 +36,8 @@ private Button view = new Button("View People");
                TableColumn tableColumn = (TableColumn) tableView.getColumns().get(0);
 
                 String barangayName = (String) tableColumn.getCellData(index);
-
-                listener.viewData(barangayName, "view");
+                String date = Utility.getCurrentYear();
+                listener.viewAllPeople(barangayName, date);
             }
         });
     }

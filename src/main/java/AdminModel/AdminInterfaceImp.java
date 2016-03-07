@@ -261,5 +261,16 @@ public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInter
         return list;
     }
 
+    @Override
+    public ArrayList viewAllPeople(String barangayName, String date)  {
+        ArrayList list = new ArrayList();
+        try {
+            list = server.viewAllPeople(barangayName, date);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
 
 }
