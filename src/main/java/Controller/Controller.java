@@ -20,6 +20,7 @@ import clientModel.StaffInfo;
 import clientModel.StaffRegister;
 import global.SecretDetails;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import utility.Utility;
 
@@ -250,6 +251,12 @@ public class Controller implements TableAccountListener {
         return  adminDB.isTheAccountOnline(username);
     }
 
+    public ArrayList getFamilyDataByStatus(String barangayName, String date,  String status){
+        return adminDB.getFamilyDataByStatus(barangayName, date, status);
+    }
+    public ArrayList showFamilyHistories(String barangayName, String date){
+        return adminDB.getBarangayFamilyHistories(barangayName, date);
+    }
 
     public File getBackUp(){
          return adminDB.getBackUp();

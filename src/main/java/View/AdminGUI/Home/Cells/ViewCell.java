@@ -1,4 +1,4 @@
-package View.AdminGUI.Home;
+package View.AdminGUI.Home.Cells;
 
 import View.AdminGUI.Home.Listeners.ViewCellListener;
 import javafx.collections.ObservableList;
@@ -15,7 +15,7 @@ public class ViewCell extends TableCell {
 private Button view = new Button("View People");
 
     private ViewCellListener listener;
-    
+
     public ViewCell(ViewCellListener listener) {
         setAlignment(Pos.CENTER);
 
@@ -37,7 +37,7 @@ private Button view = new Button("View People");
 
                 String barangayName = (String) tableColumn.getCellData(index);
 
-                listener.viewData(barangayName);
+                listener.viewData(barangayName, "view");
             }
         });
     }

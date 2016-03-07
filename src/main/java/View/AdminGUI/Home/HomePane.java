@@ -2,7 +2,10 @@ package View.AdminGUI.Home;
 
 import BarangayData.BarangayData;
 import PriorityModels.PriorityLevel;
+import View.AdminGUI.Home.Cells.*;
+import View.AdminGUI.Home.Listeners.HistoryCellListener;
 import View.AdminGUI.Home.Listeners.HomePaneListener;
+import View.AdminGUI.Home.Listeners.StatusCellListener;
 import View.AdminGUI.Home.Listeners.ViewCellListener;
 import View.AdminGUI.Report.Charts.ChartFactory;
 import View.AdminGUI.Work.PriorityProgressBarCell;
@@ -65,27 +68,52 @@ public class HomePane extends VBox{
 
     private void createColumns(){
 
-        TableColumn barangayCol = new TableColumn("Barangay Name");
+        TableColumn barangayCol = new TableColumn("Barangay");
         TableColumn priorityLevel = new TableColumn("Priority Level");
         TableColumn totalPopu = new TableColumn("Population");
         TableColumn priorityType = new TableColumn();
+        TableColumn histories = new TableColumn("Help Given");
         TableColumn unresolvePopulation = new TableColumn("Un-resolve Population");
         TableColumn resolpopulation = new TableColumn("Resolve Population");
         TableColumn view = new TableColumn("View");
 
         priorityType.setVisible(false);
 
-        ViewCellListener viewCellListener = new ViewCellListener() {
+        HistoryCellListener historyCellListener = new HistoryCellListener() {
             @Override
-            public void viewData(String barangayName) {
-                homePaneListener.viewPeople(barangayName, year);
+            public void showFamilyHistories(String barangayName, String date) {
+                homePaneListener.showFamilyHistories(barangayName, date);
             }
         };
+
+        ViewCellListener viewCellListener = new ViewCellListener() {
+            @Override
+            public void viewData(String barangayName, String type) {
+                homePaneListener.viewPeople(barangayName, year, type);
+            }
+        };
+
+        StatusCellListener statusCellListener = new StatusCellListener() {
+            @Override
+            public void viewDataByStatus(String barangayName, String date, String status) {
+                homePaneListener.viewDataByStatus(barangayName, date, status);
+            }
+        };
+
+
+        //====================== CELL RENDERER==========================///
 
         totalPopu.setCellFactory(new Callback<TableColumn, TableCell>() {
             @Override
             public TableCell call(TableColumn param) {
-                return new PopulationCell( viewCellListener);
+                return new PopulationCell();
+            }
+        });
+
+        histories.setCellFactory(new Callback<TableColumn, TableCell>() {
+            @Override
+            public TableCell call(TableColumn param) {
+                return new HistoryCell( historyCellListener);
             }
         });
 
@@ -114,9 +142,11 @@ public class HomePane extends VBox{
         resolpopulation.setCellFactory(new Callback<TableColumn, TableCell>() {
             @Override
             public TableCell call(TableColumn param) {
-                return new ResolvePopulationCell(viewCellListener);
+                return new ResolvePopulationCell(statusCellListener);
             }
         });
+
+        // =================== CELL VALUE FACTORY ================================//
 
         totalPopu.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<BarangayData, PriorityLevel>, ObservableValue<BarangayData>>() {
             @Override
@@ -130,6 +160,13 @@ public class HomePane extends VBox{
             @Override
             public ObservableValue<BarangayData> call(TableColumn.CellDataFeatures<BarangayData, PriorityLevel> param) {
                 return new ReadOnlyObjectWrapper(param.getValue().getUnresolvePopulation());
+            }
+        });
+
+        histories.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<BarangayData, PriorityLevel>, ObservableValue<BarangayData>>() {
+            @Override
+            public ObservableValue<BarangayData> call(TableColumn.CellDataFeatures<BarangayData, PriorityLevel> param) {
+                return new ReadOnlyObjectWrapper(param.getValue().getHistories());
             }
         });
 
@@ -175,15 +212,12 @@ public class HomePane extends VBox{
             }
         });
 
-        tableView.getColumns().addAll(barangayCol, priorityLevel,totalPopu, priorityType, unresolvePopulation, resolpopulation, view);
+        tableView.getColumns().addAll(barangayCol, priorityLevel,totalPopu, priorityType, unresolvePopulation, resolpopulation,histories, view);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
     }
 
-    private void addCellFactory(){
-
-    }
 
     private void setPieChartData (ObservableList<BarangayData> barangayDataList){
 
@@ -193,7 +227,9 @@ public class HomePane extends VBox{
 
         while (x <= barangayDataList.size() - 1){
             BarangayData bd =  barangayDataList.get(x);
-            pieData.add(new PieChart.Data(bd.getBarangayName(),bd.getUnresolvePopulation()));
+            if (bd.getUnresolvePopulation() >= 1){
+                pieData.add(new PieChart.Data(bd.getBarangayName(),bd.getUnresolvePopulation()));
+            }
             x++;
         }
 

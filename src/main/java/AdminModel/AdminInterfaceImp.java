@@ -10,6 +10,8 @@ import AdminModel.Report.Parent.ResponseSpecificOverView;
 import RMI.AdminInterface;
 import RMI.Constant;
 import Remote.Method.FamilyModel.Family;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import utility.TimedRMIclientSocketFactory;
 import utility.Utility;
 
@@ -235,6 +237,28 @@ public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInter
             e.printStackTrace();
         }
         return isOnline;
+    }
+
+    @Override
+    public ArrayList getFamilyDataByStatus(String barangayName, String date, String status)   {
+        ArrayList list = new ArrayList();
+        try {
+            list = server.getFamilyDataByStatus(barangayName, date, status);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    @Override
+    public ArrayList getBarangayFamilyHistories(String barangayName, String date)   {
+        ArrayList list = new ArrayList();
+        try {
+            list = server.getBarangayFamilyHistories(barangayName, date);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
 

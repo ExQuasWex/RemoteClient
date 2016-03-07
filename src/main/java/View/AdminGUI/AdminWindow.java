@@ -9,8 +9,10 @@ import Controller.Controller;
 import Remote.Method.FamilyModel.Family;
 import Remote.Method.FamilyModel.FamilyHistory;
 import Remote.Method.FamilyModel.FamilyInfo;
+import View.AdminGUI.Home.HistoryTable;
 import View.AdminGUI.Home.HomePane;
 import View.AdminGUI.Home.Listeners.HomePaneListener;
+import View.AdminGUI.Home.ResolveTable;
 import View.AdminGUI.Listeners.AdminSlidePaneListner;
 import View.AdminGUI.Listeners.TableAccountListener;
 import View.AdminGUI.Management.ManagementPane;
@@ -146,13 +148,6 @@ public class AdminWindow extends Stage{
                     familyHistory.setFamilyid(familyID);
                     familyHistory.setAdminName(AdminName);
 
-                    System.out.println(familyHistory.getAction());
-                    System.out.println(familyHistory.getAdminName());
-                    System.out.println(familyHistory.getDate());
-                    System.out.println(familyHistory.getFamilyid());
-                    System.out.println(familyHistory.isRevoke());
-                    System.out.println(familyHistory.getRevokeDescription());
-
                     boolean isAdded = ctr.addHistoryToFamily(family);
                     if (isAdded) {
                         boolean isfinish = LoadBar.updateValue();
@@ -162,8 +157,9 @@ public class AdminWindow extends Stage{
                     }
 
                     x++;
-
                 }
+
+                showWorkPane();
 
             }
         });
@@ -171,15 +167,30 @@ public class AdminWindow extends Stage{
         homePane.addHomePaneListeners(new HomePaneListener() {
 
             @Override
-            public void viewPeople(String barangayName, String year) {
-                Params params = new Params(year , barangayName);
+            public void viewPeople(String barangayName, String year, String type) {
+                Params params = new Params(year , barangayName, type);
+
                 ArrayList<Family> list = ctr.getFamilyBarangay(params, null);
                 workPane.showTable(list);
             }
 
             @Override
             public void refresh() {
+            }
 
+            @Override
+            public void viewDataByStatus(String barangayName, String date, String status) {
+
+               ArrayList list= ctr.getFamilyDataByStatus(barangayName, date, status);
+                if (status.equals("Resolve")){
+                    showResolveTable(list);
+                }
+            }
+
+            @Override
+            public void showFamilyHistories(String barangayName, String date) {
+                ArrayList list = ctr.showFamilyHistories(barangayName, date);
+                showHistoryTable(list);
             }
         });
 
@@ -242,6 +253,22 @@ public class AdminWindow extends Stage{
     private void ShowExportPane(){
         root.setCenter(null);
         root.setCenter(exportDatabasePane);
+    }
+
+    private void showResolveTable(ArrayList data){
+        ResolveTable resolveTable = new ResolveTable();
+        root.setCenter(null);
+
+        resolveTable.setData(data);
+        root.setCenter(resolveTable);
+    }
+
+    private void showHistoryTable(ArrayList data){
+        HistoryTable table = new HistoryTable();
+        root.setCenter(null);
+
+        table.setData(data);
+        root.setCenter(table);
     }
 
 

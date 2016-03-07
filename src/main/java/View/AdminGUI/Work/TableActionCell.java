@@ -35,7 +35,7 @@ public class TableActionCell extends TableCell {
                             System.out.println("X: " + x);
 
                             if (newValue != originalVal  && ismatch){
-
+                               // getTableRow().setStyle("-fx-background-color: firebrick");
                                 provokeDescription = MessageBox.showHistoryDialog("What is your reason for changing this?","Information Box");
                                 originalVal = (String) newValue;
                                 addRevokeHistory(provokeDescription);

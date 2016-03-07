@@ -1,21 +1,23 @@
-package View.AdminGUI.Home;
+package View.AdminGUI.Home.Cells;
 
+import View.AdminGUI.Home.Listeners.StatusCellListener;
 import View.AdminGUI.Home.Listeners.ViewCellListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import utility.Utility;
 
 /**
  * Created by reiner on 3/7/2016.
  */
-public class UnresolvePopulationCell extends TableCell {
+public class ResolvePopulationCell extends TableCell{
 
-    Button view = new Button("view");
+    Button view = new Button("View");
 
-    public UnresolvePopulationCell(ViewCellListener listener){
-
+    public ResolvePopulationCell(StatusCellListener listener){
         setAlignment(Pos.CENTER);
+
         view.setPrefWidth(100);
 
         view.setOnAction(new EventHandler<ActionEvent>() {
@@ -29,8 +31,8 @@ public class UnresolvePopulationCell extends TableCell {
                 TableColumn tableColumn = (TableColumn) tableView.getColumns().get(0);
 
                 String barangayName = (String) tableColumn.getCellData(index);
-
-                listener.viewData(barangayName);
+                String year = Utility.getCurrentYear();
+                listener.viewDataByStatus(barangayName, year, "Resolve");
 
             }
         });
@@ -42,7 +44,8 @@ public class UnresolvePopulationCell extends TableCell {
         if (!empty){
             view.setText(String.valueOf(item));
             setGraphic(view);
-            setGraphic(view);
+
         }
     }
+
 }

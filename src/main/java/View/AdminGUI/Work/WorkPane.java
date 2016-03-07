@@ -72,6 +72,7 @@ public class WorkPane extends BorderPane {
 
         setContextMenu();
 
+
         View.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -383,6 +384,7 @@ public class WorkPane extends BorderPane {
             x++;
         }
         workPaneListener.saveChanges(familyList);
+
     }
 
     private void Save(){

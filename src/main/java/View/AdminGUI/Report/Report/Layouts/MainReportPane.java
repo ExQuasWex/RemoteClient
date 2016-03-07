@@ -76,7 +76,7 @@ public class MainReportPane extends VBox {
         print.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Printer.Print(columnView, null);
+                Printer.Print(reportColumnPane, null);
             }
         });
     }

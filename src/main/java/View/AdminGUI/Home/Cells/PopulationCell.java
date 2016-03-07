@@ -1,4 +1,4 @@
-package View.AdminGUI.Home;
+package View.AdminGUI.Home.Cells;
 
 import View.AdminGUI.Home.Listeners.ViewCellListener;
 import javafx.event.ActionEvent;
@@ -15,7 +15,7 @@ public class PopulationCell extends TableCell{
 
     Label label = new Label();
 
-    public PopulationCell(ViewCellListener listener){
+    public PopulationCell(){
         setAlignment(Pos.CENTER);
         label.setPrefWidth(100);
         label.setAlignment(Pos.CENTER);

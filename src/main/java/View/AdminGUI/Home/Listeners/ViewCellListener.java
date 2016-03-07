@@ -5,6 +5,6 @@ package View.AdminGUI.Home.Listeners;
  */
 public interface ViewCellListener {
 
-    public void viewData(String barangayName);
+    public void viewData(String barangayName, String type);
 
 }
