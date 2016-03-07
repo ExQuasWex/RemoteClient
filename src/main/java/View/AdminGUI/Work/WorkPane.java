@@ -148,11 +148,13 @@ public class WorkPane extends BorderPane {
     }
 
     private void establishTable(){
-
+        int x = 0;
         check = new TableColumn();
+        TableColumn Number = new TableColumn("#");
         TableColumn ID = new TableColumn();
         TableColumn name = new TableColumn();
         TableColumn spouseName = new TableColumn();
+        TableColumn barangay = new TableColumn("Barangay");
         TableColumn surveyedDate = new TableColumn();
         TableColumn inputedDate = new TableColumn();
         TableColumn priorityCol = new TableColumn();
@@ -167,10 +169,24 @@ public class WorkPane extends BorderPane {
         Action.setText("Action");
         priorityCol.setText("Priority Level");
 
+
         Action.setCellFactory(new Callback<TableColumn, TableCell>() {
             @Override
             public TableCell call(TableColumn param) {
                 return new TableActionCell(tableBarangayView);
+            }
+        });
+
+        Number.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Family, Integer>, ObservableValue<Family>>() {
+            @Override
+            public ObservableValue<Family> call(TableColumn.CellDataFeatures<Family, Integer> param) {
+                return new ReadOnlyObjectWrapper(tableBarangayView.getItems().indexOf(param.getValue()));
+            }
+        });
+        barangay.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Family, Integer>, ObservableValue<Family>>() {
+            @Override
+            public ObservableValue<Family> call(TableColumn.CellDataFeatures<Family, Integer> param) {
+                return new ReadOnlyObjectWrapper(param.getValue().getFamilyinfo().getBarangay());
             }
         });
 
@@ -247,7 +263,7 @@ public class WorkPane extends BorderPane {
             }
         });
 
-        tableBarangayView.getColumns().addAll(ID, name, spouseName, inputedDate, surveyedDate, priorityCol, Action);
+        tableBarangayView.getColumns().addAll(Number, ID, name, spouseName, barangay, inputedDate, surveyedDate, priorityCol, Action);
 
         tableBarangayView.setColumnResizePolicy(TableBarangayView.CONSTRAINED_RESIZE_POLICY);
         tableBarangayView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);

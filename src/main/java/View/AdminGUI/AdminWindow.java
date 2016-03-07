@@ -228,11 +228,14 @@ public class AdminWindow extends Stage{
 
         boolean x = Utility.showConfirmationMessage("Are you sure you want to Logout?", Alert.AlertType.CONFIRMATION);
         if (x){
-            new LoginWindow();
-            ctr.Logout();
-            close();
-        }else {
+            Exit();
         }
+    }
+
+    private void Exit(){
+        close();
+        ctr.Logout();
+        new LoginWindow();
 
     }
 

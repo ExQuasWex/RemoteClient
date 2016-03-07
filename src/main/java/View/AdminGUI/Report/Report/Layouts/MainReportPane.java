@@ -322,9 +322,10 @@ public class MainReportPane extends VBox {
         System.out.println(isFactortType);
         Logger.Log(" Report Type " + reportCategoryMethod.toString() + " xValue: " +xValue+ " date " + date + " Barangay: " + barangayName);
 
-
               if (reportCategoryMethod.equals(ReportCategoryMethod.OVERVIEW)){
-                     if (isFactortType){
+                  barangayName = xValue;
+                  if (isFactortType){
+
                          params = new Params(date, "", xValue );
                      }else {
                          barangayName = xValue;

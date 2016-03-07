@@ -151,10 +151,12 @@ public class Controller implements TableAccountListener {
 
     public void addClientEntry(ClientEntries clientEntries){
         clientEntryList.add(clientEntries);
-        Platform.runLater(new Runnable() {
+         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                LoadBar.updateValue();
+               if (LoadBar.updateValue()){
+                   clientEntryList.clear();
+               }
             }
         });
     }

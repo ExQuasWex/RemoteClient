@@ -253,10 +253,12 @@ public class LoginWindow extends CustomStage {
                 adminWindow.setOnCloseRequest(new EventHandler<WindowEvent>() {
                     @Override
                     public void handle(WindowEvent event) {
+
                         boolean x = Utility.showConfirmationMessage("Are you sure you want to Logout?", Alert.AlertType.CONFIRMATION);
                         if (x){
                             adminWindow.AdminLogout();
-                        }else {
+                        }
+                        else {
                             event.consume();
                         }
 

@@ -86,12 +86,15 @@ public class ExportDatabasePane extends BorderPane {
 
                     if (confirmed){
 
-
                         File source = Controller.getInstance().getBackUp();
                         File dest = new File(path);
                         try {
-                            FileUtils.copyDirectoryToDirectory(source, dest);
-                            Utility.showMessageBox("Successfully copied Database, you can now Turn On the Server", Alert.AlertType.INFORMATION);
+                            if (source.exists()){
+                                FileUtils.copyDirectoryToDirectory(source, dest);
+                                Utility.showMessageBox("Successfully copied Database, you can now Turn On the Server", Alert.AlertType.INFORMATION);
+                            }else {
+                                Utility.showMessageBox("File is not existing,", Alert.AlertType.INFORMATION);
+                            }
 
                         } catch (IOException e) {
                             Utility.showMessageBox("Unable to backup Database", Alert.AlertType.ERROR);

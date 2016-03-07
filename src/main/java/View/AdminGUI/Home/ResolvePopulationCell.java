@@ -1,56 +1,49 @@
 package View.AdminGUI.Home;
 
 import View.AdminGUI.Home.Listeners.ViewCellListener;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 
 /**
- * Created by reiner on 2/29/2016.
+ * Created by reiner on 3/7/2016.
  */
-public class ViewCell extends TableCell {
+public class ResolvePopulationCell extends TableCell{
 
-private Button view = new Button("View People");
+    Button view = new Button("View");
 
-    private ViewCellListener listener;
-    
-    public ViewCell(ViewCellListener listener) {
+    public ResolvePopulationCell(ViewCellListener listener){
         setAlignment(Pos.CENTER);
 
-
-        this.setGraphic(view);
-        this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-        this.setEditable(true);
-
-        this.listener = listener;
+        view.setPrefWidth(100);
 
         view.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+
+
                 TableRow row = getTableRow();
                 int index =  row.getIndex();
 
-               TableView tableView =  getTableView();
-               TableColumn tableColumn = (TableColumn) tableView.getColumns().get(0);
+                TableView tableView =  getTableView();
+                TableColumn tableColumn = (TableColumn) tableView.getColumns().get(0);
 
                 String barangayName = (String) tableColumn.getCellData(index);
 
                 listener.viewData(barangayName);
+
             }
         });
-    }
 
-    //Display button if the row is not empty
+    }
 
     @Override
     protected void updateItem(Object item, boolean empty) {
-        super.updateItem(item, empty);
-        if(!empty){
+        if (!empty){
+            view.setText(String.valueOf(item));
             setGraphic(view);
-        } else {
-            setGraphic(null);
+
         }
     }
 

@@ -67,6 +67,7 @@ public class HomePane extends VBox{
 
         TableColumn barangayCol = new TableColumn("Barangay Name");
         TableColumn priorityLevel = new TableColumn("Priority Level");
+        TableColumn totalPopu = new TableColumn("Population");
         TableColumn priorityType = new TableColumn();
         TableColumn unresolvePopulation = new TableColumn("Un-resolve Population");
         TableColumn resolpopulation = new TableColumn("Resolve Population");
@@ -81,6 +82,14 @@ public class HomePane extends VBox{
             }
         };
 
+        totalPopu.setCellFactory(new Callback<TableColumn, TableCell>() {
+            @Override
+            public TableCell call(TableColumn param) {
+                return new PopulationCell( viewCellListener);
+            }
+        });
+
+
         priorityLevel.setCellFactory(new Callback<TableColumn, TableCell>() {
             @Override
             public TableCell call(TableColumn param) {
@@ -94,6 +103,43 @@ public class HomePane extends VBox{
                 return new ViewCell(viewCellListener);
             }
         });
+
+        unresolvePopulation.setCellFactory(new Callback<TableColumn, TableCell>() {
+            @Override
+            public TableCell call(TableColumn param) {
+                return new UnresolvePopulationCell(viewCellListener);
+            }
+        });
+
+        resolpopulation.setCellFactory(new Callback<TableColumn, TableCell>() {
+            @Override
+            public TableCell call(TableColumn param) {
+                return new ResolvePopulationCell(viewCellListener);
+            }
+        });
+
+        totalPopu.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<BarangayData, PriorityLevel>, ObservableValue<BarangayData>>() {
+            @Override
+            public ObservableValue<BarangayData> call(TableColumn.CellDataFeatures<BarangayData, PriorityLevel> param) {
+                return new ReadOnlyObjectWrapper(param.getValue().getPopulation());
+            }
+        });
+
+
+        unresolvePopulation.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<BarangayData, PriorityLevel>, ObservableValue<BarangayData>>() {
+            @Override
+            public ObservableValue<BarangayData> call(TableColumn.CellDataFeatures<BarangayData, PriorityLevel> param) {
+                return new ReadOnlyObjectWrapper(param.getValue().getUnresolvePopulation());
+            }
+        });
+
+        resolpopulation.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<BarangayData, PriorityLevel>, ObservableValue<BarangayData>>() {
+            @Override
+            public ObservableValue<BarangayData> call(TableColumn.CellDataFeatures<BarangayData, PriorityLevel> param) {
+                return new ReadOnlyObjectWrapper(param.getValue().getResolvePopulation());
+            }
+        });
+
 
         priorityLevel.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<BarangayData, PriorityLevel>, ObservableValue<BarangayData>>() {
             @Override
@@ -129,9 +175,13 @@ public class HomePane extends VBox{
             }
         });
 
-        tableView.getColumns().addAll(barangayCol, priorityLevel, priorityType, unresolvePopulation, resolpopulation, view);
+        tableView.getColumns().addAll(barangayCol, priorityLevel,totalPopu, priorityType, unresolvePopulation, resolpopulation, view);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
+    }
+
+    private void addCellFactory(){
 
     }
 

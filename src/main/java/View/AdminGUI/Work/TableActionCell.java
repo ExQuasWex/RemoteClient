@@ -31,10 +31,10 @@ public class TableActionCell extends TableCell {
         resolutionBox.valueProperty().addListener(new ChangeListener() {
               @Override
                       public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                            x = tableItemChange();
+                            boolean ismatch = tableItemChange();
                             System.out.println("X: " + x);
 
-                            if (newValue != originalVal  && x >= 1){
+                            if (newValue != originalVal  && ismatch){
 
                                 provokeDescription = MessageBox.showHistoryDialog("What is your reason for changing this?","Information Box");
                                 originalVal = (String) newValue;
@@ -120,25 +120,28 @@ public class TableActionCell extends TableCell {
         }
     }
 
-
     public RevokeHistory getSelectedItem(){
         return revokeHistory;
     }
 
-    private int tableItemChange(){
+    private boolean tableItemChange(){
+        boolean isMatch = false;
        ObservableList list =  getItems();
         int size = getItems().size();
-            if (list != orignalList ){
+
+            if (!list.equals(orignalList) ){
                 x = 0;
                 orignalList = list;
+                isMatch = false;
                 System.out.println("not equal to list");
-            }else if (list == orignalList){
+            }else if (list.equals(orignalList)){
                 x  = 1;
+                isMatch = true;
                 System.out.println("equal to list");
             }else {
                 System.out.println("else");
 
             }
-        return  x;
+        return  isMatch;
     }
 }
