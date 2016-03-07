@@ -22,7 +22,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.print.PrinterJob;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -43,7 +42,7 @@ public class WorkPane extends BorderPane {
     private HBox HBOX = new HBox();
     private Button View = new Button("View");
 
-    private TableView tableView = new TableView() ;
+    private TableBarangayView tableBarangayView = new TableBarangayView() ;
 
     private Button SelectAll = new Button("Select All");
     private Button Deselect  = new Button("Deselect All");
@@ -115,7 +114,7 @@ public class WorkPane extends BorderPane {
         print.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Printer.Print( tableView, null);
+                Printer.Print(tableBarangayView, null);
             }
         });
 
@@ -127,7 +126,7 @@ public class WorkPane extends BorderPane {
         viewMenuItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-             ObservableList<Family>  familyList =  tableView.getSelectionModel().getSelectedItems();
+             ObservableList<Family>  familyList =  tableBarangayView.getSelectionModel().getSelectedItems();
 
                 SearchTabWindow searchTabWindow = SearchTabWindow.getInstance();
 
@@ -136,7 +135,7 @@ public class WorkPane extends BorderPane {
             }
         });
 
-        tableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        tableBarangayView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 if (event.getButton().equals(MouseButton.SECONDARY)){
@@ -171,7 +170,7 @@ public class WorkPane extends BorderPane {
         Action.setCellFactory(new Callback<TableColumn, TableCell>() {
             @Override
             public TableCell call(TableColumn param) {
-                return new TableActionCell(tableView);
+                return new TableActionCell(tableBarangayView);
             }
         });
 
@@ -241,18 +240,18 @@ public class WorkPane extends BorderPane {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean uncCheck, Boolean iscCheck) {
 
-                ObservableList x = tableView.getSelectionModel().getSelectedIndices();
+                ObservableList x = tableBarangayView.getSelectionModel().getSelectedIndices();
                 for (Object index : x) {
                     System.out.println(index);
                 }
             }
         });
 
-        tableView.getColumns().addAll(ID, name, spouseName, inputedDate, surveyedDate, priorityCol, Action);
+        tableBarangayView.getColumns().addAll(ID, name, spouseName, inputedDate, surveyedDate, priorityCol, Action);
 
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        tableView.setPadding(new Insets(20));
+        tableBarangayView.setColumnResizePolicy(TableBarangayView.CONSTRAINED_RESIZE_POLICY);
+        tableBarangayView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        tableBarangayView.setPadding(new Insets(20));
 
     }
 
@@ -270,9 +269,9 @@ public class WorkPane extends BorderPane {
 
         ObservableList<Family> ItemList = FXCollections.observableArrayList(list);
 
-        tableView.setItems(ItemList);
+        tableBarangayView.setDataItem(ItemList);
 
-        setCenter(tableView);
+        setCenter(tableBarangayView);
         workPaneListener.showWorkPane();
 
     }
@@ -321,12 +320,12 @@ public class WorkPane extends BorderPane {
     }
 
     private void  checkAll(){
-        tableView.getSelectionModel().selectAll();
+        tableBarangayView.getSelectionModel().selectAll();
 
     }
 
     private void  deselectAll(){
-        tableView.getSelectionModel().clearSelection();
+        tableBarangayView.getSelectionModel().clearSelection();
 
     }
 
@@ -340,7 +339,7 @@ public class WorkPane extends BorderPane {
 
     private void saveChanges(){
 
-        ObservableList familyList =  tableView.getSelectionModel().getSelectedItems();
+        ObservableList familyList =  tableBarangayView.getSelectionModel().getSelectedItems();
 
         int x = 0;
 
@@ -371,11 +370,11 @@ public class WorkPane extends BorderPane {
     }
 
     private void Save(){
-        if (tableView.getItems().isEmpty()) {
+        if (tableBarangayView.getItems().isEmpty()) {
             Utility.showMessageBox("There are no data available", Alert.AlertType.ERROR);
 
         }else {
-            if (tableView.getSelectionModel().getSelectedItems().isEmpty()){
+            if (tableBarangayView.getSelectionModel().getSelectedItems().isEmpty()){
                 Utility.showMessageBox("Please select row in the table", Alert.AlertType.ERROR);
             }
             else {

@@ -18,35 +18,32 @@ public class TableActionCell extends TableCell {
 
     private ComboBox resolutionBox = new ComboBox();
     private String originalVal = "";
+    private ObservableList orignalList = FXCollections.observableArrayList();
     private String provokeDescription = null;
     public RevokeHistory revokeHistory = null;
-    int x = 0;
+    private int x = 0;
     int def = 0;
-    public TableActionCell(TableView tableView) {
+    public TableActionCell(TableBarangayView tableBarangayView) {
         revokeHistory = new RevokeHistory(false, "", "");
 
         resolutionBox.setItems(getItems());
 
         resolutionBox.valueProperty().addListener(new ChangeListener() {
-            @Override
-            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                    if (newValue != originalVal  && x >= 1){
+              @Override
+                      public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                            x = tableItemChange();
+                            System.out.println("X: " + x);
 
-                        provokeDescription = MessageBox.showHistoryDialog("What is your reason for changing this?","Information Box");
+                            if (newValue != originalVal  && x >= 1){
 
-                        addRevokeHistory(provokeDescription);
-                    } // end of if
-                x++;
-            }
-        }
+                                provokeDescription = MessageBox.showHistoryDialog("What is your reason for changing this?","Information Box");
+                                originalVal = (String) newValue;
+                                addRevokeHistory(provokeDescription);
+                                x = 0;
+                        }
+                      }
+                  }
         );
-
-        tableView.getItems().addListener(new ListChangeListener() {
-            @Override
-            public void onChanged(Change c) {
-                x = 0;
-            }
-        });
 
         this.setGraphic(resolutionBox);
         this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
@@ -123,7 +120,25 @@ public class TableActionCell extends TableCell {
         }
     }
 
+
     public RevokeHistory getSelectedItem(){
         return revokeHistory;
+    }
+
+    private int tableItemChange(){
+       ObservableList list =  getItems();
+        int size = getItems().size();
+            if (list != orignalList ){
+                x = 0;
+                orignalList = list;
+                System.out.println("not equal to list");
+            }else if (list == orignalList){
+                x  = 1;
+                System.out.println("equal to list");
+            }else {
+                System.out.println("else");
+
+            }
+        return  x;
     }
 }

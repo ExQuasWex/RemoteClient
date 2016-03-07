@@ -74,11 +74,9 @@ public class HomePane extends VBox{
 
         priorityType.setVisible(false);
 
-
         ViewCellListener viewCellListener = new ViewCellListener() {
             @Override
             public void viewData(String barangayName) {
-
                 homePaneListener.viewPeople(barangayName, year);
             }
         };
