@@ -21,18 +21,33 @@ import View.AdminGUI.Report.Report.Layouts.Listener.MainReportPaneListener;
 import View.AdminGUI.Report.Report.Layouts.MainReportPane;
 import View.AdminGUI.Work.Listener.WorkPaneListener;
 import View.AdminGUI.Work.WorkPane;
+import View.ClientWindow.Listeners.SearchPaneListener;
+import View.ClientWindow.Listeners.SearchTableListener;
+import View.ClientWindow.SearchPane;
 import View.ClientWindow.SearchTabWindow;
+import View.ClientWindow.SearchTable;
 import View.ExportDatabasePane;
 import View.Login.LoginWindow;
 import ToolKit.LoadBar;
 import ToolKit.Screen;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.Duration;
 import utility.Utility;
 
 import java.util.ArrayList;
@@ -52,13 +67,18 @@ public class AdminWindow extends Stage{
     private MainReportPane mainReportPane = new MainReportPane();
     private ExportDatabasePane exportDatabasePane;
 
+    private SearchPane searchPane = new SearchPane();
+    private SearchTable searchtable;
+
     public AdminWindow(){
         exportDatabasePane = new ExportDatabasePane(this);
-
         ctr = Controller.getInstance();
 
         root = new BorderPane();
         root.setLeft(adminSlidePane);
+        root.setTop(searchPane);
+
+        searchtable = new SearchTable(root);
 
         ShowHomePane();
         managementPane =  new ManagementPane(root);
@@ -211,6 +231,20 @@ public class AdminWindow extends Stage{
             }
         });
 
+        searchPane.addSearchPaneListener(new SearchPaneListener() {
+            @Override
+            public void searchFamily(String text) {
+                search(text);
+            }
+        });
+
+        searchtable.addSearchTableListener(new SearchTableListener() {
+            @Override
+            public void rollUp() {
+                root.setRight(null);
+            }
+        });
+
     }
 
     private void showWorkPane(){
@@ -285,6 +319,99 @@ public class AdminWindow extends Stage{
         table.setData(data);
         root.setCenter(table);
     }
+
+    private void search(String Searchedname){
+        if (ctr.isServerConnected()){
+
+            ArrayList list = ctr.searchedList(Searchedname);
+
+            if (Searchedname.equals("")){
+                Utility.showMessageBox("Search Box is empty", Alert.AlertType.ERROR);
+            }else if (list.isEmpty()){
+                Utility.showMessageBox("No records found", Alert.AlertType.ERROR);
+            }else {
+                System.out.println("show records");
+                // Controller.getInstance().showSearchedList(list);
+                showSearchedTable(list);
+            }
+        }else{
+            ShowConnectingWindow(root);
+            connect();
+        }
+
+    }
+    private  void showSearchedTable   (ArrayList<Family> data){
+        // get back to FX application if ever we are in RMI TCP Connection(2) thread
+        searchtable.setData(data);
+        root.setRight(searchtable);
+    }
+    public void ShowConnectingWindow(BorderPane root){
+
+        GridPane grid = new GridPane();
+
+        ProgressBar pb = new ProgressBar();
+        pb.setPrefWidth(190);
+
+        Label connectingL = new Label("Connecting to Server. . .");
+
+        Timeline t = new Timeline();
+        t.setCycleCount(Timeline.INDEFINITE);
+        t.setAutoReverse(true);
+        KeyValue kv = new KeyValue(connectingL.opacityProperty(), 0.0);
+        KeyFrame kf = new KeyFrame(Duration.millis(2000), kv);
+
+        KeyValue kv2 = new KeyValue(connectingL.opacityProperty(), 1.0);
+        KeyFrame kf2 = new KeyFrame(Duration.millis(2000), kv2);
+        t.getKeyFrames().addAll(kf, kf2);
+        t.play();
+
+        grid.setConstraints(connectingL, 0, 0, 1,1, HPos.CENTER, VPos.CENTER);
+        grid.setConstraints(pb, 0, 1, 1,1, HPos.CENTER, VPos.CENTER);
+
+        grid.setAlignment(Pos.CENTER);
+
+        grid.getChildren().addAll(connectingL,pb);
+
+        root.setDisable(true);
+        root.setCenter(grid);
+
+    }
+
+
+    private void connect(){
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                while(!ctr.isServerConnected( )){
+                }
+                if (ctr.isServerConnected( )){
+
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            root.setDisable(false);
+                            root.setCenter(null);
+                            root.setCenter(homePane);
+                            System.out.println("CONNECTED");
+                        }
+                    });
+
+                }
+            }
+        });
+
+        thread.start();
+
+    }
+
+
 
 
 }

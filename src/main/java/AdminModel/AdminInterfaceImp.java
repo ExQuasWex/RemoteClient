@@ -7,6 +7,7 @@ import AdminModel.Report.Parent.ResponseCompareOverview;
 import AdminModel.Report.Parent.ResponseOverviewReport;
 import AdminModel.Report.Parent.ResponseSpecific;
 import AdminModel.Report.Parent.ResponseSpecificOverView;
+import ClientPreference.ClientPreference;
 import RMI.AdminInterface;
 import RMI.Constant;
 import Remote.Method.FamilyModel.Family;
@@ -16,6 +17,9 @@ import utility.TimedRMIclientSocketFactory;
 import utility.Utility;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -35,14 +39,14 @@ public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInter
     private TimedRMIclientSocketFactory csf;
 
     public AdminInterfaceImp() throws RemoteException {
-        ipAddress = Utility.getPreference();
+        ipAddress = ClientPreference.getIpPreference();
         csf = new TimedRMIclientSocketFactory(2000);
         connectToServer();
 
     }
 
     public boolean connectToServer(){
-        ipAddress = Utility.getPreference();
+    ipAddress = ClientPreference.getIpPreference();
 
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -196,14 +200,14 @@ public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInter
     }
 
     @Override
-    public File getBackUp()  {
-        File file = null;
+    public boolean getBackUp(String username)  {
+        boolean x = false;
         try {
-            file =  server.getBackUp();
+            x =  server.getBackUp(username);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        return file;
+        return x;
     }
 
     @Override

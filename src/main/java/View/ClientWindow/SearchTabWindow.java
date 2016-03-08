@@ -58,7 +58,7 @@ public class SearchTabWindow extends CustomStage {
 
         editButton.setPrefHeight(15);
         editButton.setPrefWidth(70);
-        vBox.getChildren().add(editButton);
+        //vBox.getChildren().add(editButton);
 
         root.setCenter(tabPane);
         root.setAlignment(vBox, Pos.CENTER);

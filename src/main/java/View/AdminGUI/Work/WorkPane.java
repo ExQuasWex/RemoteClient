@@ -279,8 +279,9 @@ public class WorkPane extends BorderPane {
 
             FamilyPoverty familyPoverty = fam.getFamilypoverty();
             FamilyInfo familyInfo = fam.getFamilyinfo();
+            FamilyHistory familyHistory = fam.getFamilyHistory();
 
-            Prioritizer.addPriorityLevel(familyPoverty, familyInfo.getNumofChildren());
+            Prioritizer.addPriorityLevel(familyPoverty, familyHistory, familyInfo.getNumofChildren());
 
         }
 

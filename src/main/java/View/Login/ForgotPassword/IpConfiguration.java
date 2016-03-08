@@ -1,5 +1,7 @@
 package View.Login.ForgotPassword;
 
+import ClientPreference.ClientPreference;
+import com.sun.security.ntlm.Client;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextInputDialog;
@@ -31,7 +33,7 @@ public class IpConfiguration  {
 
         if (result.isPresent()) {
             ip = result.get();
-             Utility.SavePreference(ip);
+             ClientPreference.saveIpPreference(ip);
         }else {
                 if (ip.equals("") || ip.equals(null) ){
                        showWindow();
@@ -40,7 +42,7 @@ public class IpConfiguration  {
     }
 
     public void createNewInstanceWithIP(){
-        ip = Utility.getPreference();
+        ip = ClientPreference.getIpPreference();
 
         dialog = new TextInputDialog(ip);
         dialog.setHeaderText(null);

@@ -52,7 +52,7 @@ public class ClientWindow extends CustomStage{
     private Dimension screen = Screen.screen;
 
     private  double padding = 0.0 ;
-
+    private ClientHomePane homePane;
     public ClientWindow(){
 
         setMainComponents();
@@ -61,6 +61,7 @@ public class ClientWindow extends CustomStage{
         root.setRight(null);
         root.setTop(searchPane);
         root.setBottom(bottomPane);
+        root.setCenter(homePane);
 
         searchtable = new SearchTable(root);
 
@@ -197,6 +198,9 @@ public class ClientWindow extends CustomStage{
     }
     private void setMainComponents(){
 
+        //---------------- TOP Pane ------------//
+        String name = controller.getStaffInfo().getName();
+        homePane = new ClientHomePane(name);
         //---------------- TOP Pane ------------//
 
         //---------------- Right Pane -----------//

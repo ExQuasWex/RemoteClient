@@ -1,6 +1,7 @@
 package ClientModel;
 
 import AdminModel.RequestAccounts;
+import ClientPreference.ClientPreference;
 import Controller.Controller;
 import RMI.Constant;
 import RMI.RemoteMethods;
@@ -44,7 +45,7 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
 
 
     public Database() throws RemoteException {
-        ipAddress = Utility.getPreference();
+        ipAddress = ClientPreference.getIpPreference();
         csf = new TimedRMIclientSocketFactory(2000);
         RegisterServer();
     }
@@ -236,7 +237,8 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
     }
 
     private boolean RegisterServer( ){
-        ipAddress = Utility.getPreference();
+        ipAddress = ClientPreference.getIpPreference();
+
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {

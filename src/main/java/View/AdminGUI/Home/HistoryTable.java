@@ -36,7 +36,7 @@ public class HistoryTable extends BorderPane {
         tableView.setPadding(new Insets(20));
 
         establishColumns();
-        tableView.getColumns().addAll(num, ID, Name, Date, changed, Action, Descrip );
+        tableView.getColumns().addAll(num, ID, Name, Date, changed, Action, admin, Descrip );
 
         setCenter(tableView);
     }

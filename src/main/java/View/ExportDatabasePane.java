@@ -1,5 +1,6 @@
 package View;
 
+import ClientPreference.ClientPreference;
 import Controller.Controller;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -58,6 +59,7 @@ public class ExportDatabasePane extends BorderPane {
                 if (file.exists() && file.isDirectory()){
                     path =    file.getPath();
                     diretoryField.setText(path);
+                    ClientPreference.saveDBPath(path);
 
                 }else {
                     Utility.showMessageBox("Directory Path not found", Alert.AlertType.ERROR);
@@ -82,23 +84,14 @@ public class ExportDatabasePane extends BorderPane {
             if (path.equals("")){
                 Utility.showMessageBox("Please Select Directory path", Alert.AlertType.ERROR);
             }else {
-             boolean confirmed =    Utility.showConfirmationMessage("Continuing this operation required to shutdown the server, would you still like to continue?", Alert.AlertType.CONFIRMATION);
+             boolean confirmed =    Utility.showConfirmationMessage("This may take some few sconds?", Alert.AlertType.CONFIRMATION);
 
                     if (confirmed){
 
-                        File source = Controller.getInstance().getBackUp();
-                        File dest = new File(path);
-                        try {
-                            if (source.exists()){
-                                FileUtils.copyDirectoryToDirectory(source, dest);
-                                Utility.showMessageBox("Successfully copied Database, you can now Turn On the Server", Alert.AlertType.INFORMATION);
-                            }else {
-                                Utility.showMessageBox("File is not existing,", Alert.AlertType.INFORMATION);
-                            }
-
-                        } catch (IOException e) {
-                            Utility.showMessageBox("Unable to backup Database", Alert.AlertType.ERROR);
-                            e.printStackTrace();
+                        String username = Controller.getInstance().getStaffInfo().getUsername();
+                        boolean x = Controller.getInstance().getBackUp(username);
+                        if (x){
+                            Utility.showConfirmationMessage("Database successfully exported", Alert.AlertType.INFORMATION);
                         }
 
                     }
