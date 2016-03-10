@@ -211,7 +211,7 @@ public class ManagementTable extends TableView {
         if (isConfirm){
             boolean isOnline = Controller.getInstance().isTheAccountOnline(Username);
             if (!isOnline){
-                boolean isActivated = tableAccountListener.updateAccountStatus(id, AccountStatus.DISABLE);
+                boolean isActivated = tableAccountListener.updateAccountStatus(id, status);
                 showConfirmation(isActivated, "Account Successfully " + stats );
             }else {
                 Utility.showMessageBox("Cant save the changes made, the account is still online", Alert.AlertType.ERROR);

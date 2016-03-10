@@ -158,7 +158,6 @@ public class ManagementPane extends  BorderPane {
             @Override
             public boolean updateAccountStatus(int id, AccountStatus status) {
               return tableListener.updateAccountStatus(id, status);
-
             }
 
             @Override
