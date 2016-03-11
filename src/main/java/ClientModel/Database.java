@@ -223,8 +223,9 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
                 if (credentials == null){
                     Utility.showMessageBox("Invalid username or password", Alert.AlertType.INFORMATION);
                 }else {
-                   staffInfo = server.Login(user,pass,ip, credentials.getRemotePort(), credentials.getRemoteID());
-                    EstablishCallBack(credentials);
+                    if (EstablishCallBack(credentials)){
+                        staffInfo = server.Login(user,pass,ip, credentials.getRemotePort(), credentials.getRemoteID());
+                    }
                 }
 
 
@@ -246,6 +247,7 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
                     reg = LocateRegistry.getRegistry(System.setProperty("java.rmi.server.hostname",ipAddress), Constant.Remote_port, csf);
                     //Registry reg = LocateRegistry.getRegistry("localhost",Constant.Remote_port);
                     server = (RemoteMethods) reg.lookup(Constant.Remote_ID);
+
                     bol = server.checkDatabase();
 
                 } catch (RemoteException e) {
@@ -267,22 +269,26 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
     }
 
 
-    private void EstablishCallBack(Credentials credentials){
+    private boolean EstablishCallBack(Credentials credentials){
         try {
+
 
             myClientInterface  = new ClientInterfaceImp();
             myRegistry = LocateRegistry.createRegistry(credentials.getRemotePort());
             myRegistry.bind(credentials.getRemoteID(), myClientInterface);
 
             System.out.println("EstablishCallBack: " + credentials.getRemoteID());
-
             System.out.println("Successfully created callback port: " + credentials.getRemotePort());
+            return true;
         } catch (AlreadyBoundException e) {
             e.printStackTrace();
+            return false;
         } catch (AccessException e) {
             e.printStackTrace();
+            return false;
         } catch (RemoteException e) {
             e.printStackTrace();
+            return false;
         }
 
     }
