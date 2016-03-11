@@ -263,8 +263,8 @@ public class Controller implements TableAccountListener {
         return adminDB.viewAllPeople(barangayName, date);
     }
 
-    public boolean getBackUp(String username){
-         return adminDB.getBackUp(username);
+    public void getBackUp(String username){
+          adminDB.getBackUp(username);
     }
 
     public void addControllerListener(ControllerListener controllerListener){

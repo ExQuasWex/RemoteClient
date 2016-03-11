@@ -47,19 +47,44 @@ public class ClientInterfaceImp extends UnicastRemoteObject implements ClientInt
 
     @Override
     public void sendData(String filename, RemoteInputStream remoteFileData) throws RemoteException {
+        System.out.println("sendData called from client interface");
 
         try {
             InputStream fileData = RemoteInputStreamClient.wrap(remoteFileData);
 
-            String path = ClientPreference.getDbPath();
-            File file = new File(path + "\\" + filename);
-            OutputStream outputStream = new FileOutputStream(file);
-            IOUtils.copy(fileData, outputStream);
-            outputStream.close();
+            writeToFile(fileData,  filename);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+    }
+
+    private void writeToFile(InputStream stream, String filename) throws IOException {
+        FileOutputStream output = null;
+
+        try {
+            String path = ClientPreference.getDbPath();
+
+            File file = new File(path+"\\"+filename);
+            output = new FileOutputStream(file);
+            int chunk = 4096;
+            byte [] result = new byte[chunk];
+
+            int readBytes = 0;
+            do {
+                readBytes = stream.read(result);
+                if (readBytes > 0)
+                    output.write(result, 0, readBytes);
+                System.out.println("write");
+            } while(readBytes != -1);
+
+            output.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally{
+            if(output != null)
+                output.close();
+        }
     }
 }

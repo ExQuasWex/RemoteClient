@@ -89,10 +89,8 @@ public class ExportDatabasePane extends BorderPane {
                     if (confirmed){
 
                         String username = Controller.getInstance().getStaffInfo().getUsername();
-                        boolean x = Controller.getInstance().getBackUp(username);
-                        if (x){
+                         Controller.getInstance().getBackUp(username);
                             Utility.showConfirmationMessage("Database successfully exported", Alert.AlertType.INFORMATION);
-                        }
 
                     }
             }

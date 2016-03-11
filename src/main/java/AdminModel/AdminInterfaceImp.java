@@ -200,14 +200,12 @@ public class AdminInterfaceImp extends UnicastRemoteObject implements AdminInter
     }
 
     @Override
-    public boolean getBackUp(String username)  {
-        boolean x = false;
+    public void getBackUp(String username)  {
         try {
-            x =  server.getBackUp(username);
+           server.getBackUp(username);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        return x;
     }
 
     @Override
