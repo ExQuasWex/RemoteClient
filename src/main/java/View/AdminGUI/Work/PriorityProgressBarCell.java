@@ -53,7 +53,7 @@ public class PriorityProgressBarCell extends TableCell{
             if (priorityLevel == PriorityLevel.Low){
                 setProgressBar(progressBar, "green-bar", .2);
 
-            }else if(priorityLevel == PriorityLevel.Medium){
+            }else if(priorityLevel == PriorityLevel.Moderate){
                 setProgressBar(progressBar, "yellow-bar", .5);
 
             }else if(priorityLevel == PriorityLevel.High){

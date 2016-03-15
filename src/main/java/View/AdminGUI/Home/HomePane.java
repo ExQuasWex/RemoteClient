@@ -9,13 +9,16 @@ import View.AdminGUI.Work.PriorityProgressBarCell;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
+import sun.dc.pr.PRError;
 
 import java.util.ArrayList;
 
@@ -28,16 +31,28 @@ public class HomePane extends VBox{
     private ScrollPane scrollPane = new ScrollPane();
     private ChartFactory chartFactory = new ChartFactory();
 
+    TableColumn barangayCol = new TableColumn("Barangay");
+    TableColumn priorityLevel = new TableColumn("Priority Level");
+    TableColumn totalPopu = new TableColumn("Population");
+    TableColumn priorityType = new TableColumn();
+    TableColumn histories = new TableColumn("Help Given");
+    TableColumn unresolvePopulation = new TableColumn("Un-resolve Population");
+    TableColumn resolpopulation = new TableColumn("Resolve Population");
+    TableColumn view = new TableColumn("View");
+    private TableColumn.SortType sortType = null;
+
     private PieChart pieChart =  chartFactory.createPieChart();
     String year;
 
     private HomePaneListener homePaneListener;
 
     public HomePane() {
-        createTable();
+
         setPadding(new Insets(20));
         setSpacing(10);
         setAlignment(Pos.CENTER);
+
+        priorityLevel.setSortable(true);
 
         VBox vBox = new VBox();
         vBox.getChildren().addAll(tableView, pieChart);
@@ -46,35 +61,28 @@ public class HomePane extends VBox{
         scrollPane.setFitToWidth(true);
         getChildren().add(scrollPane);
 
-    }
 
-    private void createTable(){
-
-        createColumns();
     }
 
     public void setData(ArrayList<BarangayData> list, String year){
         this.year = year;
         ObservableList data = FXCollections.observableArrayList(list);
 
+        priorityLevel.setSortType(TableColumn.SortType.ASCENDING);
+
         tableView.getItems().clear();
         tableView.setItems(data);
+
+        createColumns();
+        tableView.getSortOrder().add(priorityLevel);
 
         setPieChartData(data);
     }
 
     private void createColumns(){
 
-        TableColumn barangayCol = new TableColumn("Barangay");
-        TableColumn priorityLevel = new TableColumn("Priority Level");
-        TableColumn totalPopu = new TableColumn("Population");
-        TableColumn priorityType = new TableColumn();
-        TableColumn histories = new TableColumn("Help Given");
-        TableColumn unresolvePopulation = new TableColumn("Un-resolve Population");
-        TableColumn resolpopulation = new TableColumn("Resolve Population");
-        TableColumn view = new TableColumn("View");
-
         priorityType.setVisible(false);
+        tableView.getColumns().clear();
 
         ViewPopleCellListener viewPopleCellListener = new ViewPopleCellListener() {
             @Override
@@ -109,6 +117,10 @@ public class HomePane extends VBox{
 
         totalPopu.setCellFactory(new Callback<TableColumn, TableCell>() {
             @Override
+
+
+
+
             public TableCell call(TableColumn param) {
                 return new PopulationCell();
             }
@@ -216,9 +228,10 @@ public class HomePane extends VBox{
             }
         });
 
-        tableView.getColumns().addAll(barangayCol, priorityLevel,totalPopu, priorityType, unresolvePopulation, resolpopulation,histories, view);
+        tableView.getColumns().addAll(barangayCol, priorityLevel, totalPopu, priorityType, unresolvePopulation, resolpopulation,histories, view);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
 
     }
 

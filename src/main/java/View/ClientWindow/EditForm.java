@@ -46,6 +46,9 @@ public class EditForm extends GridPane{
     private TextField dateField;
     private DatePicker datePicker;
     private TextField Name;
+    private TextField LastName = new TextField();
+    private TextField MidlleName = new TextField();
+
     private TextField SpouseName;
     private TextField agefield;
     private TextField addressF;
@@ -77,7 +80,7 @@ public class EditForm extends GridPane{
 
     private boolean Validate(){
 
-        FamilyNodes familyNodes = new FamilyNodes(dateField, datePicker, Name, SpouseName, agefield,
+        FamilyNodes familyNodes = new FamilyNodes(dateField, datePicker, Name, LastName ,MidlleName, SpouseName, agefield,
                 addressF, yrResidency, numofChildrenF, surveyedyr, maritalCBox, barangayCb, genderCB, underEmployedCBox,
                 otherIncomeCbox, ownershipCbox, below8kCbox, occupancyCBox,childrenSchlCBox);
 
@@ -279,7 +282,9 @@ public class EditForm extends GridPane{
         dateField.setDisable(true);
         numofChildrenF.setText("0");
 
-        Name.setPromptText("Full Name");
+        Name.setPromptText("First Name");
+        LastName.setPromptText("Last Name");
+        MidlleName.setPromptText("Middle Name");
         SpouseName.setPromptText("Spouse Full Name");
         agefield.setPromptText("35");
         addressF.setPromptText("e.g 12345 Manga st. Mabalacat");
@@ -287,8 +292,6 @@ public class EditForm extends GridPane{
         numofChildrenF.setPromptText("e.g 4");
 
         SpouseName.setDisable(true);
-
-
         maritalCBox = new ComboBox(getMaritalStatus());
         barangayCb = new ComboBox(getBarangayListModel());
         genderCB    = new ComboBox(getGender());
@@ -325,12 +328,14 @@ public class EditForm extends GridPane{
         indexYTop++;
         bottomPane.setConstraints(numofChildrenL,0,indexYTop,1,1,HPos.LEFT,VPos.CENTER);
         bottomPane.setConstraints(numofChildrenF,1,indexYTop,1,1,HPos.LEFT,VPos.CENTER);
-        topPane.setConstraints(ageL,      4,indexYTop, 1, 1, HPos.CENTER, VPos.CENTER);
+        topPane.setConstraints(ageL,      4,indexYTop, 1, 1, HPos.RIGHT, VPos.CENTER);
         topPane.setConstraints(agefield,  5,indexYTop, 1, 1, HPos.CENTER, VPos.CENTER);
 
         indexYTop++;
         topPane.setConstraints(NameL,     0,indexYTop,1,1,  HPos.LEFT, VPos.CENTER);
-        topPane.setConstraints(Name,      1,indexYTop, 5, 1, HPos.CENTER, VPos.CENTER);
+        topPane.setConstraints(Name,          1,indexYTop, 3, 1, HPos.CENTER, VPos.CENTER);
+        topPane.setConstraints(LastName,      4,indexYTop, 1, 1, HPos.CENTER, VPos.CENTER);
+        topPane.setConstraints(MidlleName,    5,indexYTop, 1, 1, HPos.CENTER, VPos.CENTER);
 
         indexYTop++;
         topPane.setConstraints(spouseNameL,     0,indexYTop,1,1, HPos.LEFT, VPos.CENTER);
@@ -346,7 +351,7 @@ public class EditForm extends GridPane{
         // adding nodes to the top gridpane
         topPane.getChildren().addAll(DateL,dateField,surveyDateL, datePicker,
                 barangayCb,yearofResidencyL,yrResidency, maritalCBox,numofChildrenL,numofChildrenF,genderCB,
-                NameL, Name, ageL,agefield,spouseNameL, SpouseName,addressL,addressF);
+                NameL, Name, LastName, MidlleName, ageL,agefield,spouseNameL, SpouseName,addressL,addressF);
 
 
         addTopComponentListeners();
@@ -524,8 +529,11 @@ public class EditForm extends GridPane{
             LocalDate dateissued = datePicker.getValue();
             int residencyYr = Integer.parseInt(yrResidency.getText());
             int numofchildren = Integer.parseInt(numofChildrenF.getText());
-            String name = Name.getText() + " " ;
-            String spousename = SpouseName.getText() + " " ;
+            String name = Name.getText().trim() ;
+            String lastname = LastName.getText().trim() ;
+            String middleName = MidlleName.getText().trim() ;
+
+            String spousename = SpouseName.getText().trim() ;
             String age = agefield.getText();
             String maritalStatus =  maritalCBox.getSelectionModel().getSelectedItem().toString();
 
@@ -553,8 +561,9 @@ public class EditForm extends GridPane{
                     }
 
 
-            FamilyInfo familyInfo = new FamilyInfo(clientID,inputedDate, dateissued,residencyYr,
-                    numofchildren,name,spousename,age,maritalStatus,barangay,gender,address );
+        FamilyInfo familyInfo = new FamilyInfo(inputedDate, dateissued, residencyYr,
+                numofchildren,name,lastname, middleName, spousename,age,
+                maritalStatus,barangay,gender,address, clientID );
 
             FamilyPoverty familyPoverty  = new FamilyPoverty(hasOtherIncome,isBelow8k,ownership,
                     occupancy,isunderEmployed,childrenScl, dateissued, Utility.getCurrentMonth());
@@ -589,7 +598,6 @@ public class EditForm extends GridPane{
 
         }
 
-
         if (familyInfo.getNumofChildren() > 0){
             childrenSchlCBox.setDisable(false);
             numofChildrenF.setText(String.valueOf(familyInfo.getNumofChildren()));
@@ -602,6 +610,8 @@ public class EditForm extends GridPane{
         LocalDate localDate = Utility.StringToLocalDate(familyInfo.getSurveyedYr().toString());
         datePicker.setValue(localDate);
         Name.setText(familyInfo.getName());
+        LastName.setText(familyInfo.getLastname());
+        MidlleName.setText(familyInfo.getMiddlename());
         SpouseName.setText(familyInfo.getSpouseName());
         agefield.setText(familyInfo.getAge());
         addressF.setText(familyInfo.getAddress());
@@ -617,8 +627,6 @@ public class EditForm extends GridPane{
         occupancyCBox.getSelectionModel().select(familyPoverty.getOccupancy());
         childrenSchlCBox.getSelectionModel().select(familyPoverty.getChildreninSchool());
         familyID = familyInfo.familyId();
-
-
 
 
         setDisable(false);

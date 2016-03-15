@@ -12,7 +12,7 @@ import clientModel.StaffRegister;
 import global.Credentials;
 import global.SecretDetails;
 import javafx.scene.control.Alert;
-import utility.TimedRMIclientSocketFactory;
+import RMI.TimedRMIclientSocketFactory;
 import utility.Utility;
 
 import java.net.InetAddress;
@@ -244,13 +244,14 @@ public class Database extends UnicastRemoteObject implements RemoteMethods {
             @Override
             public void run() {
                 try {
-                    reg = LocateRegistry.getRegistry(System.setProperty("java.rmi.server.hostname",ipAddress), Constant.Remote_port, csf);
+                    reg = LocateRegistry.getRegistry(System.setProperty("java.rmi.server.useLocalHostname=true",ipAddress), Constant.Remote_port, csf);
                     //Registry reg = LocateRegistry.getRegistry("localhost",Constant.Remote_port);
                     server = (RemoteMethods) reg.lookup(Constant.Remote_ID);
 
                     bol = server.checkDatabase();
 
                 } catch (RemoteException e) {
+                    e.printStackTrace();
                     System.out.println("Client:Database:connectToServer:RemoteException");
                     bol = false;
 

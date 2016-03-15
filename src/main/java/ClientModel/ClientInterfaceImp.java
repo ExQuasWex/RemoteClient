@@ -27,6 +27,7 @@ public class ClientInterfaceImp extends UnicastRemoteObject implements ClientInt
 
     @Override
     public boolean imAlive() {
+        System.out.println("IM aALIIEVEEEE");
         return true;
     }
 

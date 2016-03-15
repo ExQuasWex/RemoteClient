@@ -13,7 +13,7 @@ import RMI.Constant;
 import Remote.Method.FamilyModel.Family;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import utility.TimedRMIclientSocketFactory;
+import RMI.TimedRMIclientSocketFactory;
 import utility.Utility;
 
 import java.io.File;
