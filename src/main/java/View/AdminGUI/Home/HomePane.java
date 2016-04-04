@@ -119,8 +119,6 @@ public class HomePane extends VBox{
             @Override
 
 
-
-
             public TableCell call(TableColumn param) {
                 return new PopulationCell();
             }
@@ -234,7 +232,6 @@ public class HomePane extends VBox{
 
 
     }
-
 
     private void setPieChartData (ObservableList<BarangayData> barangayDataList){
 
